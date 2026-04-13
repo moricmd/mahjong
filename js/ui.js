@@ -1,15 +1,19 @@
 // ui.js
-export function renderHand(player) {
-    const area = document.getElementById("player-hand");
-    area.innerHTML = "";
+export function renderHand(player, onClick) {
+  const area = document.getElementById("player-hand");
+  area.innerHTML = "";
 
-    player.hand.forEach((tile) => {
-        const div = document.createElement("div");
-        div.className = "tile";
-        div.textContent = tile;
-        area.appendChild(div);   // ← これが必要
-    });
+  player.hand.forEach((tile, index) => {
+    const div = document.createElement("div");
+    div.className = "tile";
+    div.textContent = tile.value ?? tile;
+
+    div.onclick = () => onClick(index);
+
+    area.appendChild(div);
+  });
 }
+
 
 export function renderState(game) {
     document.getElementById("state").textContent = game.state;
