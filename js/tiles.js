@@ -20,13 +20,14 @@ export function generateTiles() {
   }
   tiles.push({ id: id++, suit: "sou", value: 5, red: true });
 
-  // 風牌（東・南・西・北）
+  // 風牌　（東=1, 南=2, 西=3, 北=4）
+  const winds = [1, 2, 3, 4]
   winds.forEach(v => {
     for (let i = 0; i < 4; i++) tiles.push({ id: id++, suit: "wind", value: v, red: false });
   });
 
-  // 三元牌（白・發・中）
-  const dragons = [1, 2, 3, 4];
+  // 三元牌　（白=1, 發=2,中=3）
+  const dragons = [1, 2, 3];
   dragons.forEach(v => {
     for (let i = 0; i < 4; i++) tiles.push({ id: id++, suit: "dragon", value: v, red: false });
   });
@@ -39,5 +40,4 @@ export function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
-  return array;
 }
