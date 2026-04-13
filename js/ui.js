@@ -1,6 +1,6 @@
 // ui.js
 export function renderHand(player, onClick) {
-  const area = document.getElementById("player-hand");
+  const area = document.getElementById("hand");
   area.innerHTML = "";
 
   player.hand.forEach((tile, index) => {
