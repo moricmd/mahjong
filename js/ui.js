@@ -15,7 +15,7 @@ export function renderHand(player, onClick) {
 }
 
 
-export function renderState(game) {
+export function renderState(state, turn) {
     document.getElementById("state").textContent = game.state;
     document.getElementById("turn").textContent = game.turn;
 }
