@@ -1,0 +1,22 @@
+.hand {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.tile {
+  width: 40px;
+  height: 60px;
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.tile.cpu {
+  background: #ddd;
+  cursor: default;
+}
