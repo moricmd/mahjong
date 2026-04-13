@@ -25,6 +25,31 @@ export class Game {
   // INIT → 山生成
   // -------------------------
   initGame() {
+    
+    // 自分の風をランダム決定（東・南・西）
+    const winds = ["east", "south", "west"];
+    this.selfWind = winds[Math.floor(Math.random() * winds.length)];
+
+    // 自分を基準としてCPU の座り位置を決める
+    if (this.selfWind === "east") {
+      this.players[1].position = "top";   // CPU1
+       this.players[2].position = "right"; // CPU2
+    }
+
+    if (this.selfWind === "south") {
+      this.players[1].position = "left";  // CPU1
+      this.players[2].position = "right"; // CPU2
+    }
+
+    if (this.selfWind === "west") {
+      this.players[1].position = "top";   // CPU1
+      this.players[2].position = "left";  // CPU2
+    }
+
+// 自分は常に bottom
+this.players[0].position = "bottom";
+
+    
     this.wall = generateTiles();
     shuffle(this.wall);
     this.wallIndex = 0;
