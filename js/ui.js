@@ -16,3 +16,4 @@ export function renderState(game) {
     document.getElementById("state").textContent = game.state;
     document.getElementById("turn").textContent = game.turn;
 }
+
