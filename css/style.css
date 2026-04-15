@@ -1,6 +1,6 @@
 .hand {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   margin-top: 20px;
 }
 
@@ -16,9 +16,28 @@
   font-size: 20px;
 }
 
+.discards {
+  display: flex;
+  flex-wrap: wrap;
+  width: 200px;
+  gap: 2px;
+}
+
 .tile.cpu {
   background: #ddd;
   cursor: default;
+}
+
+cpu-hand img {
+  transform: rotate(180deg); /* CPU1 が上にいる場合 */
+}
+
+.cpu-discards img {
+  transform: rotate(180deg);
+}
+
+.player-hand img {
+  transform: rotate(0deg);
 }
 
 .tile.bottom { transform: rotate(0deg); }
