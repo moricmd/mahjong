@@ -6,24 +6,40 @@ function tileToId(tile) {
   // すでに文字列ならそのまま
   if (typeof tile === "string") return tile;
 
-  // 数牌（man / pin / sou）
+  // 数牌（萬・筒・索）
   if (tile.suit === "man" || tile.suit === "pin" || tile.suit === "sou") {
+    // 赤5対応
+    if (tile.red) {
+      return `${tile.suit}${tile.value}r`; // 例: pin5r.png
+    }
     return `${tile.suit}${tile.value}`;
   }
 
-  // 風牌（east / south / west / north）
+  // 風牌（1=東, 2=南, 3=西, 4=北）
   if (tile.suit === "wind") {
-    return `wind_${tile.value}`;
+    const map = {
+      1: "east",
+      2: "south",
+      3: "west",
+      4: "north"
+    };
+    return `wind_${map[tile.value]}`;
   }
 
-  // 三元牌（white / green / red）
+  // 三元牌（1=白, 2=發, 3=中）
   if (tile.suit === "dragon") {
-    return `dragon_${tile.value}`;
+    const map = {
+      1: "white",
+      2: "green",
+      3: "red"
+    };
+    return `dragon_${map[tile.value]}`;
   }
 
   console.warn("Unknown tile:", tile);
-  return "back"; // 保険
+  return "back";
 }
+
 
 
 // -------------------------
