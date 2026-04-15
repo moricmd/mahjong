@@ -68,12 +68,35 @@ export function renderPlayerHand(player, onClick) {
   const area = document.getElementById("player-hand");
   area.innerHTML = "";
 
-  player.hand.forEach((tileId, index) => {
-    const img = createTileImg(tileId);
+  player.hand.forEach((tile, index) => {
+    const img = createTileImg(tile);
+
+    // クリックで打牌
     img.onclick = () => onClick(index);
+
+    // ドラッグ＆ドロップ（自動整理 OFF のときのみ）
+    img.draggable = !game.autoSort;
+
+    img.ondragstart = e => {
+      e.dataTransfer.setData("index", index);
+    };
+
+    img.ondragover = e => e.preventDefault();
+
+    img.ondrop = e => {
+      const from = Number(e.dataTransfer.getData("index"));
+      const to = index;
+
+      const t = player.hand.splice(from, 1)[0];
+      player.hand.splice(to, 0, t);
+
+      game.updateUI();
+    };
+
     area.appendChild(img);
   });
 }
+
 
 // -------------------------
 // 手牌表示（CPU）
