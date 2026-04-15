@@ -89,6 +89,44 @@ this.players[0].position = "bottom";
     renderDiscards(2, this.players[2].discards);
 }
 
+  //
+  // 自動理牌
+  //
+  sortHand(playerIndex) {
+  const p = this.players[playerIndex];
+
+  const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
+  const dragonOrder = { 1: 0, 2: 1, 3: 2 };
+  const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
+
+  p.hand.sort((a, b) => {
+    // 種類順
+    if (suitOrder[a.suit] !== suitOrder[b.suit]) {
+      return suitOrder[a.suit] - suitOrder[b.suit];
+    }
+
+    // 数牌
+    if (a.suit === "man" || a.suit === "pin" || a.suit === "sou") {
+      if (a.value !== b.value) return a.value - b.value;
+      // 赤牌は通常の5の直後
+      return (a.red ? 1 : 0) - (b.red ? 1 : 0);
+    }
+
+    // 風牌
+    if (a.suit === "wind") {
+      return windOrder[a.value] - windOrder[b.value];
+    }
+
+    // 三元牌
+    if (a.suit === "dragon") {
+      return dragonOrder[a.value] - dragonOrder[b.value];
+    }
+
+    return 0;
+  });
+}
+
+
 
 
   
@@ -146,6 +184,10 @@ this.players[0].position = "bottom";
 
     // ツモ和了チェックへ
     this.state = "CHECK_WIN";
+
+    // ツモ時に理牌
+    if (this.autoSort) this.sortHand(this.turn);
+
   }
 
   // -------------------------
@@ -191,6 +233,10 @@ this.players[0].position = "bottom";
 
     this.state = "NEXT_TURN";
     this.updateUI();
+
+    // 打牌時に理牌
+    if (this.autoSort) this.sortHand(0);
+
   }
 
 
