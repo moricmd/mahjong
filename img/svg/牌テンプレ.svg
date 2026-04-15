@@ -1,0 +1,12 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 120" width="88" height="120">
+	<style>
+		.s0 { fill: #fcfbf6;stroke: #363636;stroke-miterlimit:100;stroke-width: 2 } 
+		.s1 { fill: #ffffff;stroke: #363636;stroke-miterlimit:100;stroke-width: 2 } 
+		.s2 { fill: #ffffff;stroke: #e8e8e8;stroke-miterlimit:100 } 
+	</style>
+	<path id="Background" fill-rule="evenodd" class="s0" d="m-65-176h64c6.63 0 12 5.37 12 12v96c0 6.63-5.37 12-12 12h-64c-6.63 0-12-5.37-12-12v-96c0-6.63 5.37-12 12-12z"/>
+	<path id="シェイプ 1" fill-rule="evenodd" class="s0" d="m68-24h64c6.63 0 12 5.37 12 12v96c0 6.63-5.37 12-12 12h-64c-6.63 0-12-5.37-12-12v-96c0-6.63 5.37-12 12-12z"/>
+	<path id="シェイプ 2" class="s1" d=""/>
+	<path id="シェイプ 3" fill-rule="evenodd" class="s1" d="m12 0h64c6.63 0 12 5.37 12 12v96c0 6.63-5.37 12-12 12h-64c-6.63 0-12-5.37-12-12v-96c0-6.63 5.37-12 12-12z"/>
+	<path id="シェイプ 4" class="s2" d=""/>
+</svg>
