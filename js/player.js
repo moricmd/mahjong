@@ -3,7 +3,7 @@ export class Player {
     this.id = id;
     this.isCPU = isCPU;
     this.hand = [];
-    this.river = [];
+    this.discards = [];
   }
 
   draw(tile) {
@@ -13,8 +13,8 @@ export class Player {
   }
 
   discard(index) {
-    const [t] = this.hand.splice(index, 1);
-    if (t) this.river.push(t);
-    return t;
+    const tile = this.hand.splice(index, 1)[0];
+    this.discards.push(tile);
+    return tile;
   }
 }
