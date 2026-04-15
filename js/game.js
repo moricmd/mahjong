@@ -95,6 +95,9 @@ this.players[0].position = "bottom";
   sortHand(playerIndex) {
   const p = this.players[playerIndex];
 
+  // 手牌が14枚の時は理牌しない
+  if (p.hand.length !== 13) return;
+
   const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
   const dragonOrder = { 1: 0, 2: 1, 3: 2 };
   const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
