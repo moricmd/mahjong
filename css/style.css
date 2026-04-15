@@ -28,17 +28,28 @@
   cursor: default;
 }
 
-cpu-hand img {
-  transform: rotate(180deg); /* CPU1 が上にいる場合 */
+/* 牌の向きを座り順にする */
+#cpu1-hand {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
 }
 
-.cpu-discards img {
-  transform: rotate(180deg);
+#cpu2-hand {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
 }
 
-.player-hand img {
-  transform: rotate(0deg);
+#player-hand {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
 }
+
 
 .tile.bottom { transform: rotate(0deg); }
 .tile.top    { transform: rotate(180deg); }
