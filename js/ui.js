@@ -3,9 +3,28 @@
 
 // tileIdを文字列に変換
 function tileToId(tile) {
-  if (typeof tile === "string") return tile; // すでに文字列ならOK
-  return `${tile.suit}${tile.value}`;
+  // すでに文字列ならそのまま
+  if (typeof tile === "string") return tile;
+
+  // 数牌（man / pin / sou）
+  if (tile.suit === "man" || tile.suit === "pin" || tile.suit === "sou") {
+    return `${tile.suit}${tile.value}`;
+  }
+
+  // 風牌（east / south / west / north）
+  if (tile.suit === "wind") {
+    return `wind_${tile.value}`;
+  }
+
+  // 三元牌（white / green / red）
+  if (tile.suit === "dragon") {
+    return `dragon_${tile.value}`;
+  }
+
+  console.warn("Unknown tile:", tile);
+  return "back"; // 保険
 }
+
 
 // -------------------------
 // 牌画像を作る
