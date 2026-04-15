@@ -75,8 +75,20 @@ this.players[0].position = "bottom";
   // -------------------------
   updateUI() {
     renderState(this.state, this.turn);
-    renderHand(this.players[0], index => this.onPlayerDiscard(index));
-  }
+
+    // プレイヤーの手牌
+    renderPlayerHand(this.players[0], index => this.onPlayerDiscard(index));
+
+    // CPU の手牌（裏向き）
+    renderCPUHand(1, this.players[1].hand.length);
+    renderCPUHand(2, this.players[2].hand.length);
+
+    // 捨て牌
+    renderDiscards(0, this.players[0].discards);
+    renderDiscards(1, this.players[1].discards);
+    renderDiscards(2, this.players[2].discards);
+}
+
 
 
   
