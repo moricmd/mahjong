@@ -79,6 +79,71 @@ this.players[0].position = "bottom";
   }
 
   // -------------------------
+  // 牌表示
+  // -------------------------
+
+  // 開始時
+  function renderAll() {
+  renderPlayerHand(playerHand);
+  renderCPUHand(1, cpu1Hand.length);
+  renderCPUHand(2, cpu2Hand.length);
+
+  renderDiscards(0, playerDiscards);
+  renderDiscards(1, cpuDiscards[1]);
+  renderDiscards(2, cpuDiscards[2]);
+}
+
+
+  // 牌画像を読み込む
+  function createTileImg(tileId) {
+  const img = document.createElement("img");
+  img.src = `img/${tileId}.png`;
+  img.className = "tile";
+  return img;
+}
+
+function createBackImg() {
+  const img = document.createElement("img");
+  img.src = `img/back.png`;
+  img.className = "tile";
+  return img;
+}
+
+// 自分の手牌
+function renderPlayerHand(hand) {
+  const area = document.getElementById("player-hand");
+  area.innerHTML = "";
+
+  hand.forEach(tileId => {
+    area.appendChild(createTileImg(tileId));
+  });
+}
+
+// 対戦相手の手牌
+function renderCPUHand(cpuIndex, handCount) {
+  const area = document.getElementById(`cpu${cpuIndex}-hand`);
+  area.innerHTML = "";
+
+  for (let i = 0; i < handCount; i++) {
+    area.appendChild(createBackImg());
+  }
+}
+
+// 捨て牌表示
+function renderDiscards(playerIndex, discards) {
+  const area = document.getElementById(
+    playerIndex === 0 ? "player-discards" : `cpu${playerIndex}-discards`
+  );
+  area.innerHTML = "";
+
+  discards.forEach(tileId => {
+    area.appendChild(createTileImg(tileId));
+  });
+}
+
+
+  
+  // -------------------------
   // 外部から呼ぶ1ステップ
   // -------------------------
   step() {
@@ -164,6 +229,8 @@ this.players[0].position = "bottom";
     }
   }
 
+  
+
   // -------------------------
   // DISCARD（人間）
   // -------------------------
@@ -176,6 +243,18 @@ this.players[0].position = "bottom";
     this.state = "NEXT_TURN";
     this.updateUI();
   }
+
+  // 打牌時の処理
+  function playerDiscard(tileId) {
+  playerDiscards.push(tileId);
+  renderDiscards(0, playerDiscards);
+}
+
+　function cpuDiscard(cpuIndex, tileId) {
+  cpuDiscards[cpuIndex].push(tileId);
+  renderDiscards(cpuIndex, cpuDiscards[cpuIndex]);
+}
+
 
   // -------------------------
   // NEXT_TURN
