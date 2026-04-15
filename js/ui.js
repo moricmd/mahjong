@@ -1,15 +1,23 @@
 // ui.js
 // --------------------------------------------------
 
+// tileIdを文字列に変換
+function tileToId(tile) {
+  if (typeof tile === "string") return tile; // すでに文字列ならOK
+  return `${tile.suit}${tile.value}`;
+}
+
 // -------------------------
 // 牌画像を作る
 // -------------------------
-export function createTileImg(tileId) {
+export function createTileImg(tile) {
+  const tileId = tileToId(tile);
   const img = document.createElement("img");
   img.src = `img/${tileId}.png`;
   img.className = "tile";
   return img;
 }
+
 
 export function createBackImg() {
   const img = document.createElement("img");
