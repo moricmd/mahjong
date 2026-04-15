@@ -1,7 +1,7 @@
 // game.js
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
-import { renderHand, renderState, renderPlayerHand, renderCPUHand, renderDiscards, renderState } from "./ui.js";
+import { renderPlayerHand, renderCPUHand, renderDiscards, renderState } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 
