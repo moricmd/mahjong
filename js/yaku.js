@@ -74,9 +74,15 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
   // 一盃口 + 二盃口
   // ------------------------------
   const iipeikouHan = checkIipeikou(tiles);
-  if (iipeikouHan === 3) {
-    yakuList.push("二盃口");
-    han += 3;
+
+  if (!game.isMensen){ 
+    return; // 門前のみ
+  
+  } else {
+      if (iipeikouHan === 3) {
+      yakuList.push("二盃口");
+      han += 3;
+        
   } else if (iipeikouHan === 1) {
     yakuList.push("一盃口");
     han += 1;
@@ -86,7 +92,7 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
   // 平和
   // -------------------------------
   const pinfuHan = checkPinfu(tiles, playerWind, roundWind);
-  if (pinfuHan > 0) {
+  if (game.isMensen && pinfuHan > 0) {
     yakuList.push("平和");
     han += pinfuHan;
   }
