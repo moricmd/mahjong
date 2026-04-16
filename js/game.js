@@ -18,6 +18,8 @@ export class Game {
     this.wall = [];
     this.wallIndex = 0;
 
+    this.autoSort = false;
+
     this.initGame();
   }
 
