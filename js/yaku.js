@@ -71,24 +71,25 @@ if (windCount[roundWindNum] >= 2) han++;
 
 
 //
-// 一盃口
+// 一盃口 + 二盃口
 // 
-  
-  const iipeikouHan = checkIipeikou(tiles);
-if (iipeikouHan > 0) {
+const iipeikouHan = checkIipeikou(tiles);
+if (iipeikouHan === 3) {
+  yakuList.push("二盃口");
+  han += 3;
+} else if (iipeikouHan === 1) {
   yakuList.push("一盃口");
-  han += iipeikouHan;
+  han += 1;
 }
-
 
 
   return { han, yakuList };
 }
 
+// ---------------------------------------------------------------------------------------------------------------
+
 // ------------------------------
-// 和了形チェック（最小）
-// 今は「七対子」「国士無双」は未実装
-// 面子分解の枠組みだけ作る
+// 役の定義
 // ------------------------------
 function checkWinningShape(tiles) {
   tiles.sort((a, b) => a.id - b.id);
@@ -168,10 +169,9 @@ function checkYakuhai(tiles, playerWind, roundWind) {
 }
 
 //
-// 一盃口
+// 一盃口 + 二盃口
 //
 function checkIipeikou(tiles) {
-  // 一盃口は 1 翻
   let han = 0;
 
   // スートごとに数字を集計
@@ -183,11 +183,11 @@ function checkIipeikou(tiles) {
     }
   }
 
-  // 各スートで順子をカウント
+  let iipeikouCount = 0;  // 一盃口の数
+
   for (const suit of ["man", "pin", "sou"]) {
     const arr = suits[suit].sort((a, b) => a - b);
 
-    // 順子候補を数える
     const shuntsuCount = {};
 
     for (let i = 0; i < arr.length - 2; i++) {
@@ -198,15 +198,25 @@ function checkIipeikou(tiles) {
       }
     }
 
-    // 同じ順子が 2 回出たら一盃口
+    // 同じ順子が2回 → 一盃口
     for (const key in shuntsuCount) {
       if (shuntsuCount[key] >= 2) {
-        han += 1;
+        iipeikouCount++;
       }
     }
   }
 
-  return han;
+  // 一盃口が2つ → 二盃口（3翻）
+  if (iipeikouCount >= 2) {
+    return 3;  // 二盃口
+  }
+
+  // 一盃口が1つ → 一盃口（1翻）
+  if (iipeikouCount === 1) {
+    return 1;
+  }
+
+  return 0;
 }
 
 
