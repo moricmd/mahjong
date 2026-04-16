@@ -8,7 +8,6 @@ body {
 .hand {
   display: flex;
   gap: 4px;
-  margin-top: 20px;
 }
 
 .tile {
