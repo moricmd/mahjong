@@ -64,26 +64,31 @@ export function createBackImg() {
 // -------------------------
 // 手牌表示（プレイヤー）
 // -------------------------
-export function renderPlayerHand(player, onClick) {
+export function renderPlayerHand(player, onClick, autoSort) {
   const area = document.getElementById("player-hand");
   area.innerHTML = "";
 
   player.hand.forEach((tile, index) => {
     const img = createTileImg(tile);
 
-    // クリックで打牌
     img.onclick = () => onClick(index);
 
-    // ドラッグ＆ドロップ（自動整理 OFF のときのみ）
-    img.draggable = !game.autoSort;
+    // 自動整理 OFF のときだけドラッグ可能
+    img.draggable = !autoSort;
 
     img.ondragstart = e => {
+      if (autoSort) return;
       e.dataTransfer.setData("index", index);
     };
 
-    img.ondragover = e => e.preventDefault();
+    img.ondragover = e => {
+      if (autoSort) return;
+      e.preventDefault();
+    };
 
     img.ondrop = e => {
+      if (autoSort) return;
+
       const from = Number(e.dataTransfer.getData("index"));
       const to = index;
 
@@ -96,6 +101,7 @@ export function renderPlayerHand(player, onClick) {
     area.appendChild(img);
   });
 }
+
 
 
 // -------------------------
