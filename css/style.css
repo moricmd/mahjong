@@ -46,6 +46,7 @@
   
   display: flex;
   gap: 4px;
+  z-index: 1000;
 }
 
 #cpu2-hand {
@@ -56,6 +57,7 @@
 
   display: flex;
   gap: 4px;
+  z-index: 1000;
 }
 
 #player-hand {
