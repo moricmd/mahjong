@@ -20,5 +20,7 @@ let autoSort = false;
 autoSortBtn.addEventListener("click", () => {
   autoSort = !autoSort;
   autoSortBtn.textContent = `自動整理：${autoSort ? "ON" : "OFF"}`;
+
+  if (game) game.autoSort = autoSort;
 });
 
