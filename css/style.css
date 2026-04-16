@@ -79,12 +79,29 @@ body {
   z-index: 1000;
 }
 
-#next-btn, #auto-sort-btn {
+
+#next-btn {
   position: fixed;
-  bottom: 20px;
+  bottom: 20px; 
   right: 20px;
   z-index: 2000;
+  background: white;
+  padding: 8px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
 }
+
+#auto-sort-btn {
+  position: fixed;
+  bottom: 70px; 
+  right: 20px;
+  z-index: 2000;
+  background: white;
+  padding: 8px 12px;
+  border: 1px solid #333;
+  border-radius: 4px;
+}
+
 
 
 .tile.bottom { transform: rotate(0deg); }
