@@ -55,7 +55,7 @@ for (const t of hand) {
   if (t.suit === "wind") windCount[t.value]++;
 }
 
-// 三元牌の刻子 or 雀頭
+// 三元牌の刻子
 for (let d = 1; d <= 3; d++) {
   if (dragonCount[d] >= 2) han++;   // 雀頭 or 刻子
 }
@@ -68,6 +68,18 @@ if (windCount[selfWindNum] >= 2) han++;
 // 場風（東1局なら東=1）
 const roundWindNum = 1; // 今は東固定
 if (windCount[roundWindNum] >= 2) han++;
+
+
+//
+// 一盃口
+// 
+  
+  const iipeikouHan = checkIipeikou(tiles);
+if (iipeikouHan > 0) {
+  yakuList.push("一盃口");
+  han += iipeikouHan;
+}
+
 
 
   return { han, yakuList };
@@ -154,6 +166,49 @@ function checkYakuhai(tiles, playerWind, roundWind) {
 
   return han;
 }
+
+//
+// 一盃口
+//
+function checkIipeikou(tiles) {
+  // 一盃口は 1 翻
+  let han = 0;
+
+  // スートごとに数字を集計
+  const suits = { man: [], pin: [], sou: [] };
+
+  for (const t of tiles) {
+    if (t.suit === "man" || t.suit === "pin" || t.suit === "sou") {
+      suits[t.suit].push(t.value);
+    }
+  }
+
+  // 各スートで順子をカウント
+  for (const suit of ["man", "pin", "sou"]) {
+    const arr = suits[suit].sort((a, b) => a - b);
+
+    // 順子候補を数える
+    const shuntsuCount = {};
+
+    for (let i = 0; i < arr.length - 2; i++) {
+      const a = arr[i], b = arr[i + 1], c = arr[i + 2];
+      if (a + 1 === b && b + 1 === c) {
+        const key = `${suit}-${a}`;
+        shuntsuCount[key] = (shuntsuCount[key] || 0) + 1;
+      }
+    }
+
+    // 同じ順子が 2 回出たら一盃口
+    for (const key in shuntsuCount) {
+      if (shuntsuCount[key] >= 2) {
+        han += 1;
+      }
+    }
+  }
+
+  return han;
+}
+
 
 
 // ------------------------------
