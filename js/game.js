@@ -187,10 +187,6 @@ this.players[0].position = "bottom";
 
     // ツモ和了チェックへ
     this.state = "CHECK_WIN";
-
-    // ツモ時に理牌
-    if (this.autoSort) this.sortHand(this.turn);
-
   }
 
   // -------------------------
@@ -216,10 +212,14 @@ this.players[0].position = "bottom";
       // CPUは即ランダム捨て
       const idx = Math.floor(Math.random() * p.hand.length);
       p.discard(idx);
-      this.state = "NEXT_TURN";
+
+      if (this.autoSort) this.sortHand(this.turn);
+      
+        this.state = "NEXT_TURN";
+
     } else {
-      // 人間は捨て牌待ち
-      this.state = "DISCARD";
+        // 人間は捨て牌待ち
+        this.state = "DISCARD";
     }
   }
 
@@ -234,12 +234,11 @@ this.players[0].position = "bottom";
     const p = this.players[0];
     p.discard(index);
 
-    this.state = "NEXT_TURN";
-    this.updateUI();
-
     // 打牌時に理牌
     if (this.autoSort) this.sortHand(0);
-
+    
+    this.state = "NEXT_TURN";
+    this.updateUI();
   }
 
 
