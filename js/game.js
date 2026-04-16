@@ -13,17 +13,25 @@ export class Game {
       new Player(2, true)   // CPU
     ];
 
-    this.state = "INIT";
-    this.turn = 0;
-    this.wall = []; // 山
-    this.wallIndex = 0;
+    this.state = "INIT";　// 状態
+    this.turn = 0; // 巡目
+    
+    this.wallIndex = 0; // 山からめくった牌の番号
 
     this.isMensen = true; // 門前フラグ
 
     this.autoSort = true; // 自動整理ボタン
 
+
     this.honba = 0; // 積み棒(親連荘・流局ごとに+1)
     this.kyotaku = 0; // 供託(立直時に支払い)
+
+    
+    // 牌山
+    this.wall = []; // 山
+    this.rinshan = []; // 嶺上牌
+    this.doraIndicators = []; // ドラ表示牌
+    this.uraIndicators = []; // 裏ドラ表示牌
 
     this.initGame();
   }
@@ -65,6 +73,24 @@ this.players[0].position = "bottom";
     this.deal();
   }
 
+  function buildWall() {
+  const tiles = generateAllTiles(); // 108枚（3麻）
+  shuffle(tiles);
+
+  // 嶺上牌（4枚）を後ろから確保
+  game.rinshan = tiles.splice(-4);
+
+  // ドラ表示牌（1枚）
+  game.doraIndicators = [ tiles.splice(-1)[0] ];
+
+  // 裏ドラはリーチ時にめくるので今は空
+  game.uraIndicators = [];
+
+  // 残りが通常山
+  game.wall = tiles;
+}
+
+
   // -------------------------
   // DEAL → 配牌
   // -------------------------
@@ -101,9 +127,9 @@ updateUI() {
 }
 
 
-  //
+  // ------------------------------
   // 自動理牌
-  //
+  // ------------------------------
   sortHand(playerIndex) {
   const p = this.players[playerIndex];
 
@@ -201,6 +227,17 @@ updateUI() {
     this.state = "CHECK_WIN";
   }
 
+  // 通常ツモ
+  function drawTile() {
+    return game.wall.pop();
+  }
+
+  // 嶺上牌ツモ
+  function drawRinshan() {
+    return game.rinshan.pop();
+  }
+
+
   // -------------------------
   // CHECK_WIN → 和了判定（最小）
   // -------------------------
@@ -218,6 +255,8 @@ updateUI() {
       this.state = "END_ROUND";
       return;
     }
+
+    
 
     // 和了でなければ捨て牌へ
     if (p.isCPU) {
