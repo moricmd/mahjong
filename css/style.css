@@ -77,6 +77,13 @@ body {
   z-index: 1000;
 }
 
+#next-btn, #auto-sort-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2000;
+}
+
 
 .tile.bottom { transform: rotate(0deg); }
 .tile.top    { transform: rotate(180deg); }
