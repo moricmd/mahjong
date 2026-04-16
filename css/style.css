@@ -50,7 +50,7 @@ body {
   position: absolute;
   top: 20px;
   left: 50px;
-  transform: translateX(0%) rotate(180deg);
+  transform: translateX(10%) rotate(180deg);
   
   display: flex;
   margin: 0 auto;
@@ -73,7 +73,7 @@ body {
   position: absolute;
   bottom: 20px;
   left: 50px;
-  transform: translateX(0%);
+  transform: translateX(10%);
 
   display: flex;
   margin: 0 auto;
