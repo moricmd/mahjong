@@ -15,7 +15,7 @@ window.addEventListener("load", () => {
 //自動理牌
 //
 const autoSortBtn = document.getElementById("auto-sort-btn");
-let autoSort = false;
+let autoSort = true;
 
 autoSortBtn.addEventListener("click", () => {
   autoSort = !autoSort;
