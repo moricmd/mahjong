@@ -2,7 +2,7 @@
 
 // ------------------------------
 // 役判定のメイン関数
-// ------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind = 1) {
   const tiles = [...handTiles];
 
@@ -40,53 +40,75 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
     han += yakuhaiHan;
   }
 
-// -------------------------
-// 役牌判定
-// -------------------------
+  // ------------------------------
+  // 役牌判定
+  // ------------------------------
 
-// 三元牌（白=1, 發=2, 中=3）
-const dragonCount = { 1: 0, 2: 0, 3: 0 };
+  // 三元牌（白=1, 發=2, 中=3）
+  const dragonCount = { 1: 0, 2: 0, 3: 0 };
 
-// 風牌（東=1, 南=2, 西=3, 北=4）
-const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
+  // 風牌（東=1, 南=2, 西=3, 北=4）
+  const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
-for (const t of hand) {
-  if (t.suit === "dragon") dragonCount[t.value]++;
-  if (t.suit === "wind") windCount[t.value]++;
+  for (const t of hand) {
+    if (t.suit === "dragon") dragonCount[t.value]++;
+    if (t.suit === "wind") windCount[t.value]++;
+  }
+
+  // 三元牌の刻子
+  for (let d = 1; d <= 3; d++) {
+    if (dragonCount[d] >= 2) han++;   // 雀頭 or 刻子
+  }
+
+  // 自風（game.selfWind を wind の番号に変換）
+  const windMap = { east: 1, south: 2, west: 3, north: 4 };
+  const selfWindNum = windMap[selfWind];
+  if (windCount[selfWindNum] >= 2) han++;
+
+  // 場風（東1局なら東=1）
+  const roundWindNum = 1; // 今は東固定
+  if (windCount[roundWindNum] >= 2) han++;
+
+
+  // ------------------------------
+  // 一盃口 + 二盃口
+  // ------------------------------
+  const iipeikouHan = checkIipeikou(tiles);
+  if (iipeikouHan === 3) {
+    yakuList.push("二盃口");
+    han += 3;
+  } else if (iipeikouHan === 1) {
+    yakuList.push("一盃口");
+    han += 1;
+  }
+
+  // -------------------------------
+  // 平和
+  // -------------------------------
+  const pinfuHan = checkPinfu(tiles, playerWind, roundWind);
+  if (pinfuHan > 0) {
+    yakuList.push("平和");
+    han += pinfuHan;
+  }
+
+　// ------------------------------
+  // 三色同刻
+  // ------------------------------
+  const sanshokuDoukouHan = checkSanshokuDoukou(tiles);
+if (sanshokuDoukouHan > 0) {
+  yakuList.push("三色同刻");
+  han += sanshokuDoukouHan;
 }
 
-// 三元牌の刻子
-for (let d = 1; d <= 3; d++) {
-  if (dragonCount[d] >= 2) han++;   // 雀頭 or 刻子
+
+
+
+    return { han, yakuList };
 }
 
-// 自風（game.selfWind を wind の番号に変換）
-const windMap = { east: 1, south: 2, west: 3, north: 4 };
-const selfWindNum = windMap[selfWind];
-if (windCount[selfWindNum] >= 2) han++;
-
-// 場風（東1局なら東=1）
-const roundWindNum = 1; // 今は東固定
-if (windCount[roundWindNum] >= 2) han++;
+// ---------------------------------------------------------------------------------------------------------------------
 
 
-//
-// 一盃口 + 二盃口
-// 
-const iipeikouHan = checkIipeikou(tiles);
-if (iipeikouHan === 3) {
-  yakuList.push("二盃口");
-  han += 3;
-} else if (iipeikouHan === 1) {
-  yakuList.push("一盃口");
-  han += 1;
-}
-
-
-  return { han, yakuList };
-}
-
-// ---------------------------------------------------------------------------------------------------------------
 
 // ------------------------------
 // 役の定義
@@ -168,9 +190,9 @@ function checkYakuhai(tiles, playerWind, roundWind) {
   return han;
 }
 
-//
+// ------------------------------
 // 一盃口 + 二盃口
-//
+// ------------------------------
 function checkIipeikou(tiles) {
   let han = 0;
 
@@ -214,6 +236,89 @@ function checkIipeikou(tiles) {
   // 一盃口が1つ → 一盃口（1翻）
   if (iipeikouCount === 1) {
     return 1;
+  }
+
+  return 0;
+}
+
+
+// ------------------------------
+// 平和
+// ------------------------------
+function checkPinfu(tiles, playerWind, roundWind) {
+  // 風牌・三元牌が雀頭ならピンフにならない
+  const counts = {};
+  tiles.forEach(t => {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  // 雀頭候補を探す（2枚のもの）
+  let pairSuit = null;
+  let pairValue = null;
+
+  for (const key in counts) {
+    if (counts[key] === 2) {
+      const [suit, value] = key.split("-");
+      pairSuit = suit;
+      pairValue = Number(value);
+      break;
+    }
+  }
+
+  // 雀頭が役牌ならピンフ不可
+  if (pairSuit === "dragon") return 0;
+  if (pairSuit === "wind") {
+    if (pairValue === playerWind) return 0;
+    if (pairValue === roundWind) return 0;
+  }
+
+  // 数牌だけを抽出
+  const nums = tiles.filter(t =>
+    t.suit === "man" || t.suit === "pin" || t.suit === "sou"
+  );
+
+  // 順子を数える
+  let shuntsuCount = 0;
+
+  const arr = nums
+    .map(t => ({ suit: t.suit, value: t.value }))
+    .sort((a, b) => a.value - b.value);
+
+  for (let i = 0; i < arr.length - 2; i++) {
+    const a = arr[i], b = arr[i + 1], c = arr[i + 2];
+    if (a.suit === b.suit && b.suit === c.suit &&
+        a.value + 1 === b.value && b.value + 1 === c.value) {
+      shuntsuCount++;
+    }
+  }
+
+  // 4 面子すべて順子ならピンフ
+  if (shuntsuCount >= 4) return 1;
+
+  return 0;
+}
+
+// ------------------------------
+// 三色同刻
+// ------------------------------
+function checkSanshokuDoukou(tiles) {
+  // suit-value のカウント
+  const counts = {};
+  tiles.forEach(t => {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  // 数字 1〜9 でチェック
+  for (let n = 1; n <= 9; n++) {
+    const man = counts[`man-${n}`] >= 3;
+    const pin = counts[`pin-${n}`] >= 3;
+    const sou = counts[`sou-${n}`] >= 3;
+
+    if (man && pin && sou) {
+      return 2; // 三色同刻は 2 翻
+    }
   }
 
   return 0;
