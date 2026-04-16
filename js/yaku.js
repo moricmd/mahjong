@@ -101,6 +101,25 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
     han += pinfuHan;
   }
 
+
+　// ------------------------------
+　// ドラ・裏ドラ
+　// ------------------------------
+  　const doraCount = countDora(tiles, game.doraIndicators);
+　　if (doraCount > 0) {
+  　　yakuList.push(`ドラ${doraCount}`);
+  　　han += doraCount;
+　　}
+
+　　if (player.isRiichi) {
+　　  const uraCount = countDora(tiles, game.uraIndicators);
+　　  if (uraCount > 0) {
+  　　  yakuList.push(`裏ドラ${uraCount}`);
+  　　  han += uraCount;
+ 　　 }
+　　}
+
+
 　// ------------------------------
   // 三色同刻
   // ------------------------------
@@ -185,7 +204,16 @@ function checkMelds(tiles) {
 }
 
 // ------------------------------
-// タンヤオ判定
+// 立直
+// ------------------------------
+if (player.isRiichi) {
+  yakuList.push("立直");
+  han += 1;
+}
+
+
+// ------------------------------
+// タンヤオ
 // ------------------------------
 function isTanyao(tiles) {
   return tiles.every(t => {
@@ -195,7 +223,7 @@ function isTanyao(tiles) {
 }
 
 // ------------------------------
-// 役牌判定（風牌・三元牌）
+// 役牌（風牌・三元牌）
 // ------------------------------
 function checkYakuhai(tiles, playerWind, roundWind) {
   let han = 0;
@@ -210,7 +238,7 @@ function checkYakuhai(tiles, playerWind, roundWind) {
   if (counts[`dragon_green`] >= 3) yakuList.push("役牌：發");
   if (counts[`dragon_red`] >= 3) yakuList.push("役牌：中");
   if (counts[`wind_${playerWind}`] >= 3) yakuList.push("自風牌：東");
-  if (counts[`wind_${roundWind}`] >= 3) yakuList.push("場風牌：南");
+  if (counts[`wind_${roundWind}`] >= 3) yakuList.push("場風牌：東");
 
   return han;
 }
@@ -323,6 +351,28 @@ function checkPinfu(tiles, playerWind, roundWind) {
 
   return 0;
 }
+
+
+// ------------------------------
+// ドラ・裏ドラ
+// ------------------------------
+game.doraIndicators = [ drawTileFromDeadWall() ];
+
+function countDora(tiles, doraIndicators) {
+  let count = 0;
+
+  for (const ind of doraIndicators) {
+    const next = nextTile(ind); // 例：1m → 2m、9m → 1m、白→發→中→白
+    for (const t of tiles) {
+      if (t.suit === next.suit && t.value === next.value) {
+        count++;
+      }
+    }
+  }
+
+  return count;
+}
+
 
 // ------------------------------
 // 三色同刻
