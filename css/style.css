@@ -98,7 +98,7 @@ body {
   position: absolute;
   top: 120px;         /* CPU1 手牌の下 */
   left: 50%;
-  transform: rotate(180deg);
+  transform: translateX(-20%); rotate(180deg);
   width: 300px;
   display: flex;
   flex-wrap: wrap;
