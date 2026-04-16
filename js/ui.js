@@ -10,7 +10,7 @@ function tileToId(tile) {
   if (tile.suit === "man" || tile.suit === "pin" || tile.suit === "sou") {
     // 赤5対応
     if (tile.red) {
-      return `${tile.suit}${tile.value}r`; // 例: pin5r.png
+      return `${tile.suit}${tile.value}r`;
     }
     return `${tile.suit}${tile.value}`;
   }
