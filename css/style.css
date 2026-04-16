@@ -60,7 +60,7 @@ body {
 
 #cpu2-hand {
   position: absolute;
-  left: 0;
+  left: 20px;
   top: 50%;
   transform: translateX(-50%) rotate(90deg);
 
