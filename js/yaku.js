@@ -23,12 +23,16 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
 
   // ツモ
   if (isTsumo) {
+    if (!game.isMensen) return; //門前のみ
+    
     yakuList.push("門前清自摸和");
     han += 1;
   }
 
   // タンヤオ
   if (isTanyao(tiles)) {
+    if (!game.isMensen) return; //喰いタンなし
+    
     yakuList.push("断么九");
     han += 1;
   }
@@ -106,6 +110,21 @@ if (sanshokuDoukouHan > 0) {
   han += sanshokuDoukouHan;
 }
 
+
+// ------------------------------
+// 一気通貫
+// ------------------------------
+const ittsuuBaseHan = checkIttsuu(tiles); // 2 を返す（門前基準）
+
+if (ittsuuBaseHan > 0) {
+  if (game.isMenzen) {
+    yakuList.push("一気通貫");
+    han += 2; // 門前
+  } else {
+    yakuList.push("一気通貫（食い下がり）");
+    han += 1; // 鳴き
+  }
+}
 
 
 
@@ -329,6 +348,42 @@ function checkSanshokuDoukou(tiles) {
 
   return 0;
 }
+
+// ------------------------------
+// 一気通貫
+// ------------------------------
+function checkIttsuu(tiles) {
+  // スートごとに数字を集計
+  const suits = { man: [], pin: [], sou: [] };
+
+  for (const t of tiles) {
+    if (t.suit === "man" || t.suit === "pin" || t.suit === "sou") {
+      suits[t.suit].push(t.value);
+    }
+  }
+
+  // スートごとに一気通貫をチェック
+  for (const suit of ["man", "pin", "sou"]) {
+    const arr = suits[suit].sort((a, b) => a - b);
+
+    // 数字のカウント
+    const count = {};
+    arr.forEach(v => count[v] = (count[v] || 0) + 1);
+
+    // 123, 456, 789 が作れるか
+    const has123 = count[1] > 0 && count[2] > 0 && count[3] > 0;
+    const has456 = count[4] > 0 && count[5] > 0 && count[6] > 0;
+    const has789 = count[7] > 0 && count[8] > 0 && count[9] > 0;
+
+    if (has123 && has456 && has789) {
+      return 2; // 一気通貫は 2 翻（雀魂基準）
+    }
+  }
+
+  return 0;
+}
+
+
 
 
 
