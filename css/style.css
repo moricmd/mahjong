@@ -110,7 +110,7 @@ body {
   left: 120px;        /* CPU2 手牌の右側 */
   top: 40%;
   
-  transform: translateX(-20%) rotate(90deg);
+  transform: rotate(90deg);
   width: 300px;
   display: flex;
   flex-wrap: wrap;
