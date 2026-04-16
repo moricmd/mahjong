@@ -78,6 +78,58 @@ body {
   z-index: 1000;
 }
 
+/* --- 河（捨て牌） --- */
+#player-discards {
+  position: absolute;
+  bottom: 120px;      /* 手牌の上に配置 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+#cpu1-discards {
+  position: absolute;
+  top: 120px;         /* CPU1 手牌の下 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+#cpu2-discards {
+  position: absolute;
+  left: 120px;        /* CPU2 手牌の右側 */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* --- 山（中央） --- */
+#wall {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 160px;
+  height: 80px;
+  background: #ccc;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  z-index: 500;
+}
+
+
 
 #next-btn {
   position: fixed;
