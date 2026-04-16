@@ -62,7 +62,7 @@ body {
   position: absolute;
   left: 20px;
   top: 50%;
-  transform: translateX(-50%) rotate(90deg);
+  transform: translateX(-40%) rotate(90deg);
 
   display: flex;
   gap: 4px;
