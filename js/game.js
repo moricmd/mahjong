@@ -73,21 +73,26 @@ this.players[0].position = "bottom";
   // -------------------------
   // UI 更新
   // -------------------------
-  updateUI() {
-    renderState(this.state, this.turn);
+updateUI() {
+  renderState(this.state, this.turn);
 
-    // プレイヤーの手牌
-    renderPlayerHand(this.players[0], index => this.onPlayerDiscard(index));
+  // プレイヤーの手牌
+  renderPlayerHand(
+    this.players[0],
+    index => this.onPlayerDiscard(index),
+    this.autoSort
+  );
 
-    // CPU の手牌（裏向き）
-    renderCPUHand(1, this.players[1].hand.length);
-    renderCPUHand(2, this.players[2].hand.length);
+  // CPU の手牌
+  renderCPUHand(1, this.players[1].hand.length);
+  renderCPUHand(2, this.players[2].hand.length);
 
-    // 捨て牌
-    renderDiscards(0, this.players[0].discards);
-    renderDiscards(1, this.players[1].discards);
-    renderDiscards(2, this.players[2].discards);
+  // 捨て牌
+  renderDiscards(0, this.players[0].discards);
+  renderDiscards(1, this.players[1].discards);
+  renderDiscards(2, this.players[2].discards);
 }
+
 
   //
   // 自動理牌
