@@ -17,7 +17,7 @@ window.addEventListener("load", () => {
 const autoSortBtn = document.getElementById("auto-sort-btn");
 let autoSort = true;
 
-autoSortBtn.textContent = "自動整理:ON";
+autoSortBtn.textContent = "自動整理：ON";
 
 autoSortBtn.addEventListener("click", () => {
   autoSort = !autoSort;
