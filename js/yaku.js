@@ -40,6 +40,36 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
     han += yakuhaiHan;
   }
 
+// -------------------------
+// 役牌判定
+// -------------------------
+
+// 三元牌（白=1, 發=2, 中=3）
+const dragonCount = { 1: 0, 2: 0, 3: 0 };
+
+// 風牌（東=1, 南=2, 西=3, 北=4）
+const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+for (const t of hand) {
+  if (t.suit === "dragon") dragonCount[t.value]++;
+  if (t.suit === "wind") windCount[t.value]++;
+}
+
+// 三元牌の刻子 or 雀頭
+for (let d = 1; d <= 3; d++) {
+  if (dragonCount[d] >= 2) han++;   // 雀頭 or 刻子
+}
+
+// 自風（game.selfWind を wind の番号に変換）
+const windMap = { east: 1, south: 2, west: 3, north: 4 };
+const selfWindNum = windMap[selfWind];
+if (windCount[selfWindNum] >= 2) han++;
+
+// 場風（東1局なら東=1）
+const roundWindNum = 1; // 今は東固定
+if (windCount[roundWindNum] >= 2) han++;
+
+
   return { han, yakuList };
 }
 
@@ -116,19 +146,15 @@ function checkYakuhai(tiles, playerWind, roundWind) {
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  // 三元牌（白=1, 發=2, 中=3）
-  for (let v = 1; v <= 3; v++) {
-    if (counts[`dragon-${v}`] >= 3) han++;
-  }
-
-  // 自風
-  if (counts[`wind-${playerWind}`] >= 3) han++;
-
-  // 場風
-  if (counts[`wind-${roundWind}`] >= 3) han++;
+  if (counts[`dragon_white`] >= 3) yakuList.push(`役牌：白`);
+  if (counts[`dragon_green`] >= 3) yakuList.push("役牌：發");
+  if (counts[`dragon_red`] >= 3) yakuList.push("役牌：中");
+  if (counts[`wind_${playerWind}`] >= 3) yakuList.push("自風牌：東");
+  if (counts[`wind_${roundWind}`] >= 3) yakuList.push("場風牌：南");
 
   return han;
 }
+
 
 // ------------------------------
 // 補助関数
