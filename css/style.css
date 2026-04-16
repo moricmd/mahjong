@@ -53,6 +53,7 @@ body {
   transform: rotate(180deg);
   
   display: flex;
+  margin: 0 auto;
   gap: 4px;
   z-index: 1000;
 }
@@ -64,7 +65,6 @@ body {
   transform: rotate(90deg);
 
   display: flex;
-  margin: 0 auto;
   gap: 4px;
   z-index: 1000;
 }
