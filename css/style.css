@@ -49,6 +49,7 @@ body {
 #cpu1-hand {
   position: absolute;
   top: 20px;
+  left: 50px;
   transform: translateX(0%) rotate(180deg);
   
   display: flex;
@@ -71,6 +72,7 @@ body {
 #player-hand {
   position: absolute;
   bottom: 20px;
+  left: 50px;
   transform: translateX(0%);
 
   display: flex;
