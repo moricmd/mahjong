@@ -22,6 +22,9 @@ export class Game {
 
     this.autoSort = true; // 自動整理ボタン
 
+    this.honba = 0; // 積み棒(親連荘・流局ごとに+1)
+    this.kyotaku = 0; // 供託(立直時に支払い)
+
     this.initGame();
   }
 
