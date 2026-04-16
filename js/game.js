@@ -15,8 +15,10 @@ export class Game {
 
     this.state = "INIT";
     this.turn = 0;
-    this.wall = [];
+    this.wall = []; // 山
     this.wallIndex = 0;
+
+    this.isMensen = true; // 門前フラグ
 
     this.autoSort = true; // 自動整理ボタン
 
