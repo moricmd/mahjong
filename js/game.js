@@ -274,13 +274,7 @@ updateUI() {
     }
   }
 
-  //
-  // 立直
-  //
-  function onRiichiDeclared() {
-  // 裏ドラ表示牌を1枚めくる
-  game.uraIndicators = [ game.wall.splice(-1)[0] ];
-}
+  
 
 
   // -------------------------
