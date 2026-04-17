@@ -254,12 +254,12 @@ updateUI() {
 
   // 通常ツモ
   drawTile() {
-    return game.wall.pop();
+    return this.wall.pop();
   }
 
   // 嶺上牌ツモ
   drawRinshan() {
-    return game.rinshan.pop();
+    return this.rinshan.pop();
   }
 
 
