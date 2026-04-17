@@ -143,7 +143,7 @@ updateUI() {
   document.getElementById("kyotaku-count").textContent = game.kyotaku;
 }
 
-  function setPlayMode(mode) {
+  setPlayMode(mode) {
   document.getElementById("play-mode").textContent = mode;
 }
 
