@@ -80,6 +80,7 @@ body {
   height: 60px;
   padding: 6px;
   border-radius: 6px;
+  align-items: center;
   display: flex;
   flex-direction: column;
   gap: 4px;
