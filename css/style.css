@@ -78,6 +78,7 @@ body {
 .counter-area {
   background: rgba(50, 50, 50, 0.6);
   padding: 6px;
+  margin: 20px 0;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
