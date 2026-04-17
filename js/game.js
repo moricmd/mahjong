@@ -42,21 +42,21 @@ export class Game {
   initGame() {
     
     // 自分の風をランダム決定（東・南・西）
-    const winds = ["east", "south", "west"];
+    const winds = [1, 2, 3]; // 東=1, 南=2, 西=3
     this.playerWind = winds[Math.floor(Math.random() * winds.length)];
 
     // 自分を基準としてCPU の座り位置を決める
-    if (this.playerWind === "east") {
+    if (this.playerWind === 1) { // 東のとき
       this.players[1].position = "top";   // CPU1
        this.players[2].position = "right"; // CPU2
     }
 
-    if (this.playerWind === "south") {
+    if (this.playerWind === 2) { // 南
       this.players[1].position = "left";  // CPU1
       this.players[2].position = "right"; // CPU2
     }
 
-    if (this.playerWind === "west") {
+    if (this.playerWind === 3) { // 西
       this.players[1].position = "top";   // CPU1
       this.players[2].position = "left";  // CPU2
     }
@@ -88,6 +88,7 @@ this.players[0].position = "bottom";
 
   // 残りが通常山
   this.wall = tiles;
+
 }
 
 
