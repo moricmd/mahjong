@@ -257,12 +257,12 @@ setPlayMode("対人戦");
   }
 
   // 通常ツモ
-  function drawTile() {
+  drawTile() {
     return game.wall.pop();
   }
 
   // 嶺上牌ツモ
-  function drawRinshan() {
+  drawRinshan() {
     return game.rinshan.pop();
   }
 
