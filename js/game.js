@@ -78,16 +78,16 @@ this.players[0].position = "bottom";
   shuffle(tiles);
 
   // 嶺上牌（4枚）を後ろから確保
-  game.rinshan = tiles.splice(-4);
+  this.rinshan = tiles.splice(-4);
 
   // ドラ表示牌（1枚）
-  game.doraIndicators = [ tiles.splice(-1)[0] ];
+  this.doraIndicators = [ tiles.splice(-1)[0] ];
 
   // 裏ドラはリーチ時にめくるので今は空
-  game.uraIndicators = [];
+  this.uraIndicators = [];
 
   // 残りが通常山
-  game.wall = tiles;
+  this.wall = tiles;
 }
 
 
@@ -133,14 +133,14 @@ updateUI() {
   const area = document.getElementById("dora-indicators");
   area.innerHTML = "";
 
-  game.doraIndicators.forEach(tile => {
+  this.doraIndicators.forEach(tile => {
     const img = document.createElement("img");
     img.src = tileToImage(tile); // あなたの tileToImage() を使用
     area.appendChild(img);
   });
 
-  document.getElementById("honba-count").textContent = game.honba;
-  document.getElementById("kyotaku-count").textContent = game.kyotaku;
+  document.getElementById("honba-count").textContent = this.honba;
+  document.getElementById("kyotaku-count").textContent = this.kyotaku;
 }
 
   setPlayMode(mode) {
@@ -277,7 +277,7 @@ updateUI() {
       lastTile,
       true,
       playerWind,
-      game.roundWind
+      1
       );
 
     if (result > 0) {
