@@ -1,5 +1,19 @@
 // yaku.js
 
+  // ------------------------------
+  // 1. 和了形チェック（最小構成）
+  // ------------------------------
+  const isWinning = checkWinningShape(tiles);
+  if (!isWinning) {
+    return { han: 0, yakuList: [] };
+  }
+
+  // ------------------------------
+  // 2. 役判定（最小構成）
+  // ------------------------------
+
+
+
 // ------------------------------
 // 役判定のメイン関数
 // ---------------------------------------------------------------------------------------------------------------------
@@ -12,14 +26,24 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
   // ------------------------------
   // 1. 和了形チェック（最小構成）
   // ------------------------------
-  const isWinning = checkWinningShape(tiles);
-  if (!isWinning) {
-    return { han: 0, yakuList: [] };
-  }
+    const isWinning = checkWinningShape(tiles);
+    if (!isWinning) {
+      return { han: 0, yakuList: [] };
+    }
 
   // ------------------------------
   // 2. 役判定（最小構成）
   // ------------------------------
+
+  
+  // ------------------------------
+  // 立直
+  // ------------------------------
+  if (player.isRiichi) {
+    yakuList.push("立直");
+    han += 1;
+  }
+  
 
   // ツモ
   if (isTsumo) {
@@ -37,7 +61,9 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
     han += 1;
   }
 
+  // ------------------------------
   // 役牌（風牌・三元牌）
+  // ------------------------------
   const yakuhaiHan = checkYakuhai(tiles, playerWind, roundWind);
   if (yakuhaiHan > 0) {
     yakuList.push("役牌");
@@ -48,30 +74,9 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
   // 役牌判定
   // ------------------------------
 
-  // 三元牌（白=1, 發=2, 中=3）
-  const dragonCount = { 1: 0, 2: 0, 3: 0 };
-
-  // 風牌（東=1, 南=2, 西=3, 北=4）
-  const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
-
-  for (const t of tiles) {
-    if (t.suit === "dragon") dragonCount[t.value]++;
-    if (t.suit === "wind") windCount[t.value]++;
-  }
-
-  // 三元牌の刻子
-  for (let d = 1; d <= 3; d++) {
-    if (dragonCount[d] >= 2) han++;   // 雀頭 or 刻子
-  }
-
-  // 自風（game.selfWind を wind の番号に変換）
-  const windMap = { east: 1, south: 2, west: 3, north: 4 };
-  const selfWindNum = windMap[player];
-  if (windCount[selfWindNum] >= 2) han++;
-
-  // 場風（東1局なら東=1）
-  const roundWindNum = 1; // 今は東固定
-  if (windCount[roundWindNum] >= 2) han++;
+  
+  
+  
 
 
   // ------------------------------
@@ -156,7 +161,6 @@ if (ittsuuBaseHan > 0) {
     return { han, yakuList };
 }
 
-}
 // ---------------------------------------------------------------------------------------------------------------------
 
 
@@ -210,13 +214,7 @@ function checkMelds(tiles) {
   return false;
 }
 
-// ------------------------------
-// 立直
-// ------------------------------
-if (player.isRiichi) {
-  yakuList.push("立直");
-  han += 1;
-}
+
 
 
 // ------------------------------
@@ -232,6 +230,33 @@ function isTanyao(tiles) {
 // ------------------------------
 // 役牌（風牌・三元牌）
 // ------------------------------
+
+  // 風牌（東=1, 南=2, 西=3, 北=4）
+  const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
+  // 三元牌（白=1, 發=2, 中=3）
+  const dragonCount = { 1: 0, 2: 0, 3: 0 };
+
+
+  for (const t of tiles) {
+    if (t.suit === "wind") windCount[t.value]++;
+    if (t.suit === "dragon") dragonCount[t.value]++;
+  }
+
+  // 三元牌の刻子
+  for (let d = 1; d <= 3; d++) {
+    if (dragonCount[d] >= 2) han++;
+  }
+
+  // 自風（game.selfWind を wind の番号に変換）
+  const windMap = { east: 1, south: 2, west: 3, north: 4 };
+  const selfWindNum = windMap[player];
+  if (windCount[selfWindNum] >= 2) han++;
+
+  // 場風（東1局なら東=1）
+  const roundWindNum = 1; // 今は東固定
+  if (windCount[roundWindNum] >= 2) han++;
+
+
 function checkYakuhai(tiles, playerWind, roundWind) {
   let han = 0;
 
@@ -249,6 +274,8 @@ function checkYakuhai(tiles, playerWind, roundWind) {
 
   return han;
 }
+
+
 
 // ------------------------------
 // 一盃口 + 二盃口
