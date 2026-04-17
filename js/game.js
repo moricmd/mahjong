@@ -74,7 +74,7 @@ this.players[0].position = "bottom";
   }
 
   buildWall() {
-  const tiles = generateAllTiles(); // 108枚（3麻）
+  const tiles = generateTiles(); // 108枚（3麻）
   shuffle(tiles);
 
   // 嶺上牌（4枚）を後ろから確保
