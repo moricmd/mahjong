@@ -267,44 +267,39 @@ updateUI() {
   // CHECK_WIN → 和了判定（最小）
   // -------------------------
   onCheckWin() {
-    const p = this.players[this.turn];
-    const lastTile = p.hand[p.hand.length - 1];
+  const p = this.players[this.turn];
+  const lastTile = p.hand[p.hand.length - 1];
 
-    // 最小の役判定（ツモ + タンヤオのみ）
-    const result = judgeYaku(
-      p,
-      p.hand,
-      lastTile,
-      true,
-      playerWind,
-      1
-      );
+  // 役判定
+  const { han, yakuList } = judgeYaku(
+    p,          // player
+    p.hand,     // handTiles
+    lastTile,   // winTile
+    true,       // isTsumo
+    1,          // playerWind（とりあえず東固定）
+    1           // roundWind（東場固定）
+  );
 
-    if (result > 0) {
-      const score = calcScore(result, 30, this.turn === 0, true);
-      console.log("和了！ han=", result, "score=", score);
-      alert(`プレイヤー${this.turn} ツモ和了（仮） han=${result}`);
-      this.state = "END_ROUND";
-      return;
-    }
-
-    
-
-    // 和了でなければ捨て牌へ
-    if (p.isCPU) {
-      // CPUは即ランダム捨て
-      const idx = Math.floor(Math.random() * p.hand.length);
-      p.discard(idx);
-
-      if (this.autoSort) this.sortHand(this.turn);
-      
-        this.state = "NEXT_TURN";
-
-    } else {
-        // 人間は捨て牌待ち
-        this.state = "DISCARD";
-    }
+  if (han > 0) {
+    const score = calcScore(han, 30, this.turn === 0, true);
+    console.log("和了！ han=", han, "yaku=", yakuList, "score=", score);
+    alert(`プレイヤー${this.turn} ツモ和了（仮） han=${han}\n${yakuList.join(" / ")}`);
+    this.state = "END_ROUND";
+    return;
   }
+
+  // 和了でなければ捨て牌へ
+  if (p.isCPU) {
+    const idx = Math.floor(Math.random() * p.hand.length);
+    p.discard(idx);
+
+    if (this.autoSort) this.sortHand(this.turn);
+    this.state = "NEXT_TURN";
+
+  } else {
+    this.state = "DISCARD";
+  }
+}
 
   
 
