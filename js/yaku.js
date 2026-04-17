@@ -1,41 +1,20 @@
 // yaku.js
 
-  // ------------------------------
-  // 1. 和了形チェック（最小構成）
-  // ------------------------------
-  const isWinning = checkWinningShape(tiles);
-  if (!isWinning) {
-    return { han: 0, yakuList: [] };
-  }
-
-  // ------------------------------
-  // 2. 役判定（最小構成）
-  // ------------------------------
-
-
-
 // ------------------------------
 // 役判定のメイン関数
-// ---------------------------------------------------------------------------------------------------------------------
+// ------------------------------
 export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, roundWind = 1) {
   const tiles = [...handTiles];
-
   const yakuList = [];
   let han = 0;
 
   // ------------------------------
-  // 1. 和了形チェック（最小構成）
+  // 和了形チェック
   // ------------------------------
-    const isWinning = checkWinningShape(tiles);
-    if (!isWinning) {
-      return { han: 0, yakuList: [] };
-    }
+  if (!checkWinningShape(tiles)) {
+    return { han: 0, yakuList: [] };
+  }
 
-  // ------------------------------
-  // 2. 役判定（最小構成）
-  // ------------------------------
-
-  
   // ------------------------------
   // 立直
   // ------------------------------
@@ -43,20 +22,19 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
     yakuList.push("立直");
     han += 1;
   }
-  
 
-  // ツモ
-  if (isTsumo) {
-    if (!game.isMenzen) return; //門前のみ
-    
+  // ------------------------------
+  // ツモ（門前のみ）
+  // ------------------------------
+  if (isTsumo && player.isMenzen) {
     yakuList.push("門前清自摸和");
     han += 1;
   }
 
-  // タンヤオ
+  // ------------------------------
+  // タンヤオ（喰いタンあり）
+  // ------------------------------
   if (isTanyao(tiles)) {
-    if (!game.isMenzen) return; //喰いタンなし
-    
     yakuList.push("断么九");
     han += 1;
   }
@@ -71,157 +49,113 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
   }
 
   // ------------------------------
-  // 役牌判定
+  // 一盃口・二盃口（門前のみ）
   // ------------------------------
-
-  // 風牌（東=1, 南=2, 西=3, 北=4）
-  const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
-  // 三元牌（白=1, 發=2, 中=3）
-  const dragonCount = { 1: 0, 2: 0, 3: 0 };
-
-
-  for (const t of tiles) {
-    if (t.suit === "wind") windCount[t.value]++;
-    if (t.suit === "dragon") dragonCount[t.value]++;
-  }
-
-  // 三元牌の刻子
-  for (let d = 1; d <= 3; d++) {
-    if (dragonCount[d] >= 2) han++;
-  }
-
-  // 自風（game.selfWind を wind の番号に変換）
-  const windMap = { east: 1, south: 2, west: 3, north: 4 };
-  const selfWindNum = playerWind;
-  if (windCount[selfWindNum] >= 2) han++;
-
-  // 場風（東1局なら東=1）
-  const roundWindNum = 1; // 今は東固定
-  if (windCount[roundWindNum] >= 2) han++;
-
-
-
-
-  // ------------------------------
-  // 一盃口 + 二盃口
-  // ------------------------------
-  const iipeikouHan = checkIipeikou(tiles);
-
-  if (!game.isMenzen){ 
-    return; // 門前のみ
-  
-    } else if (iipeikouHan === 3) {
-        yakuList.push("二盃口");
-        han += 3;
-        
+  if (player.isMenzen) {
+    const iipeikouHan = checkIipeikou(tiles);
+    if (iipeikouHan === 3) {
+      yakuList.push("二盃口");
+      han += 3;
     } else if (iipeikouHan === 1) {
       yakuList.push("一盃口");
       han += 1;
     }
+  }
 
-  // -------------------------------
-  // 平和
-  // -------------------------------
+  // ------------------------------
+  // 平和（門前のみ）
+  // ------------------------------
   const pinfuHan = checkPinfu(tiles, playerWind, roundWind);
-  if (game.isMenzen && pinfuHan > 0) {
+  if (player.isMenzen && pinfuHan > 0) {
     yakuList.push("平和");
     han += pinfuHan;
   }
 
+  // ------------------------------
+  // ドラ
+  // ------------------------------
+  const doraCount = countDora(tiles, game.doraIndicators);
+  if (doraCount > 0) {
+    yakuList.push(`ドラ${doraCount}`);
+    han += doraCount;
+  }
 
   // ------------------------------
-  // ドラ・裏ドラ
+  // 裏ドラ（立直時のみ）
   // ------------------------------
-  　const doraCount = countDora(tiles, game.doraIndicators);
-      if (doraCount > 0) {
-  　　yakuList.push(`ドラ${doraCount}`);
-  　　han += doraCount;
-　　}
+  if (player.isRiichi) {
+    const uraCount = countDora(tiles, game.uraIndicators);
+    if (uraCount > 0) {
+      yakuList.push(`裏ドラ${uraCount}`);
+      han += uraCount;
+    }
+  }
 
-　　if (player.isRiichi) {
-　　  const uraCount = countDora(tiles, game.uraIndicators);
-　　  if (uraCount > 0) {
-  　　  yakuList.push(`裏ドラ${uraCount}`);
-  　　  han += uraCount;
- 　　 }
-　　}
-
- 
-
-　// ------------------------------
+  // ------------------------------
   // 三色同刻
   // ------------------------------
-  const sanshokuDoukouHan = checkSanshokuDoukou(tiles);
-if (sanshokuDoukouHan > 0) {
-  yakuList.push("三色同刻");
-  han += sanshokuDoukouHan;
-}
-
-
-// ------------------------------
-// 一気通貫
-// ------------------------------
-const ittsuuBaseHan = checkIttsuu(tiles); // 2 を返す（門前基準）
-
-if (ittsuuBaseHan > 0) {
-  if (game.isMenzen) {
-    yakuList.push("一気通貫");
-    han += 2; // 門前
-  } else {
-    yakuList.push("一気通貫（食い下がり）");
-    han += 1; // 鳴き
+  const sanshokuHan = checkSanshokuDoukou(tiles);
+  if (sanshokuHan > 0) {
+    yakuList.push("三色同刻");
+    han += sanshokuHan;
   }
+
+  // ------------------------------
+  // 一気通貫（食い下がりあり）
+  // ------------------------------
+  const ittsuuHan = checkIttsuu(tiles);
+  if (ittsuuHan > 0) {
+    if (player.isMenzen) {
+      yakuList.push("一気通貫");
+      han += 2;
+    } else {
+      yakuList.push("一気通貫（食い下がり）");
+      han += 1;
+    }
+  }
+
+  return { han, yakuList };
 }
 
-
-
-    return { han, yakuList };
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-
-
+// ======================================================================
+// 役の定義
+// ======================================================================
 
 // ------------------------------
-// 役の定義
+// 和了形チェック
 // ------------------------------
 function checkWinningShape(tiles) {
   tiles.sort((a, b) => a.id - b.id);
 
-  // 雀頭候補を全探索
   for (let i = 0; i < tiles.length - 1; i++) {
     if (sameTile(tiles[i], tiles[i + 1])) {
       const remaining = tiles.slice();
       remaining.splice(i, 2);
-
-      if (checkMelds(remaining)) {
-        return true;
-      }
+      if (checkMelds(remaining)) return true;
     }
   }
   return false;
 }
 
 // ------------------------------
-// 面子分解（順子・刻子）
+// 面子分解
 // ------------------------------
 function checkMelds(tiles) {
   if (tiles.length === 0) return true;
 
   const first = tiles[0];
 
-  // 刻子チェック
+  // 刻子
   const same = tiles.filter(t => sameTile(t, first));
   if (same.length >= 3) {
     const rest = removeTiles(tiles, first, 3);
     if (checkMelds(rest)) return true;
   }
 
-  // 順子チェック（数牌のみ）
+  // 順子
   if (first.suit === "man" || first.suit === "pin" || first.suit === "sou") {
     const t2 = findTile(tiles, first.suit, first.value + 1);
     const t3 = findTile(tiles, first.suit, first.value + 2);
-
     if (t2 && t3) {
       const rest = removeSpecificTiles(tiles, [first, t2, t3]);
       if (checkMelds(rest)) return true;
@@ -230,9 +164,6 @@ function checkMelds(tiles) {
 
   return false;
 }
-
-
-
 
 // ------------------------------
 // タンヤオ
@@ -245,184 +176,138 @@ function isTanyao(tiles) {
 }
 
 // ------------------------------
-// 役牌（風牌・三元牌）
+// 役牌
 // ------------------------------
-  function checkYakuhai(tiles, playerWind, roundWind) {
-    let han = 0;
-
-    const counts = {};
-    tiles.forEach(t => {
-      const key = `${t.suit}-${t.value}`;
-      counts[key] = (counts[key] || 0) + 1;
-    });
-
-    if (counts[`dragon_white`] >= 3) yakuList.push(`役牌：白`);
-    if (counts[`dragon_green`] >= 3) yakuList.push("役牌：發");
-    if (counts[`dragon_red`] >= 3) yakuList.push("役牌：中");
-    if (counts[`wind_${playerWind}`] >= 3) yakuList.push("自風牌：東");
-    if (counts[`wind_${roundWind}`] >= 3) yakuList.push("場風牌：東");
-
-    return han;
-  }
-  
-  
-// ------------------------------
-// 一盃口 + 二盃口
-// ------------------------------
-function checkIipeikou(tiles) {
+function checkYakuhai(tiles, playerWind, roundWind) {
   let han = 0;
 
-  // スートごとに数字を集計
-  const suits = { man: [], pin: [], sou: [] };
-
-  for (const t of tiles) {
-    if (t.suit === "man" || t.suit === "pin" || t.suit === "sou") {
-      suits[t.suit].push(t.value);
-    }
-  }
-
-  let iipeikouCount = 0;  // 一盃口の数
-
-  for (const suit of ["man", "pin", "sou"]) {
-    const arr = suits[suit].sort((a, b) => a - b);
-
-    const shuntsuCount = {};
-
-    for (let i = 0; i < arr.length - 2; i++) {
-      const a = arr[i], b = arr[i + 1], c = arr[i + 2];
-      if (a + 1 === b && b + 1 === c) {
-        const key = `${suit}-${a}`;
-        shuntsuCount[key] = (shuntsuCount[key] || 0) + 1;
-      }
-    }
-
-    // 同じ順子が2回 → 一盃口
-    for (const key in shuntsuCount) {
-      if (shuntsuCount[key] >= 2) {
-        iipeikouCount++;
-      }
-    }
-  }
-
-  // 一盃口が2つ → 二盃口（3翻）
-  if (iipeikouCount >= 2) {
-    return 3;  // 二盃口
-  }
-
-  // 一盃口が1つ → 一盃口（1翻）
-  if (iipeikouCount === 1) {
-    return 1;
-  }
-
-  return 0;
-}
-
-
-// ------------------------------
-// 平和
-// ------------------------------
-function checkPinfu(tiles, playerWind, roundWind) {
-  // 風牌・三元牌が雀頭ならピンフにならない
   const counts = {};
   tiles.forEach(t => {
     const key = `${t.suit}-${t.value}`;
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  // 雀頭候補を探す（2枚のもの）
-  let pairSuit = null;
-  let pairValue = null;
+  // 三元牌
+  if (counts["dragon-1"] >= 3) han++;
+  if (counts["dragon-2"] >= 3) han++;
+  if (counts["dragon-3"] >= 3) han++;
 
-  for (const key in counts) {
-    if (counts[key] === 2) {
-      const [suit, value] = key.split("-");
-      pairSuit = suit;
-      pairValue = Number(value);
-      break;
+  // 自風
+  if (counts[`wind-${playerWind}`] >= 3) han++;
+
+  // 場風
+  if (counts[`wind-${roundWind}`] >= 3) han++;
+
+  return han;
+}
+
+// ------------------------------
+// 一盃口・二盃口
+// ------------------------------
+function checkIipeikou(tiles) {
+  const suits = { man: [], pin: [], sou: [] };
+
+  for (const t of tiles) {
+    if (suits[t.suit]) suits[t.suit].push(t.value);
+  }
+
+  let count = 0;
+
+  for (const suit of ["man", "pin", "sou"]) {
+    const arr = suits[suit].sort((a, b) => a - b);
+    const shuntsu = {};
+
+    for (let i = 0; i < arr.length - 2; i++) {
+      if (arr[i] + 1 === arr[i + 1] && arr[i + 1] + 1 === arr[i + 2]) {
+        const key = `${suit}-${arr[i]}`;
+        shuntsu[key] = (shuntsu[key] || 0) + 1;
+      }
+    }
+
+    for (const key in shuntsu) {
+      if (shuntsu[key] >= 2) count++;
     }
   }
 
-  // 雀頭が役牌ならピンフ不可
-  if (pairSuit === "dragon") return 0;
-  if (pairSuit === "wind") {
-    if (pairValue === playerWind) return 0;
-    if (pairValue === roundWind) return 0;
-  }
-
-  // 数牌だけを抽出
-  const nums = tiles.filter(t =>
-    t.suit === "man" || t.suit === "pin" || t.suit === "sou"
-  );
-
-  // 順子を数える
-  let shuntsuCount = 0;
-
-  const arr = nums
-    .map(t => ({ suit: t.suit, value: t.value }))
-    .sort((a, b) => a.value - b.value);
-
-  for (let i = 0; i < arr.length - 2; i++) {
-    const a = arr[i], b = arr[i + 1], c = arr[i + 2];
-    if (a.suit === b.suit && b.suit === c.suit &&
-        a.value + 1 === b.value && b.value + 1 === c.value) {
-      shuntsuCount++;
-    }
-  }
-
-  // 4 面子すべて順子ならピンフ
-  if (shuntsuCount >= 4) return 1;
-
+  if (count >= 2) return 3; // 二盃口
+  if (count === 1) return 1; // 一盃口
   return 0;
 }
 
+// ------------------------------
+// 平和
+// ------------------------------
+function checkPinfu(tiles, playerWind, roundWind) {
+  const counts = {};
+  tiles.forEach(t => {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  // 雀頭が役牌なら不可
+  for (const key in counts) {
+    if (counts[key] === 2) {
+      const [suit, value] = key.split("-");
+      const v = Number(value);
+
+      if (suit === "dragon") return 0;
+      if (suit === "wind" && (v === playerWind || v === roundWind)) return 0;
+    }
+  }
+
+  // 順子が4つ必要
+  const nums = tiles.filter(t => t.suit !== "wind" && t.suit !== "dragon");
+  let shuntsu = 0;
+
+  const arr = nums.sort((a, b) => a.value - b.value);
+
+  for (let i = 0; i < arr.length - 2; i++) {
+    if (
+      arr[i].suit === arr[i + 1].suit &&
+      arr[i + 1].suit === arr[i + 2].suit &&
+      arr[i].value + 1 === arr[i + 1].value &&
+      arr[i + 1].value + 1 === arr[i + 2].value
+    ) {
+      shuntsu++;
+    }
+  }
+
+  return shuntsu >= 4 ? 1 : 0;
+}
 
 // ------------------------------
-// ドラ・裏ドラ
+// ドラ
 // ------------------------------
-game.doraIndicators = [ drawTileFromDeadWall() ];
-
-function countDora(tiles, doraIndicators) {
+function countDora(tiles, indicators) {
   let count = 0;
 
-  for (const ind of doraIndicators) {
-    const next = nextTile(ind); // 例：1m → 2m、9m → 1m、白→發→中→白
+  for (const ind of indicators) {
+    const next = nextTile(ind);
     for (const t of tiles) {
-      if (t.suit === next.suit && t.value === next.value) {
-        count++;
-      }
+      if (t.suit === next.suit && t.value === next.value) count++;
     }
   }
 
   return count;
 }
 
- // 立直時のみ
-  function onRiichiDeclared() {
-  // 裏ドラ表示牌を1枚めくる
-  game.uraIndicators = [ game.wall.splice(-1)[0] ];
-}
-
-
-
 // ------------------------------
 // 三色同刻
 // ------------------------------
 function checkSanshokuDoukou(tiles) {
-  // suit-value のカウント
   const counts = {};
   tiles.forEach(t => {
     const key = `${t.suit}-${t.value}`;
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  // 数字 1〜9 でチェック
   for (let n = 1; n <= 9; n++) {
-    const man = counts[`man-${n}`] >= 3;
-    const pin = counts[`pin-${n}`] >= 3;
-    const sou = counts[`sou-${n}`] >= 3;
-
-    if (man && pin && sou) {
-      return 2; // 三色同刻は 2 翻
+    if (
+      counts[`man-${n}`] >= 3 &&
+      counts[`pin-${n}`] >= 3 &&
+      counts[`sou-${n}`] >= 3
+    ) {
+      return 2;
     }
   }
 
@@ -433,39 +318,27 @@ function checkSanshokuDoukou(tiles) {
 // 一気通貫
 // ------------------------------
 function checkIttsuu(tiles) {
-  // スートごとに数字を集計
   const suits = { man: [], pin: [], sou: [] };
 
   for (const t of tiles) {
-    if (t.suit === "man" || t.suit === "pin" || t.suit === "sou") {
-      suits[t.suit].push(t.value);
-    }
+    if (suits[t.suit]) suits[t.suit].push(t.value);
   }
 
-  // スートごとに一気通貫をチェック
   for (const suit of ["man", "pin", "sou"]) {
     const arr = suits[suit].sort((a, b) => a - b);
-
-    // 数字のカウント
     const count = {};
-    arr.forEach(v => count[v] = (count[v] || 0) + 1);
 
-    // 123, 456, 789 が作れるか
-    const has123 = count[1] > 0 && count[2] > 0 && count[3] > 0;
-    const has456 = count[4] > 0 && count[5] > 0 && count[6] > 0;
-    const has789 = count[7] > 0 && count[8] > 0 && count[9] > 0;
+    arr.forEach(v => (count[v] = (count[v] || 0) + 1));
 
-    if (has123 && has456 && has789) {
-      return 2; // 一気通貫は 2 翻（雀魂基準）
+    if (count[1] && count[2] && count[3] &&
+        count[4] && count[5] && count[6] &&
+        count[7] && count[8] && count[9]) {
+      return 2;
     }
   }
 
   return 0;
 }
-
-
-
-
 
 // ------------------------------
 // 補助関数
