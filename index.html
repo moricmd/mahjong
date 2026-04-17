@@ -17,23 +17,28 @@
   -->
 
   
-  <div id="top-left-info">
+<div id="top-left-info">
   <div class="dora-area">
     <div class="dora-title">ドラ</div>
-    <div id="dora-indicators" class="dora-tiles">
-      <!-- JS でドラ表示牌を追加 -->
-    </div>
+    <div id="dora-indicators" class="dora-tiles"></div>
   </div>
 
-  <div class="round-info">
-    <div class="honba">本場: <span id="honba-count">0</span></div>
-    <div class="kyotaku">供託: <span id="kyotaku-count">0</span></div>
+  <div class="counter-area">
+    <div class="counter-row">
+      <img src="img/honba.png" class="counter-icon">
+      <span class="counter-text">× <span id="honba-count">0</span></span>
+    </div>
+    <div class="counter-row">
+      <img src="img/kyotaku.png" class="counter-icon">
+      <span class="counter-text">× <span id="kyotaku-count">0</span></span>
+    </div>
   </div>
 
   <div class="mode-info">
     <span id="play-mode">CPU戦</span>
   </div>
 </div>
+
 
 
 <div id="table">
