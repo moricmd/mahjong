@@ -73,7 +73,7 @@ this.players[0].position = "bottom";
     this.deal();
   }
 
-  function buildWall() {
+  buildWall() {
   const tiles = generateAllTiles(); // 108枚（3麻）
   shuffle(tiles);
 
