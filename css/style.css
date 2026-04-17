@@ -85,6 +85,9 @@ body {
   gap: 4px;
 }
 
+.counter-area img {
+  height: 45px;
+
 .counter-row {
   display: flex;
   align-items: center;
