@@ -6,18 +6,21 @@ let game = null;
 window.addEventListener("load", () => {
   game = new Game();
 
-  document.getElementById("next-btn").onclick = () => {
-    game.step();
-  };
-});
-
+  
 // モード表示
 if (true){
   game.setPlayMode("CPU戦");
 
+/*
 } else {
   game.setPlayMode("対人戦");
 }
+*/
+
+  document.getElementById("next-btn").onclick = () => {
+    game.step();
+  };
+});
 
 
 //
