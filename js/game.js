@@ -43,10 +43,10 @@ export class Game {
     
     // 自分の風をランダム決定（東・南・西）
     const winds = ["east", "south", "west"];
-    this.selfWind = winds[Math.floor(Math.random() * winds.length)];
+    this.playerWind = winds[Math.floor(Math.random() * winds.length)];
 
     // 自分を基準としてCPU の座り位置を決める
-    if (this.selfWind === "east") {
+    if (this.playerWind === "east") {
       this.players[1].position = "top";   // CPU1
        this.players[2].position = "right"; // CPU2
     }
