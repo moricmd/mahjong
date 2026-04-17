@@ -126,6 +126,35 @@ updateUI() {
   renderDiscards(2, this.players[2].discards);
 }
 
+  // ------------------------------
+  // ドラ表示エリア
+  // ------------------------------
+  function updateDoraUI() {
+  const area = document.getElementById("dora-indicators");
+  area.innerHTML = "";
+
+  game.doraIndicators.forEach(tile => {
+    const img = document.createElement("img");
+    img.src = tileToImage(tile); // あなたの tileToImage() を使用
+    area.appendChild(img);
+  });
+
+  document.getElementById("honba-count").textContent = game.honba;
+  document.getElementById("kyotaku-count").textContent = game.kyotaku;
+}
+
+  function setPlayMode(mode) {
+  document.getElementById("play-mode").textContent = mode;
+}
+
+// 例：CPU戦
+setPlayMode("CPU戦");
+
+// 例：対人戦
+setPlayMode("対人戦");
+
+
+
 
   // ------------------------------
   // 自動理牌
