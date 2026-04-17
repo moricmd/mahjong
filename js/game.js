@@ -129,7 +129,7 @@ updateUI() {
   // ------------------------------
   // ドラ表示エリア
   // ------------------------------
-  function updateDoraUI() {
+  updateDoraUI() {
   const area = document.getElementById("dora-indicators");
   area.innerHTML = "";
 
