@@ -11,6 +11,15 @@ window.addEventListener("load", () => {
   };
 });
 
+// モード表示
+if (true){
+  setPlayMode("CPU戦");
+
+} else {
+  setPlayMode("対人戦");
+}
+
+
 //
 //自動理牌
 //
