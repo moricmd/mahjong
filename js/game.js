@@ -147,11 +147,7 @@ updateUI() {
   document.getElementById("play-mode").textContent = mode;
 }
 
-// 例：CPU戦
-setPlayMode("CPU戦");
 
-// 例：対人戦
-setPlayMode("対人戦");
 
 
 
