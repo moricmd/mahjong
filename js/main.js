@@ -11,8 +11,10 @@ window.addEventListener("load", () => {
 if (true){
   game.setPlayMode("CPU戦");
 
+
+} 
 /*
-} else {
+else {
   game.setPlayMode("対人戦");
 }
 */
