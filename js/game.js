@@ -271,12 +271,19 @@ updateUI() {
     const lastTile = p.hand[p.hand.length - 1];
 
     // 最小の役判定（ツモ + タンヤオのみ）
-    const { han } = judgeYaku(p.hand, lastTile, true);
+    const result = judgeYaku(
+      p,
+      p.hand,
+      lastTile,
+      true
+      p.wind,
+      game.roundWind
+      );
 
-    if (han > 0) {
-      const score = calcScore(han, 30, this.turn === 0, true);
-      console.log("和了！ han=", han, "score=", score);
-      alert(`プレイヤー${this.turn} ツモ和了（仮） han=${han}`);
+    if (reslut > 0) {
+      const score = calcScore(result, 30, this.turn === 0, true);
+      console.log("和了！ han=", result, "score=", score);
+      alert(`プレイヤー${this.turn} ツモ和了（仮） han=${result}`);
       this.state = "END_ROUND";
       return;
     }
