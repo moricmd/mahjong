@@ -35,8 +35,6 @@ body {
 }
 
 
-/* ドラ表示 */
-
 #top-left-info {
   position: absolute;
   top: 10px;
@@ -52,7 +50,7 @@ body {
   gap: 10px;
 }
 
-/* ドラ表示エリア */
+/* ドラ表示 */
 .dora-area {
   background: rgba(50, 50, 50, 0.6);
   padding: 6px;
@@ -76,17 +74,33 @@ body {
   border-radius: 3px;
 }
 
-/* 本場・供託 */
-.round-info {
+/* 積み棒・供託 */
+.counter-area {
   background: rgba(50, 50, 50, 0.6);
   padding: 6px;
   border-radius: 6px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
-/* プレイモード表示 */
+.counter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.counter-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.counter-text {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* プレイモード */
 .mode-info {
   background: rgba(50, 50, 50, 0.6);
   padding: 6px;
@@ -94,6 +108,7 @@ body {
   text-align: center;
   font-weight: bold;
 }
+
 
 
 
