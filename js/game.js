@@ -275,12 +275,12 @@ updateUI() {
       p,
       p.hand,
       lastTile,
-      true
-      p.wind,
+      true,
+      playerWind,
       game.roundWind
       );
 
-    if (reslut > 0) {
+    if (result > 0) {
       const score = calcScore(result, 30, this.turn === 0, true);
       console.log("和了！ han=", result, "score=", score);
       alert(`プレイヤー${this.turn} ツモ和了（仮） han=${result}`);
