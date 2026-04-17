@@ -118,7 +118,6 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
       yakuList.push("一盃口");
       han += 1;
     }
- }
 
   // -------------------------------
   // 平和
