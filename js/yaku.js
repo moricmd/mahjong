@@ -119,6 +119,12 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
  　　 }
 　　}
 
+  // 立直時のみ
+  function onRiichiDeclared() {
+  // 裏ドラ表示牌を1枚めくる
+  game.uraIndicators = [ game.wall.splice(-1)[0] ];
+}
+
 
 　// ------------------------------
   // 三色同刻
