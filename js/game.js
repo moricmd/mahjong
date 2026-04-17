@@ -51,12 +51,12 @@ export class Game {
        this.players[2].position = "right"; // CPU2
     }
 
-    if (this.selfWind === "south") {
+    if (this.playerWind === "south") {
       this.players[1].position = "left";  // CPU1
       this.players[2].position = "right"; // CPU2
     }
 
-    if (this.selfWind === "west") {
+    if (this.playerWind === "west") {
       this.players[1].position = "top";   // CPU1
       this.players[2].position = "left";  // CPU2
     }
