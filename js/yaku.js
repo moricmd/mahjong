@@ -3,7 +3,7 @@
 // ------------------------------
 // 役判定のメイン関数
 // ---------------------------------------------------------------------------------------------------------------------
-export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind = 1) {
+export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, roundWind = 1) {
   const tiles = [...handTiles];
 
   const yakuList = [];
@@ -54,7 +54,7 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
   // 風牌（東=1, 南=2, 西=3, 北=4）
   const windCount = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
-  for (const t of hand) {
+  for (const t of tiles) {
     if (t.suit === "dragon") dragonCount[t.value]++;
     if (t.suit === "wind") windCount[t.value]++;
   }
@@ -66,7 +66,7 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
 
   // 自風（game.selfWind を wind の番号に変換）
   const windMap = { east: 1, south: 2, west: 3, north: 4 };
-  const selfWindNum = windMap[selfWind];
+  const selfWindNum = windMap[player];
   if (windCount[selfWindNum] >= 2) han++;
 
   // 場風（東1局なら東=1）
@@ -82,15 +82,15 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
   if (!game.isMensen){ 
     return; // 門前のみ
   
-  } else {
-      if (iipeikouHan === 3) {
-      yakuList.push("二盃口");
-      han += 3;
+    } else if (iipeikouHan === 3) {
+        yakuList.push("二盃口");
+        han += 3;
         
-  } else if (iipeikouHan === 1) {
-    yakuList.push("一盃口");
-    han += 1;
-  }
+    } else if (iipeikouHan === 1) {
+      yakuList.push("一盃口");
+      han += 1;
+    }
+ }
 
   // -------------------------------
   // 平和
@@ -102,11 +102,11 @@ export function judgeYaku(handTiles, winTile, isTsumo, playerWind = 1, roundWind
   }
 
 
-　// ------------------------------
-　// ドラ・裏ドラ
-　// ------------------------------
+  // ------------------------------
+  // ドラ・裏ドラ
+  // ------------------------------
   　const doraCount = countDora(tiles, game.doraIndicators);
-　　if (doraCount > 0) {
+      if (doraCount > 0) {
   　　yakuList.push(`ドラ${doraCount}`);
   　　han += doraCount;
 　　}
@@ -156,6 +156,7 @@ if (ittsuuBaseHan > 0) {
     return { han, yakuList };
 }
 
+}
 // ---------------------------------------------------------------------------------------------------------------------
 
 
