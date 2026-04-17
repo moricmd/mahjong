@@ -272,17 +272,25 @@ updateUI() {
   const lastTile = p.hand[p.hand.length - 1];
 
   // 役判定
-  const { han, yakuList } = judgeYaku(
+  const result = judgeYaku(
     p,                // player
     p.hand,           // handTiles
     lastTile,         // winTile
     true,             // isTsumo
-    this.playerWind,  // playerWind（とりあえず東固定）
+    this.playerWind,  // playerWind
     1                 // roundWind（東場固定）
   );
 
+  const { han, yakuList } = result;
+
   if (han > 0) {
-    const score = calcScore(han, 30, this.turn === 0, true);
+    const score = calcScore(
+      result,          // ← ここが最重要（オブジェクトで渡す）
+      30,
+      this.turn === 0,
+      true
+    );
+
     console.log("和了！ han=", han, "yaku=", yakuList, "score=", score);
     alert(`プレイヤー${this.turn} ツモ和了（仮） han=${han}\n${yakuList.join(" / ")}`);
     this.state = "END_ROUND";
@@ -301,6 +309,7 @@ updateUI() {
     this.state = "DISCARD";
   }
 }
+
 
   
 
