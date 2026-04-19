@@ -5,6 +5,8 @@
   <title>三人麻雀プロトタイプ</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
+
 <body>
 
   
@@ -13,49 +15,89 @@
 
     <div>状態: <span id="state"></span></div>
     <div>巡目: <span id="turn"></span></div> 
-  
+
+
+<!-------------------- タイトル画面 -------------------->
+<div id="title-screen" class="screen">
+  <h1>Mahjong Game</h1>
+  <button id="to-login">ログイン</button>
+</div>
 
   
-<div id="top-left-info">
-  <div class="dora-area">
-    <div class="dora-title">ドラ</div>
-    <div id="dora-indicators" class="dora-tiles"></div>
-  </div>
+<!-------------------- ログイン画面 -------------------->
+<div id="login-screen" class="screen">
+  <h2>ログイン</h2>
+  <input id="login-user" placeholder="ユーザー名">
+  <input id="login-pass" type="password" placeholder="パスワード">
+  <button id="login-btn">ログイン</button>
+  <button id="to-register">アカウント作成</button>
+</div>
 
-  <div class="counter-area">
-    <div class="counter-row">
-      <img src="img/立直棒.png" class="counter-icon">
-      <span class="counter-text">× <span id="honba-count">0</span></span>
-      <img src="img/積み棒.png" class="counter-icon">
-      <span class="counter-text">× <span id="kyotaku-count">0</span></span>
+  
+<!-------------------- アカウント作成画面 -------------------->
+<div id="register-screen" class="screen">
+  <h2>アカウント作成</h2>
+  <input id="reg-user" placeholder="ユーザー名">
+  <input id="reg-pass" type="password" placeholder="パスワード">
+  <button id="register-btn">作成</button>
+  <button id="back-login">戻る</button>
+</div>
+
+  
+  <!-------------------- メニュー画面 -------------------->
+<div id="menu-screen" class="screen">
+  <h2>メニュー</h2>
+  <button id="cpu-mode">CPU戦</button>
+  <button id="pvp-mode">対人戦</button>
+</div>
+
+  
+<!-- ゲーム画面 
+  --------------------------------------------------------------------------------------------------------------------->
+<div id="game-screen" class="screen">
+  
+
+  <div id="top-left-info">
+    <div class="dora-area">
+      <div class="dora-title">ドラ</div>
+      <div id="dora-indicators" class="dora-tiles"></div>
+    </div>
+
+    <div class="counter-area">
+      <div class="counter-row">
+        <img src="img/立直棒.png" class="counter-icon">
+        <span class="counter-text">× <span id="honba-count">0</span></span>
+        <img src="img/積み棒.png" class="counter-icon">
+        <span class="counter-text">× <span id="kyotaku-count">0</span></span>
+      </div>
+    </div>
+
+    <div class="mode-info">
+      <span id="play-mode">CPU戦</span>
     </div>
   </div>
 
-  <div class="mode-info">
-    <span id="play-mode">CPU戦</span>
+
+
+  <div id="table">
+
+    <div id="wall">東1局</div>
+
+    <div id="cpu1-hand" class="hand cpu-hand"></div>
+    <div id="cpu1-discards" class="discards cpu-discards"></div>
+
+    <div id="cpu2-hand" class="hand cpu-hand"></div>
+    <div id="cpu2-discards" class="discards cpu-discards"></div>
+
+    <div id="player-hand" class="hand player-hand"></div>
+    <div id="player-discards" class="discards player-discards"></div>
+
   </div>
-</div>
 
-
-
-<div id="table">
-
-  <div id="wall">東1局</div>
-
-  <div id="cpu1-hand" class="hand cpu-hand"></div>
-  <div id="cpu1-discards" class="discards cpu-discards"></div>
-
-  <div id="cpu2-hand" class="hand cpu-hand"></div>
-  <div id="cpu2-discards" class="discards cpu-discards"></div>
-
-  <div id="player-hand" class="hand player-hand"></div>
-  <div id="player-discards" class="discards player-discards"></div>
-
-</div>
-
-<div>
-  <button id="next-btn">次の処理へ</button>
-  <button id="auto-sort-btn">自動整理：OFF</button>
+  <div>
+    <button id="next-btn">次の処理へ</button>
+    <button id="auto-sort-btn">自動整理：OFF</button>
+  </div>
 </div>
 
 
