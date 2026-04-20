@@ -10,15 +10,28 @@ window.addEventListener("load", () => {
 // モード表示
 if (true){
   game.setPlayMode("CPU戦");
-
-
 } 
+
 /*
 else {
   game.setPlayMode("対人戦");
 }
 */
 
+
+// game画面を呼ぶ
+function startCPUmode() {
+  window.game = new Game();
+  game.setPlayMode("CPU戦");
+}
+
+function startPVPmode() {
+  window.game = new Game();
+  game.setPlayMode("対人戦");
+}
+
+
+  
   document.getElementById("next-btn").onclick = () => {
     game.step();
   };
