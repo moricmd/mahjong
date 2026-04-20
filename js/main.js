@@ -38,9 +38,25 @@ function startPVPmode() {
 });
 
 // ------------------------------
-// 画面遷移
+// 画面遷移(ログインをスキップ)
 // ------------------------------
 
+// タイトル → メニュー
+document.getElementById("start-btn").onclick = () => {
+  showScreen("menu-screen");
+};
+
+// メニュー → CPU戦（ゲーム画面）
+document.getElementById("cpu-mode").onclick = () => {
+  showScreen("game-screen");
+  startCPUmode();
+};
+
+/*
+
+// ------------------------------
+// 画面遷移
+// ------------------------------
 // タイトル → ログイン
 document.getElementById("to-login").onclick = () => {
   showScreen("login-screen");
@@ -73,6 +89,8 @@ document.getElementById("pvp-mode").onclick = () => {
   showScreen("game-screen");
   startPVPmode(); // ← 後で実装
 };
+
+*/
 
 
 
