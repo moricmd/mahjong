@@ -320,6 +320,42 @@ updateUI() {
   }
 }
 
+  // ------------------------------
+  // ロン判定
+  // ------------------------------
+  onCheckRon(discardTile, discarderIndex) {
+  // 全プレイヤーをチェック
+  for (let i = 0; i < 3; i++) {
+    if (i === discarderIndex) continue; // 自分の捨て牌ではロンできない
+
+    const p = this.players[i];
+
+    // CPU もプレイヤーも同じ判定
+    const tempHand = [...p.hand, discardTile];
+
+    const result = judgeYaku(
+      p,
+      tempHand,
+      discardTile,
+      false,              // isTsumo = false（ロン）
+      this.playerWind,    // 自風
+      1                   // 場風（東場固定）
+    );
+
+    if (result.han > 0) {
+      const score = calcScore(result, 30, i === 0, false);
+
+      alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+
+      this.state = "END_ROUND";
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 
   
 
