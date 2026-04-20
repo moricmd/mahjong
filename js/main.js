@@ -24,10 +24,48 @@ else {
   };
 });
 
+// ------------------------------
+// 画面遷移
+// ------------------------------
 
-//
-//自動理牌
-//
+// タイトル → ログイン
+document.getElementById("to-login").onclick = () => {
+  showScreen("login-screen");
+};
+
+// ログイン → メニュー（認証は後で実装）
+document.getElementById("login-btn").onclick = () => {
+  // 認証処理は後で追加
+  showScreen("menu-screen");
+};
+
+// ログイン → アカウント作成
+document.getElementById("to-register").onclick = () => {
+  showScreen("register-screen");
+};
+
+// アカウント作成 → ログイン
+document.getElementById("back-login").onclick = () => {
+  showScreen("login-screen");
+};
+
+// メニュー → CPU戦
+document.getElementById("cpu-mode").onclick = () => {
+  showScreen("game-screen");
+  startCPUmode(); // ← 後で実装
+};
+
+// メニュー → 対人戦
+document.getElementById("pvp-mode").onclick = () => {
+  showScreen("game-screen");
+  startPVPmode(); // ← 後で実装
+};
+
+
+
+// ------------------------------
+// 自動理牌
+// ------------------------------
 const autoSortBtn = document.getElementById("auto-sort-btn");
 let autoSort = true;
 
