@@ -405,7 +405,6 @@ function showScreen(id) {
     document.getElementById(id).style.display = "flex";
   }
   
-  document.getElementById(id).style.display = "flex";
 }
 
 
