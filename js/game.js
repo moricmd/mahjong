@@ -349,15 +349,5 @@ function showScreen(id) {
   document.getElementById(id).style.display = "flex";
 }
 
-// タイトル → メニュー
-document.getElementById("start-btn").onclick = () => {
-  showScreen("menu-screen");
-};
-
-// メニュー → CPU戦（ゲーム画面）
-document.getElementById("cpu-mode").onclick = () => {
-  showScreen("game-screen");
-  startCPUmode();
-};
 
 
