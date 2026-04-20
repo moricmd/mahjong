@@ -304,7 +304,13 @@ updateUI() {
   // 和了でなければ捨て牌へ
   if (p.isCPU) {
     const idx = Math.floor(Math.random() * p.hand.length);
+    const discardTile = p.hand[idx];
+    
     p.discard(idx);
+
+    
+    // ロン確認
+    if (this.onCheckRon(discardTile, this.turn)) return;
 
     if (this.autoSort) this.sortHand(this.turn);
     this.state = "NEXT_TURN";
@@ -325,7 +331,12 @@ updateUI() {
     if (this.state !== "DISCARD") return;
 
     const p = this.players[0];
+    const discardTile = p.hand[index];
+  
     p.discard(index);
+
+    // ロン確認
+    if (this.onCheckRon(discardTile, 0)) return;
 
     // 打牌時に理牌
     if (this.autoSort) this.sortHand(0);
