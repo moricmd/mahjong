@@ -100,6 +100,10 @@ this.players[0].position = "bottom";
       this.players.forEach(p => p.draw(this.wall[this.wallIndex++]));
     }
 
+    if (this.autoSort){
+      this.sorthand(0);
+    }
+
     this.state = "TURN_START";
     this.updateUI();
   }
