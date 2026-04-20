@@ -31,13 +31,7 @@ function startPVPmode() {
 }
 
 
-  
-  document.getElementById("next-btn").onclick = () => {
-    game.step();
-  };
-});
-
-// ------------------------------
+  // ------------------------------
 // 画面遷移(ログインをスキップ)
 // ------------------------------
 
@@ -91,6 +85,15 @@ document.getElementById("pvp-mode").onclick = () => {
 };
 
 */
+
+
+
+  
+  document.getElementById("next-btn").onclick = () => {
+    game.step();
+  };
+});
+
 
 
 
