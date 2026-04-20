@@ -397,6 +397,14 @@ updateUI() {
 // -------------------------------
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
+
+  
+  if (id === "game-screen") {
+    document.getElementById(id).style.display = "block"; // ゲーム画面はblock
+  } else {
+    document.getElementById(id).style.display = "flex";
+  }
+  
   document.getElementById(id).style.display = "flex";
 }
 
