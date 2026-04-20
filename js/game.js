@@ -340,3 +340,24 @@ updateUI() {
     this.state = "TURN_START";
   }
 }
+
+// -------------------------------
+// 画面切り替え
+// -------------------------------
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
+  document.getElementById(id).style.display = "flex";
+}
+
+// タイトル → メニュー
+document.getElementById("start-btn").onclick = () => {
+  showScreen("menu-screen");
+};
+
+// メニュー → CPU戦（ゲーム画面）
+document.getElementById("cpu-mode").onclick = () => {
+  showScreen("game-screen");
+  startCPUmode();
+};
+
+
