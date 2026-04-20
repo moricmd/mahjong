@@ -19,7 +19,7 @@ body {
 }
 
 #game-screen {
-  diosplay: block !important;
+  display: block !important;
 
 
   
