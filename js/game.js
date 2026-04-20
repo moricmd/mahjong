@@ -101,7 +101,7 @@ this.players[0].position = "bottom";
     }
 
     if (this.autoSort){
-      this.sorthand(0);
+      this.sortHand(0);
     }
 
     this.state = "TURN_START";
