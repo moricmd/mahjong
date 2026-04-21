@@ -60,7 +60,7 @@ export function judgeYaku(
   }
 
   // 平和
-  const pinfuHan = checkPinfu(tiles, playerWind, roundWind);
+  const pinfuHan = checkPinfu(tiles, playerWind, roundWind, winTile);
   if (player.isMenzen && pinfuHan > 0) {
     yakuList.push("平和");
     han += pinfuHan;
