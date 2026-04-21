@@ -113,7 +113,17 @@ export class Game {
     renderDiscards(1, this.players[1].discards);
     renderDiscards(2, this.players[2].discards);
 
-    updateTableInfo() {
+    
+
+    this.updateTableInfo();
+
+  }
+
+
+  // -------------------------
+  // 山の表示
+  // -------------------------
+  updateTableInfo() {
   const roundNames = ["", "東", "南", "西"];
   document.getElementById("round-display").textContent =
     `${roundNames[this.round]}${this.kyoku}局`;
@@ -156,12 +166,6 @@ export class Game {
   document.getElementById("score-right").textContent  = this.scores[2];
   document.getElementById("score-left").textContent   = this.scores[1];
 }
-
-
-    this.updateTableInfo();
-
-  }
-
 
   
   // ------------------------------
