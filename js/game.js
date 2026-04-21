@@ -155,7 +155,7 @@ updateUI() {
 
 
   // ------------------------------
-  // 立直フラグ
+  // 一発フラグ
   // ------------------------------
 
 　/*
@@ -164,10 +164,13 @@ updateUI() {
   player.isRiichi = true;
 　player.isIppatsu = true;
 
-  // 誰かの副露が入ったとき（一発の条件）
+  // 誰かの副露が入ったとき一発を消す
 　for (const pl of this.players) {
   pl.isIppatsu = false;
 }
+
+  // 次巡の打牌で一発を消す
+  player.isIppatsu = false;
 
 */
 
