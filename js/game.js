@@ -217,6 +217,134 @@ updateUI() {
 
 
 
+ // =========================
+ // 副露処理 
+ // =========================
+ 
+   // -------------------------
+   // ポン
+   // -------------------------
+　 onPon(playerIndex, tile) {
+     const p = this.players[playerIndex];
+
+     // 手牌から2枚抜く
+     let removed = 0;
+     for (let i = 0; i < p.hand.length && removed < 2; i++) {
+       if (sameTile(p.hand[i], tile)) {
+         p.hand.splice(i, 1);
+         i--;
+         removed++;
+       }
+     }
+
+     // 副露情報を追加
+     p.melds.push({
+       type: "pon",
+       tiles: [tile, tile, tile]
+     });
+
+     p.isMenzen = false;
+
+     // 一発消滅
+     this.clearIppatsu();
+
+     this.turn = playerIndex;
+     this.state = "DISCARD";
+   }
+
+
+  
+   // -------------------------
+   // カン
+   // -------------------------
+
+     // 1. 暗槓
+     onAnkan(playerIndex, tile) {
+     const p = this.players[playerIndex];
+
+     // 手牌から4枚抜く
+     let removed = 0;
+     for (let i = 0; i < p.hand.length && removed < 4; i++) {
+       if (sameTile(p.hand[i], tile)) {
+         p.hand.splice(i, 1);
+         i--;
+         removed++;
+       }
+     }
+
+     p.melds.push({
+       type: "ankan",
+       tiles: [tile, tile, tile, tile]
+     });
+
+     p.kanCount++;
+
+     // カンドラ追加
+     this.addKanDora();
+
+     // 一発消滅
+     this.clearIppatsu();
+
+     this.state = "DRAW"; // 嶺上牌ツモ
+   }
+
+
+  
+     // 2. 大明槓
+     onDaiminkan(playerIndex, tile) {
+     const p = this.players[playerIndex];
+
+     // 手牌から3枚抜く
+     let removed = 0;
+     for (let i = 0; i < p.hand.length && removed < 3; i++) {
+       if (sameTile(p.hand[i], tile)) {
+         p.hand.splice(i, 1);
+         i--;
+         removed++;
+       }
+     }
+
+     p.melds.push({
+       type: "daiminkan",
+       tiles: [tile, tile, tile, tile]
+     });
+
+     p.isMenzen = false;
+      p.kanCount++;
+
+     this.addKanDora();
+     this.clearIppatsu();
+
+     this.turn = playerIndex;
+     this.state = "DRAW";
+   }
+
+
+  
+     // 3. 加槓
+     onKakan(playerIndex, tile) {
+     const p = this.players[playerIndex];
+
+     // 手牌から1枚抜く
+     const idx = p.hand.findIndex(t => sameTile(t, tile));
+     p.hand.splice(idx, 1);
+
+     // 既存のポンをカンに昇格
+     const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
+     meld.type = "kakan";
+     meld.tiles.push(tile);
+
+     p.kanCount++;
+
+     this.addKanDora();
+     this.clearIppatsu();
+
+     this.state = "DRAW";
+   }
+
+
+
+
 
   
   // -------------------------
