@@ -112,6 +112,42 @@ export class Game {
     renderDiscards(0, this.players[0].discards);
     renderDiscards(1, this.players[1].discards);
     renderDiscards(2, this.players[2].discards);
+
+    updateTableInfo() {
+  // 局表示
+  const roundNames = ["", "東", "南", "西"];
+  document.getElementById("round-display").textContent =
+    `${roundNames[this.round]}${this.kyoku}局`;
+
+  // 残り山
+  const remain = this.wall.length - this.wallIndex;
+  document.getElementById("wall-count").textContent = `残り ${remain}`;
+
+  // 風の文字
+  const windChar = {1:"東", 2:"南", 3:"西", 4:"北"};
+
+  // 各プレイヤーの風
+  const winds = [
+    this.playerWind,
+    (this.playerWind % 3) + 1,
+    ((this.playerWind + 1) % 3) + 1
+  ];
+
+  // 風表示
+  document.getElementById("wind-bottom").textContent = windChar[winds[0]];
+  document.getElementById("wind-top").textContent    = windChar[winds[1]];
+  document.getElementById("wind-right").textContent  = windChar[winds[2]];
+  document.getElementById("wind-left").textContent   = windChar[winds[1]]; // 三麻は左右同じ
+
+  // 点数表示
+  document.getElementById("score-bottom").textContent = this.scores[0];
+  document.getElementById("score-top").textContent    = this.scores[1];
+  document.getElementById("score-right").textContent  = this.scores[2];
+  document.getElementById("score-left").textContent   = this.scores[1];
+}
+
+    this.updateTableInfo();
+
   }
 
 
