@@ -308,7 +308,7 @@ updateUI() {
 
   // 和了でなければ捨て牌へ
   if (p.isCPU) {
-    const idx = Math.floor(Math.random() * p.hand.length);
+    const idx = chooseDiscardIndex(p.hand);
     const discardTile = p.hand[idx];
     
     p.discard(idx);
