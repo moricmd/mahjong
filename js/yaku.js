@@ -12,7 +12,7 @@ export function judgeYaku(
   playerWind = 1,
   roundWind = 1,
   doraIndicators = [],
-  uraIndicators = ],
+  uraIndicators = [],
   isLastTile = false
   
 ) {
