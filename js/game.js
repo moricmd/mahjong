@@ -283,12 +283,14 @@ updateUI() {
 
   // 役判定
   const result = judgeYaku(
-    p,                // player
-    p.hand,           // handTiles
-    lastTile,         // winTile
-    true,             // isTsumo
-    this.playerWind,  // playerWind
-    1                 // roundWind（東場固定）
+    p,                    // player
+    p.hand,               // handTiles
+    lastTile,             // winTile
+    true,                 // isTsumo
+    this.playerWind,      // playerWind
+    1,                    // roundWind（東場固定）
+    this.doraIndicators,  // ドラ
+    this.uraIndicators    // 裏ドラ
   );
 
   const { han, yakuList } = result;
