@@ -287,6 +287,7 @@ updateUI() {
     p.hand,               // handTiles
     lastTile,             // winTile
     true,                 // isTsumo
+    false,                // isRon 
     this.playerWind,      // playerWind
     1,                    // roundWind（東場固定）
     this.doraIndicators,  // ドラ
@@ -297,7 +298,7 @@ updateUI() {
 
   if (han > 0) {
     const score = calcScore(
-      result,          // ← ここが最重要（オブジェクトで渡す）
+      result,
       30,
       this.turn === 0,
       true
