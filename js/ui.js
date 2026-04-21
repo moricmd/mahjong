@@ -58,7 +58,10 @@ export function renderPlayerHand(player, onClick, autoSort) {
 export function renderCPUHand(player) {
   const area = document.getElementById(`cpu${player.index}-hand`);
 
+  // 初期化
   area.className = "hand-area";
+
+  // 座り順クラス
   area.classList.add(`hand-${player.position}`);
 
   area.innerHTML = "";
@@ -70,6 +73,7 @@ export function renderCPUHand(player) {
     area.appendChild(img);
   }
 }
+
 
 
 
