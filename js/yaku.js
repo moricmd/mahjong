@@ -13,9 +13,8 @@ export function judgeYaku(
   roundWind = 1,
   doraIndicators = [],
   uraIndicators = ],
-  isLastTile = false;
-
-
+  isLastTile = false
+  
 ) {
   const tiles = [...handTiles];
   const yakuList = [];
