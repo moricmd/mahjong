@@ -66,41 +66,30 @@ export function createBackImg() {
 // -------------------------
 export function renderPlayerHand(player, onClick, autoSort) {
   const area = document.getElementById("player-hand");
+  area.className = "hand-area";
+
+  // 座り順に応じて位置クラスを付与
+  if (player.position === "bottom") area.classList.add("hand-bottom");
+  if (player.position === "top")    area.classList.add("hand-top");
+  if (player.position === "right")  area.classList.add("hand-right");
+
   area.innerHTML = "";
 
+  // 手牌を描画
   player.hand.forEach((tile, index) => {
-    const img = createTileImg(tile);
+    const img = document.createElement("img");
+    img.src = tileToImage(tile);
+    img.className = "tile";
 
-    img.onclick = () => onClick(index);
-
-    // 自動整理 OFF のときだけドラッグ可能
-    img.draggable = !autoSort;
-
-    img.ondragstart = e => {
-      if (autoSort) return;
-      e.dataTransfer.setData("index", index);
-    };
-
-    img.ondragover = e => {
-      if (autoSort) return;
-      e.preventDefault();
-    };
-
-    img.ondrop = e => {
-      if (autoSort) return;
-
-      const from = Number(e.dataTransfer.getData("index"));
-      const to = index;
-
-      const t = player.hand.splice(from, 1)[0];
-      player.hand.splice(to, 0, t);
-
-      game.updateUI();
-    };
+    // 自分の手牌だけクリック可能
+    if (!player.isCPU) {
+      img.onclick = () => onClick(index);
+    }
 
     area.appendChild(img);
   });
 }
+
 
 
 
