@@ -487,6 +487,101 @@ export class Game {
     if (this.players[this.turn].isCPU) {
       setTimeout(() => this.step(), 300);
     }
+
+
+
+  // -------------------------
+  // 場進行
+  // -------------------------
+  nextRound(renchan, winnerIndex = null) {
+
+  // ------------------------------
+  // あがりやめ・聴牌やめ
+  // ------------------------------
+  if (this.kyoku === 3) {
+    const parent = this.dealer;
+
+    const parentCondition =
+      (winnerIndex === parent) || this.isTenpai(parent);
+
+    if (parentCondition && this.scores[parent] >= 40000) {
+      this.endGame();
+      return;
+    }
+  }
+
+  // ------------------------------
+  // 親の連荘
+  // ------------------------------
+  if (renchan) {
+    // 親は変わらず
+    this.kyoku++;
+    if (this.kyoku > 3) this.kyoku = 3;
+    return this.startNewHand();
+  }
+
+  // ------------------------------
+  // 親交代
+  // ------------------------------
+  this.dealer = (this.dealer + 1) % 3;
+
+  // 局進行
+  this.kyoku++;
+
+  if (this.kyoku > 3) {
+    this.kyoku = 1;
+    this.round++;
+  }
+
+  // ------------------------------
+  // 東3 → 南入
+  // ------------------------------
+  if (this.round === 2 && this.kyoku === 1) {
+    if (!this.hasPlayerOver40000()) {
+      // 南入
+    }
+  }
+
+  // ------------------------------
+  // 南3 → 西入
+  // ------------------------------
+  if (this.round === 3 && this.kyoku === 1) {
+    if (!this.hasPlayerOver40000()) {
+      // 西入
+    }
+  }
+
+  // ------------------------------
+  // 西3 → 強制終了
+  // ------------------------------
+  if (this.round === 4) {
+    this.endGame();
+    return;
+  }
+
+  this.startNewHand();
+}
+
+  // 40000点持ちのプレイヤーがいるか
+  hasPlayerOver40000() {
+  return this.scores.some(s => s >= 40000);
+}
+
+
+  // 対局終了
+  endGame() {
+  const maxScore = Math.max(...this.scores);
+  const winner = this.scores.indexOf(maxScore);
+
+  alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
+  this.state = "END_ROUND";
+}
+
+
+
+
+
+
   }
 }
 
