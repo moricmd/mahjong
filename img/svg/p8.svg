@@ -1,0 +1,26 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 88 120" width="88" height="120">
+	<defs>
+		<image  width="88" height="120" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAAB4CAMAAABB58UwAAAAAXNSR0IB2cksfwAAAR1QTFRFAAAAMzMzNTU1NjY2cHBu3t7Z/Pv2NDQ0TExMi4uLv7+/3Nzc9fX1////vr6+TExMl5aULi4uNjY2QEBAqqqqp6enQEBAZWVk7OvnJCQkNTU1R0dH3d3dSEhIXl5d9vXwNjY2RERE5+fn5ubmRkZGe3t5NDQ0ODg41NTU0tLSODg4v767NTU1mJiYlJSUW1taR0dH9/f3REREh4eHxsbGwsLC6urqNzc3+vr69vb24+PjwcHBvb29hISEQUFB8/Pz8PDwj4+PNTU1MzMzz8/PNzc3MzMzNTU16enpNTU1AAAANTU14ODgNjY2AAAANTU1qKiopaWlPz8/NTU1MzMzKysrNjY229vbS0tLNTU1Li4uAAAAMzMzNTU1NDQ0Uv93LgAAAF90Uk5TACi8/////4T+//////////8Ww/7//////wfL/v////+r/v////9U/v/////X////////////////////////////xTz//jKQ/4wExv/HA8////7OFAy5//62CwFQxE+KBxSeAAABc0lEQVR4nO3aXyvDYRQH8PP1MBJtyjQjjdZa+8MYTWlcTNRuuOGC18cNuyA1Fwg14mKxzJpoZkwjaqWVhp9tljfwe55SzvfinHP16byAL6gaACQrdas2mj+oCdCva5ooG96ovfQDd6BowrveR3/TgpdOvFbgbhQsKEpziYzI9+ARZMv14VmiS9SFzEAWjhs7HqS6RL1IO+FJuW4lu0T9SQ+EF9fSYc1xDmFolO4SOc4ghtMKYGccwp9SAJuzEK0KXLInFMFUYphhhhlmmGGGGWaYYYYZZphhhhlmWDccuGSYYYYZZphhhhn+r7ArxzDDDDPMMMN/ChZjSQWu5xTC9qQA9p5AjCcUwEPHEL4rBbDvCGICcemu/ysGa8GdkQ6PHk4htG9vuJfsBrAXAs3uWN0xqa5Zu5uJgsLYbgseSHSNyIexWa3+TW6ZgrvS3GlszGO9VlZcQKRWVhy80GmOWKLluTVaxGq9BbmM6ikpS/hcqaxvHPvXt96hxGMAAAAASUVORK5CYII="/>
+	</defs>
+	<style>
+		.s0 { fill: #15076c;stroke: #000000;stroke-miterlimit:100;stroke-width: 2 } 
+		.s1 { fill: none;stroke: #ffffff;stroke-miterlimit:100;stroke-width: 2 } 
+	</style>
+	<use id="Background" href="#img1" x="0" y="0"/>
+	<path id="シェイプ 1" fill-rule="evenodd" class="s0" d="m29.33 33c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 2" fill-rule="evenodd" class="s0" d="m29.33 57c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 3" fill-rule="evenodd" class="s0" d="m58.66 33c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 4" fill-rule="evenodd" class="s0" d="m58.66 57c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 5" fill-rule="evenodd" class="s0" d="m58.66 81c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 6" fill-rule="evenodd" class="s0" d="m29.33 81c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 7" fill-rule="evenodd" class="s0" d="m29.33 105c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 8" fill-rule="evenodd" class="s0" d="m58.66 105c-4.98 0-9-4.02-9-9 0-4.98 4.02-9 9-9 4.98 0 9 4.02 9 9 0 4.98-4.02 9-9 9z"/>
+	<path id="シェイプ 9" fill-rule="evenodd" class="s1" d="m29.33 28c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 10" fill-rule="evenodd" class="s1" d="m58.66 28c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 11" fill-rule="evenodd" class="s1" d="m29.33 52c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 12" fill-rule="evenodd" class="s1" d="m58.66 52c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 13" fill-rule="evenodd" class="s1" d="m29.33 76c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 14" fill-rule="evenodd" class="s1" d="m58.66 76c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 15" fill-rule="evenodd" class="s1" d="m29.33 100c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+	<path id="シェイプ 16" fill-rule="evenodd" class="s1" d="m58.66 100c-2.21 0-4-1.79-4-4 0-2.21 1.79-4 4-4 2.21 0 4 1.79 4 4 0 2.21-1.79 4-4 4z"/>
+</svg>
