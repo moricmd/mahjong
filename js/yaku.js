@@ -101,6 +101,68 @@ export function judgeYaku(
     }
   }
 
+
+    // ------------------------------
+  // 対々和（トイトイ）
+  // ------------------------------
+  if (checkToitoi(tiles)) {
+    yakuList.push("対々和");
+    han += 2;
+  }
+
+  // ------------------------------
+  // 混一色（ホンイツ）
+  // ------------------------------
+  if (checkHonitsu(tiles)) {
+    if (player.isMenzen) {
+      yakuList.push("混一色");
+      han += 3;
+    } else {
+      yakuList.push("混一色（食い下がり）");
+      han += 2;
+    }
+  }
+
+  // ------------------------------
+  // 清一色（チンイツ）
+  // ------------------------------
+  if (checkChinitsu(tiles)) {
+    if (player.isMenzen) {
+      yakuList.push("清一色");
+      han += 6;
+    } else {
+      yakuList.push("清一色（食い下がり）");
+      han += 5;
+    }
+  }
+
+  // ------------------------------
+  // 混全帯么九（チャンタ）
+  // ------------------------------
+  if (checkChanta(tiles)) {
+    if (player.isMenzen) {
+      yakuList.push("混全帯么九");
+      han += 2;
+    } else {
+      yakuList.push("混全帯么九（食い下がり）");
+      han += 1;
+    }
+  }
+
+  // ------------------------------
+  // 純全帯么九（純チャン）
+  // ------------------------------
+  if (checkJunchan(tiles)) {
+    if (player.isMenzen) {
+      yakuList.push("純全帯么九");
+      han += 3;
+    } else {
+      yakuList.push("純全帯么九（食い下がり）");
+      han += 2;
+    }
+  }
+
+
   return { han, yakuList };
 }
 
@@ -376,6 +438,93 @@ function checkIttsuu(tiles) {
 
   return 0;
 }
+
+// ------------------------------
+// 対々和
+// ------------------------------
+function checkToitoi(tiles) {
+  const counts = {};
+  tiles.forEach(t => {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  });
+
+  // 刻子が4つ必要
+  let koutsu = 0;
+  for (const key in counts) {
+    if (counts[key] >= 3) koutsu++;
+  }
+
+  return koutsu === 4;
+}
+
+
+// ------------------------------
+// 混一色
+// ------------------------------
+function checkHonitsu(tiles) {
+  const suits = new Set(tiles.map(t => t.suit));
+
+  // 字牌が含まれ、かつ数牌が1種類のみ
+  const hasHonor = suits.has("wind") || suits.has("dragon");
+
+  const numberSuits = [...suits].filter(s => s === "man" || s === "pin" || s === "sou");
+
+  return hasHonor && numberSuits.length === 1;
+}
+
+
+// ------------------------------
+// 清一色
+// ------------------------------
+function checkChinitsu(tiles) {
+  const suits = new Set(tiles.map(t => t.suit));
+
+  // 数牌1種類のみ、字牌なし
+  if (suits.has("wind") || suits.has("dragon")) return false;
+
+  const numberSuits = [...suits].filter(s => s === "man" || s === "pin" || s === "sou");
+
+  return numberSuits.length === 1;
+}
+
+
+// ------------------------------
+// チャンタ
+// ------------------------------
+function checkChanta(tiles) {
+  let has19orHonor = true;
+
+  for (const t of tiles) {
+    if (t.suit === "wind" || t.suit === "dragon") continue;
+    if (t.value !== 1 && t.value !== 9) {
+      has19orHonor = false;
+      break;
+    }
+  }
+
+  return has19orHonor;
+}
+
+
+// ------------------------------
+// 純チャン
+// ------------------------------
+function checkJunchan(tiles) {
+  let all19 = true;
+
+  for (const t of tiles) {
+    if (t.suit === "wind" || t.suit === "dragon") return false;
+    if (t.value !== 1 && t.value !== 9) {
+      all19 = false;
+      break;
+    }
+  }
+
+  return all19;
+}
+
+
 
 
 // ------------------------------
