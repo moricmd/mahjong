@@ -124,7 +124,7 @@ export function judgeYaku(
   }
 
 
-    // ------------------------------
+  // ------------------------------
   // ダブル立直
   // ------------------------------
   if (player.isDoubleRiichi) {
@@ -132,6 +132,16 @@ export function judgeYaku(
     han += 2;
   }
 
+  
+　// ------------------------------
+  // 三暗刻
+  // ------------------------------
+  if (checkSanankou(player, winTile, isRon)) {
+    yakuList.push("三暗刻");
+    han += 2;
+  }
+
+  
   // ------------------------------
   // 三槓子
   // ------------------------------
@@ -140,13 +150,18 @@ export function judgeYaku(
     han += 2;
   }
 
+  
+
   // ------------------------------
-  // 三暗刻
+  // 七対子（チートイツ）
   // ------------------------------
-  if (checkSanankou(player, winTile, isRon)) {
-    yakuList.push("三暗刻");
-    han += 2;
+  const chiitoiHan = checkChiitoitsu(tiles);
+  if (player.isMenzen && chiitoiHan > 0) {
+    yakuList.push("七対子");
+    han += chiitoiHan;
+    return { han, yakuList }; // 七対子は特殊和了形なのでここで終了
   }
+
 
 
 
@@ -546,6 +561,30 @@ function checkSanankou(player, winTile, isRon) {
 // ------------------------------
 function checkSankantsu(player) {
   return player.kanCount >= 3;
+}
+
+
+// ------------------------------
+// 七対子
+// ------------------------------
+function checkChiitoitsu(tiles) {
+  if (tiles.length !== 14) return 0;
+
+  const counts = {};
+  for (const t of tiles) {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+
+  let pairCount = 0;
+
+  for (const key in counts) {
+    const c = counts[key];
+    if (c === 2) pairCount++;
+    else if (c === 1 || c === 3 || c === 4) return 0; // 1枚・3枚以上は不成立
+  }
+
+  return pairCount === 7 ? 2 : 0; // 七対子は常に2翻
 }
 
 
