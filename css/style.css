@@ -33,7 +33,7 @@ body {
 .tile {
   width: 40px;
   height: 60px;
-  border: 1px solid #333;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
