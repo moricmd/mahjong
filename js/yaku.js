@@ -225,43 +225,45 @@ function checkIipeikou(tiles) {
 // ------------------------------
 // 平和
 // ------------------------------
-function checkPinfu(tiles, playerWind, roundWind) {
+function checkPinfu(tiles, playerWind, roundWind, winTile) {
+  // 1. 雀頭が役牌ならピンフ不可
   const counts = {};
   tiles.forEach(t => {
     const key = `${t.suit}-${t.value}`;
     counts[key] = (counts[key] || 0) + 1;
   });
 
-  // 雀頭が役牌なら不可
+  let pairTile = null;
+
   for (const key in counts) {
     if (counts[key] === 2) {
       const [suit, value] = key.split("-");
       const v = Number(value);
 
+      // 三元牌
       if (suit === "dragon") return 0;
+
+      // 自風・場風
       if (suit === "wind" && (v === playerWind || v === roundWind)) return 0;
+
+      pairTile = { suit, value: v };
     }
   }
 
-  // 順子が4つ必要
-  const nums = tiles.filter(t => t.suit !== "wind" && t.suit !== "dragon");
-  let shuntsu = 0;
-
-  const arr = nums.sort((a, b) => a.value - b.value);
-
-  for (let i = 0; i < arr.length - 2; i++) {
-    if (
-      arr[i].suit === arr[i + 1].suit &&
-      arr[i + 1].suit === arr[i + 2].suit &&
-      arr[i].value + 1 === arr[i + 1].value &&
-      arr[i + 1].value + 1 === arr[i + 2].value
-    ) {
-      shuntsu++;
-    }
+  // 2. 刻子が1つでもあればピンフ不可
+  for (const key in counts) {
+    if (counts[key] >= 3) return 0;
   }
 
-  return shuntsu >= 4 ? 1 : 0;
+  // 3. 順子4つかどうか（面子分解で確認）
+  if (!isAllShuntsu(tiles)) return 0;
+
+  // 4. 待ちが両面かどうか
+  if (!isRyanmenWait(tiles, winTile)) return 0;
+
+  return 1;
 }
+
 
 // ------------------------------
 // ドラ
