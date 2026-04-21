@@ -229,7 +229,33 @@ body {
 
 
 
-/* 牌の向きを座り順にする */
+/* 手牌の表示 */
+.hand-area {
+  position: absolute;
+}
+
+.hand-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
+.hand-top    { top: 0;    left: 50%; transform: translateX(-50%) rotate(180deg); }
+.hand-right  { right: 0;  top: 50%;  transform: translateY(-50%) rotate(90deg); }
+.hand-left   { left: 0;   top: 50%;  transform: translateY(-50%) rotate(-90deg); }
+
+
+/* 捨て牌の表示 */
+.discard-area { position: absolute; }
+
+.discard-bottom { bottom: 80px; left: 50%; transform: translateX(-50%); }
+.discard-top    { top: 80px;    left: 50%; transform: translateX(-50%) rotate(180deg); }
+.discard-right  { right: 80px;  top: 50%;  transform: translateY(-50%) rotate(90deg); }
+.discard-left   { left: 80px;   top: 50%;  transform: translateY(-50%) rotate(-90deg); }
+
+
+
+
+
+
+/*
+
+ 牌の向きを座り順にする 
 #cpu1-hand {
   position: absolute;
   top: 20px;
@@ -265,10 +291,10 @@ body {
   z-index: 1000;
 }
 
-/* --- 河（捨て牌） --- */
+ --- 河（捨て牌） --- 
 #player-discards {
   position: absolute;
-  bottom: 120px;      /* 手牌の上に配置 */
+  bottom: 120px;     
   left: 50%;
 
   transform: translateX(-20%)　translateY(20%);
@@ -280,7 +306,7 @@ body {
 
 #cpu1-discards {
   position: absolute;
-  top: 120px;         /* CPU1 手牌の下 */
+  top: 120px;        
   left: 50%;
   transform: translateX(-20%); translateY(-20%) rotate(180deg);
   width: 300px;
@@ -291,7 +317,7 @@ body {
 
 #cpu2-discards {
   position: absolute;
-  left: 120px;        /* CPU2 手牌の右側 */
+  left: 120px;        
   top: 40%;
   
   transform: rotate(90deg);
@@ -300,6 +326,8 @@ body {
   flex-wrap: wrap;
   gap: 4px;
 }
+
+*/
 
 /* --- 山（中央） --- */
 #wall {
