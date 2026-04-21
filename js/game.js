@@ -114,30 +114,41 @@ export class Game {
     renderDiscards(2, this.players[2].discards);
 
     updateTableInfo() {
-  // 局表示
   const roundNames = ["", "東", "南", "西"];
   document.getElementById("round-display").textContent =
     `${roundNames[this.round]}${this.kyoku}局`;
 
-  // 残り山
   const remain = this.wall.length - this.wallIndex;
-  document.getElementById("wall-count").textContent = `残り ${remain}`;
+  document.getElementById("wall-count").textContent = `${remain}`;
 
-  // 風の文字
-  const windChar = {1:"東", 2:"南", 3:"西", 4:"北"};
+  const windChar = {1:"東", 2:"南", 3:"西"};
 
-  // 各プレイヤーの風
+  // 三麻の風の割り当て
   const winds = [
-    this.playerWind,
-    (this.playerWind % 3) + 1,
-    ((this.playerWind + 1) % 3) + 1
+    this.playerWind,                     // bottom
+    (this.playerWind % 3) + 1,           // top
+    ((this.playerWind + 1) % 3) + 1      // right
   ];
 
-  // 風表示
+  // 左は top と同じ風（3麻の仕様）
+  const leftWind = winds[1];
+
+  // 風文字をセット
   document.getElementById("wind-bottom").textContent = windChar[winds[0]];
   document.getElementById("wind-top").textContent    = windChar[winds[1]];
   document.getElementById("wind-right").textContent  = windChar[winds[2]];
-  document.getElementById("wind-left").textContent   = windChar[winds[1]]; // 三麻は左右同じ
+  document.getElementById("wind-left").textContent   = windChar[leftWind];
+
+  // ★ まず全ての赤背景をリセット
+  ["wind-bottom","wind-top","wind-right","wind-left"].forEach(id=>{
+    document.getElementById(id).classList.remove("east-wind");
+  });
+
+  // ★ 東のプレイヤーだけ赤背景を付与
+  if (winds[0] === 1) document.getElementById("wind-bottom").classList.add("east-wind");
+  if (winds[1] === 1) document.getElementById("wind-top").classList.add("east-wind");
+  if (winds[2] === 1) document.getElementById("wind-right").classList.add("east-wind");
+  if (leftWind === 1) document.getElementById("wind-left").classList.add("east-wind");
 
   // 点数表示
   document.getElementById("score-bottom").textContent = this.scores[0];
@@ -145,6 +156,7 @@ export class Game {
   document.getElementById("score-right").textContent  = this.scores[2];
   document.getElementById("score-left").textContent   = this.scores[1];
 }
+
 
     this.updateTableInfo();
 
