@@ -8,12 +8,13 @@ export function judgeYaku(
   handTiles,
   winTile,
   isTsumo,
+  isRon = false,
   playerWind = 1,
   roundWind = 1,
   doraIndicators = [],
   uraIndicators = ],
   isLastTile = false;
-  isRon = false
+
 
 ) {
   const tiles = [...handTiles];
