@@ -107,14 +107,22 @@ export function renderPlayerHand(player, onClick, autoSort) {
 // -------------------------
 // 手牌表示（CPU）
 // -------------------------
-export function renderCPUHand(cpuIndex, count) {
-  const area = document.getElementById(`cpu${cpuIndex}-hand`);
-  area.innerHTML = "";
+export function renderCPUHand(playerIndex, tileCount, position) {
+  const area = document.getElementById(`cpu${playerIndex}-hand`);
+  area.className = "hand-area";
 
-  for (let i = 0; i < count; i++) {
-    area.appendChild(createBackImg());
+  if (position === "top") area.classList.add("hand-top");
+  if (position === "right") area.classList.add("hand-right");
+  if (position === "left") area.classList.add("hand-left");
+
+  area.innerHTML = "";
+  for (let i = 0; i < tileCount; i++) {
+    const img = document.createElement("img");
+    img.src = "img/back.png";
+    area.appendChild(img);
   }
 }
+
 
 // -------------------------
 // 捨て牌表示
