@@ -148,6 +148,86 @@ body {
 }
 
 
+#table-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 420px;
+  height: 420px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.center-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#wall-count {
+  font-size: 20px;
+  margin-top: 4px;
+}
+
+.side-info {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.side-info.top {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.side-info.bottom {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.side-info.left {
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.side-info.right {
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.wind-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  background: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wind-box.player {
+  background: #b30000; /* 自分の風は赤背景 */
+}
+
+.score-box {
+  font-size: 22px;
+}
+
+
+
 /* 牌の向きを座り順にする */
 #cpu1-hand {
   position: absolute;
