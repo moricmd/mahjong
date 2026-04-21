@@ -291,7 +291,8 @@ updateUI() {
     this.playerWind,      // playerWind
     1,                    // roundWind（東場固定）
     this.doraIndicators,  // ドラ
-    this.uraIndicators    // 裏ドラ
+    this.uraIndicators,   // 裏ドラ
+    this.wallIndex >= this.wall.length // isLastTile (海底牌ならtrue)
   );
 
   const { han, yakuList } = result;
