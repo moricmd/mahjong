@@ -8,7 +8,7 @@ export function judgeYaku(
   handTiles,
   winTile,
   isTsumo,
-  isRon = false,
+  isRon,
   playerWind = 1,
   roundWind = 1,
   doraIndicators = [],
