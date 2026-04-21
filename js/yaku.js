@@ -11,7 +11,10 @@ export function judgeYaku(
   playerWind = 1,
   roundWind = 1,
   doraIndicators = [],
-  uraIndicators = []
+  uraIndicators = ],
+  isLastTile = false;
+  isRon = false
+
 ) {
   const tiles = [...handTiles];
   const yakuList = [];
@@ -82,6 +85,25 @@ export function judgeYaku(
     }
   }
 
+
+  // ------------------------------
+  // 海底摸月（ハイテイ）
+  // ------------------------------
+  if (isTsumo && isLastTile) {
+    yakuList.push("海底摸月");
+    han += 1;
+  }
+
+  // ------------------------------
+  // 河底撈魚（ホウテイ）
+  // ------------------------------
+  if (isRon && isLastTile) {
+    yakuList.push("河底撈魚");
+    han += 1;
+  }
+
+
+
   // 三色同刻
   const sanshokuHan = checkSanshokuDoukou(tiles);
   if (sanshokuHan > 0) {
@@ -102,7 +124,24 @@ export function judgeYaku(
   }
 
 
-    // ------------------------------
+  // ------------------------------
+  // 混老頭（ホンロウトウ）
+  // ------------------------------
+  if (checkHonroutou(tiles)) {
+    yakuList.push("混老頭");
+    han += 2;
+  }
+
+  // ------------------------------
+  // 小三元
+  // ------------------------------
+  if (checkShousangen(tiles)) {
+    yakuList.push("小三元");
+    han += 2;
+  }
+
+
+  // ------------------------------
   // 対々和（トイトイ）
   // ------------------------------
   if (checkToitoi(tiles)) {
@@ -438,6 +477,48 @@ function checkIttsuu(tiles) {
 
   return 0;
 }
+
+
+// ------------------------------
+// 混老頭
+// ------------------------------
+function checkHonroutou(tiles) {
+  for (const t of tiles) {
+    if (t.suit === "man" || t.suit === "pin" || t.suit === "sou") {
+      if (t.value !== 1 && t.value !== 9) return false;
+    }
+  }
+  return true;
+}
+
+
+// ------------------------------
+// 小三元
+// ------------------------------
+function checkShousangen(tiles) {
+  const counts = {
+    1: 0, // 白
+    2: 0, // 發
+    3: 0  // 中
+  };
+
+  for (const t of tiles) {
+    if (t.suit === "dragon") {
+      counts[t.value]++;
+    }
+  }
+
+  let koutsu = 0;
+  let pair = 0;
+
+  for (let v = 1; v <= 3; v++) {
+    if (counts[v] >= 3) koutsu++;
+    else if (counts[v] === 2) pair++;
+  }
+
+  return koutsu === 2 && pair === 1;
+}
+
 
 // ------------------------------
 // 対々和
