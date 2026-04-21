@@ -3,54 +3,51 @@
 // ------------------------------
 // 役判定のメイン関数
 // ------------------------------
-export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, roundWind = 1) {
+export function judgeYaku(
+  player,
+  handTiles,
+  winTile,
+  isTsumo,
+  playerWind = 1,
+  roundWind = 1,
+  doraIndicators = [],
+  uraIndicators = []
+) {
   const tiles = [...handTiles];
   const yakuList = [];
   let han = 0;
 
-  // ------------------------------
   // 和了形チェック
-  // ------------------------------
   if (!checkWinningShape(tiles)) {
     return { han: 0, yakuList: [] };
   }
 
-  // ------------------------------
   // 立直
-  // ------------------------------
   if (player.isRiichi) {
     yakuList.push("立直");
     han += 1;
   }
 
-  // ------------------------------
   // ツモ（門前のみ）
-  // ------------------------------
   if (isTsumo && player.isMenzen) {
     yakuList.push("門前清自摸和");
     han += 1;
   }
 
-  // ------------------------------
-  // タンヤオ（喰いタンあり）
-  // ------------------------------
+  // タンヤオ
   if (isTanyao(tiles)) {
     yakuList.push("断么九");
     han += 1;
   }
 
-  // ------------------------------
-  // 役牌（風牌・三元牌）
-  // ------------------------------
+  // 役牌
   const yakuhaiHan = checkYakuhai(tiles, playerWind, roundWind);
   if (yakuhaiHan > 0) {
     yakuList.push("役牌");
     han += yakuhaiHan;
   }
 
-  // ------------------------------
-  // 一盃口・二盃口（門前のみ）
-  // ------------------------------
+  // 一盃口・二盃口
   if (player.isMenzen) {
     const iipeikouHan = checkIipeikou(tiles);
     if (iipeikouHan === 3) {
@@ -62,47 +59,37 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
     }
   }
 
-  // ------------------------------
-  // 平和（門前のみ）
-  // ------------------------------
+  // 平和
   const pinfuHan = checkPinfu(tiles, playerWind, roundWind);
   if (player.isMenzen && pinfuHan > 0) {
     yakuList.push("平和");
     han += pinfuHan;
   }
 
-  // ------------------------------
   // ドラ
-  // ------------------------------
-  const doraCount = countDora(tiles, game.doraIndicators);
+  const doraCount = countDora(tiles, doraIndicators);
   if (doraCount > 0) {
     yakuList.push(`ドラ${doraCount}`);
     han += doraCount;
   }
 
-  // ------------------------------
-  // 裏ドラ（立直時のみ）
-  // ------------------------------
+  // 裏ドラ
   if (player.isRiichi) {
-    const uraCount = countDora(tiles, game.uraIndicators);
+    const uraCount = countDora(tiles, uraIndicators);
     if (uraCount > 0) {
       yakuList.push(`裏ドラ${uraCount}`);
       han += uraCount;
     }
   }
 
-  // ------------------------------
   // 三色同刻
-  // ------------------------------
   const sanshokuHan = checkSanshokuDoukou(tiles);
   if (sanshokuHan > 0) {
     yakuList.push("三色同刻");
     han += sanshokuHan;
   }
 
-  // ------------------------------
-  // 一気通貫（食い下がりあり）
-  // ------------------------------
+  // 一気通貫
   const ittsuuHan = checkIttsuu(tiles);
   if (ittsuuHan > 0) {
     if (player.isMenzen) {
@@ -116,6 +103,7 @@ export function judgeYaku(player, handTiles, winTile, isTsumo, playerWind = 1, r
 
   return { han, yakuList };
 }
+
 
 // ======================================================================
 // 役の定義
@@ -318,27 +306,27 @@ function checkSanshokuDoukou(tiles) {
 // 一気通貫
 // ------------------------------
 function checkIttsuu(tiles) {
-  const suits = { man: [], pin: [], sou: [] };
+  const suits = ["man", "pin", "sou"];
 
-  for (const t of tiles) {
-    if (suits[t.suit]) suits[t.suit].push(t.value);
-  }
+  for (const s of suits) {
+    const has123 = tiles.some(t => t.suit === s && t.value === 1) &&
+                   tiles.some(t => t.suit === s && t.value === 2) &&
+                   tiles.some(t => t.suit === s && t.value === 3);
 
-  for (const suit of ["man", "pin", "sou"]) {
-    const arr = suits[suit].sort((a, b) => a - b);
-    const count = {};
+    const has456 = tiles.some(t => t.suit === s && t.value === 4) &&
+                   tiles.some(t => t.suit === s && t.value === 5) &&
+                   tiles.some(t => t.suit === s && t.value === 6);
 
-    arr.forEach(v => (count[v] = (count[v] || 0) + 1));
+    const has789 = tiles.some(t => t.suit === s && t.value === 7) &&
+                   tiles.some(t => t.suit === s && t.value === 8) &&
+                   tiles.some(t => t.suit === s && t.value === 9);
 
-    if (count[1] && count[2] && count[3] &&
-        count[4] && count[5] && count[6] &&
-        count[7] && count[8] && count[9]) {
-      return 2;
-    }
+    if (has123 && has456 && has789) return 2;
   }
 
   return 0;
 }
+
 
 // ------------------------------
 // 補助関数
