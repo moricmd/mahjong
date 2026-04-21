@@ -55,21 +55,22 @@ export function renderPlayerHand(player, onClick, autoSort) {
 // -------------------------
 // 手牌表示（CPU）
 // -------------------------
-export function renderCPUHand(playerIndex, tileCount, position) {
-  const area = document.getElementById(`cpu${playerIndex}-hand`);
-  area.className = "hand-area";
+export function renderCPUHand(player) {
+  const area = document.getElementById(`cpu${player.index}-hand`);
 
-  if (position === "top") area.classList.add("hand-top");
-  if (position === "right") area.classList.add("hand-right");
-  if (position === "left") area.classList.add("hand-left");
+  area.className = "hand-area";
+  area.classList.add(`hand-${player.position}`);
 
   area.innerHTML = "";
-  for (let i = 0; i < tileCount; i++) {
+
+  for (let i = 0; i < player.hand.length; i++) {
     const img = document.createElement("img");
     img.src = "img/back.png";
+    img.className = "tile";
     area.appendChild(img);
   }
 }
+
 
 
 // -------------------------
