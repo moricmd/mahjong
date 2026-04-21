@@ -110,11 +110,10 @@ export class Game {
     renderCPUHand(2, this.players[2].hand.length, this.players[2].position);
 
 
-    renderDiscards(0, this.players[0].discards);
-    renderDiscards(1, this.players[1].discards);
-    renderDiscards(2, this.players[2].discards);
+    renderDiscards(0, this.players[0].discards, this.players[0].position);
+    renderDiscards(1, this.players[1].discards, this.players[1].position);
+    renderDiscards(2, this.players[2].discards, this.players[2].position);
 
-    
 
     this.updateTableInfo();
 
