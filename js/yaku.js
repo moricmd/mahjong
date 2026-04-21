@@ -291,6 +291,27 @@ function isAllShuntsu(tiles) {
 }
 
 
+//補助関数: 両面待ちか判定
+function isRyanmenWait(tiles, winTile) {
+  // winTile が順子の真ん中なら両面ではない
+  // winTile が順子の端（例: 3-4 の 2 or 5）なら両面
+
+  const suit = winTile.suit;
+  const v = winTile.value;
+
+  // 数牌以外は両面待ちにならない
+  if (suit !== "man" && suit !== "pin" && suit !== "sou") return false;
+
+  const hasLeft  = tiles.some(t => t.suit === suit && t.value === v - 1);
+  const hasRight = tiles.some(t => t.suit === suit && t.value === v + 1);
+
+  // 両面待ちの条件：左右どちらかが順子の端になる
+  return (hasLeft && tiles.some(t => t.suit === suit && t.value === v - 2)) ||
+         (hasRight && tiles.some(t => t.suit === suit && t.value === v + 2));
+}
+
+
+
 
 // ------------------------------
 // ドラ
