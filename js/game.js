@@ -28,6 +28,13 @@ export class Game {
     this.doraIndicators = [];
     this.uraIndicators = [];
 
+
+    this.scores = [35000, 35000, 35000]; // 点数
+    this.round = 1;   // 1=東, 2=南, 3=西
+    this.kyoku = 1;   // 1〜3
+    this.dealer = 0;  
+
+
     this.initGame();
   }
 
@@ -442,6 +449,16 @@ export class Game {
 
     return false;
   }
+
+
+  // -------------------------
+  // 聴牌判定
+  // -------------------------
+  isTenpai(playerIndex) {
+    const p = this.players[playerIndex];
+    return checkTenpai(p.hand); // あなたの checkTenpai() を使う
+  }
+
 
   // -------------------------
   // DISCARD（人間）
