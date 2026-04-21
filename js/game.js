@@ -539,6 +539,7 @@ export class Game {
     if (this.players[this.turn].isCPU) {
       setTimeout(() => this.step(), 300);
     }
+  }
 
 
 
