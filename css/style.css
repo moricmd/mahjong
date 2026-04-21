@@ -371,8 +371,3 @@ body {
 }
 
 
-
-.tile.bottom { transform: rotate(0deg); }
-.tile.top    { transform: rotate(180deg); }
-.tile.left   { transform: rotate(90deg); }
-.tile.right  { transform: rotate(270deg); }
