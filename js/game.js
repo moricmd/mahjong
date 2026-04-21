@@ -107,6 +107,18 @@ export class Game {
     renderDiscards(2, this.players[2].discards);
   }
 
+
+  
+  // ------------------------------
+  // プレイモード表示
+  // ------------------------------
+  setPlayMode(mode) {
+    const el = document.getElementById("play-mode");
+    if (el) el.textContent = mode;
+  }
+
+
+
   // -------------------------
   // 一発クリア
   // -------------------------
