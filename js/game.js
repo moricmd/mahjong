@@ -368,7 +368,7 @@ updateUI() {
     this.doraIndicators.push(tile);
 
     // 一発消滅（北抜きは鳴き扱いではないので消さない）
-    // → 雀魂ルールでは北抜きは一発を消さない
+    this.clearIppatsu();
 
     this.state = "DRAW"; // 嶺上牌ツモ
   }
