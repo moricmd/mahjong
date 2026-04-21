@@ -127,16 +127,23 @@ export function renderCPUHand(playerIndex, tileCount, position) {
 // -------------------------
 // 捨て牌表示
 // -------------------------
-export function renderDiscards(playerIndex, discards) {
-  const area = document.getElementById(
-    playerIndex === 0 ? "player-discards" : `cpu${playerIndex}-discards`
-  );
-  area.innerHTML = "";
+export function renderDiscards(playerIndex, discards, position) {
+  const area = document.getElementById(`discards-${playerIndex}`);
+  area.className = "discard-area";
 
-  discards.forEach(tileId => {
-    area.appendChild(createTileImg(tileId));
+  if (position === "top") area.classList.add("discard-top");
+  if (position === "right") area.classList.add("discard-right");
+  if (position === "left") area.classList.add("discard-left");
+  if (position === "bottom") area.classList.add("discard-bottom");
+
+  area.innerHTML = "";
+  discards.forEach(tile => {
+    const img = document.createElement("img");
+    img.src = tileToImage(tile);
+    area.appendChild(img);
   });
 }
+
 
 // -------------------------
 // 状態表示
