@@ -260,6 +260,7 @@ updateUI() {
     // ★ CPU のときは自動で次へ
     if (p.isCPU) {
       setTimeout(() => this.step(), 300);
+    }
   }
 
   // 通常ツモ
