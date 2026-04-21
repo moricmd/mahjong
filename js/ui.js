@@ -27,22 +27,19 @@ export function createBackImg() {
 // -------------------------
 export function renderPlayerHand(player, onClick, autoSort) {
   const area = document.getElementById("player-hand");
+
   area.className = "hand-area";
 
   // 座り順に応じて位置クラスを付与
-  if (player.position === "bottom") area.classList.add("hand-bottom");
-  if (player.position === "top")    area.classList.add("hand-top");
-  if (player.position === "right")  area.classList.add("hand-right");
+  area.classList.add(`hand-${player.position}`);
 
   area.innerHTML = "";
 
-  // 手牌を描画
   player.hand.forEach((tile, index) => {
     const img = document.createElement("img");
     img.src = tileToImage(tile);
     img.className = "tile";
 
-    // 自分の手牌だけクリック可能
     if (!player.isCPU) {
       img.onclick = () => onClick(index);
     }
@@ -50,6 +47,7 @@ export function renderPlayerHand(player, onClick, autoSort) {
     area.appendChild(img);
   });
 }
+
 
 
 
