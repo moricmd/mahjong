@@ -154,8 +154,22 @@ updateUI() {
 }
 
 
+  // ------------------------------
+  // 立直フラグ
+  // ------------------------------
 
+　/*
+  
+  // 立直時
+  player.isRiichi = true;
+　player.isIppatsu = true;
 
+  // 誰かの副露が入ったとき（一発の条件）
+　for (const pl of this.players) {
+  pl.isIppatsu = false;
+}
+
+*/
 
 
   // ------------------------------
