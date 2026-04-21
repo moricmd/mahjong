@@ -4,6 +4,7 @@ import { Player } from "./player.js";
 import { renderPlayerHand, renderCPUHand, renderDiscards, renderState } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
+import { chooseDiscardIndex } from "./CPU.js"
 
 export class Game {
   constructor() {
@@ -255,6 +256,10 @@ updateUI() {
 
     // ツモ和了チェックへ
     this.state = "CHECK_WIN";
+
+    // ★ CPU のときは自動で次へ
+    if (p.isCPU) {
+      setTimeout(() => this.step(), 300);
   }
 
   // 通常ツモ
@@ -389,6 +394,10 @@ updateUI() {
   onNextTurn() {
     this.turn = (this.turn + 1) % 3;
     this.state = "TURN_START";
+
+    // ★ CPU のターンなら自動で進行
+  if (this.players[this.turn].isCPU) {
+    setTimeout(() => this.step(), 300); // 0.3秒後に自動進行
   }
 }
 
