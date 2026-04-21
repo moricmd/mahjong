@@ -1,3 +1,5 @@
+// tiles.js
+
 // 三麻（雀魂）牌生成
 export function generateTiles() {
   const tiles = [];
