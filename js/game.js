@@ -4,35 +4,29 @@ import { Player } from "./player.js";
 import { renderPlayerHand, renderCPUHand, renderDiscards, renderState } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
-import { chooseDiscardIndex } from "./CPU.js"
+import { chooseDiscardIndex } from "./CPU.js";
 
 export class Game {
   constructor() {
     this.players = [
-      new Player(0, false), // 自分
-      new Player(1, true),  // CPU
-      new Player(2, true)   // CPU
+      new Player(0, false),
+      new Player(1, true),
+      new Player(2, true)
     ];
 
-    this.state = "INIT";　// 状態
-    this.turn = 0; // 巡目
-    
-    this.wallIndex = 0; // 山からめくった牌の番号
+    this.state = "INIT";
+    this.turn = 0;
 
-    this.isMensen = true; // 門前フラグ
+    this.wallIndex = 0;
+    this.autoSort = true;
 
-    this.autoSort = true; // 自動整理ボタン
+    this.honba = 0;
+    this.kyotaku = 0;
 
-
-    this.honba = 0; // 積み棒(親連荘・流局ごとに+1)
-    this.kyotaku = 0; // 供託(立直時に支払い)
-
-    
-    // 牌山
-    this.wall = []; // 山
-    this.rinshan = []; // 嶺上牌
-    this.doraIndicators = []; // ドラ表示牌
-    this.uraIndicators = []; // 裏ドラ表示牌
+    this.wall = [];
+    this.rinshan = [];
+    this.doraIndicators = [];
+    this.uraIndicators = [];
 
     this.initGame();
   }
@@ -41,69 +35,53 @@ export class Game {
   // INIT → 山生成
   // -------------------------
   initGame() {
-    
-    // 自分の風をランダム決定（東・南・西）
-    const winds = [1, 2, 3]; // 東=1, 南=2, 西=3
+    const winds = [1, 2, 3];
     this.playerWind = winds[Math.floor(Math.random() * winds.length)];
 
-    // 自分を基準としてCPU の座り位置を決める
-    if (this.playerWind === 1) { // 東のとき
-      this.players[1].position = "top";   // CPU1
-       this.players[2].position = "right"; // CPU2
+    if (this.playerWind === 1) {
+      this.players[1].position = "top";
+      this.players[2].position = "right";
+    }
+    if (this.playerWind === 2) {
+      this.players[1].position = "left";
+      this.players[2].position = "right";
+    }
+    if (this.playerWind === 3) {
+      this.players[1].position = "top";
+      this.players[2].position = "left";
     }
 
-    if (this.playerWind === 2) { // 南
-      this.players[1].position = "left";  // CPU1
-      this.players[2].position = "right"; // CPU2
-    }
+    this.players[0].position = "bottom";
 
-    if (this.playerWind === 3) { // 西
-      this.players[1].position = "top";   // CPU1
-      this.players[2].position = "left";  // CPU2
-    }
-
-// 自分は常に bottom
-this.players[0].position = "bottom";
-
-    
-    this.wall = generateTiles();
-    shuffle(this.wall);
-    this.wallIndex = 0;
-
+    this.buildWall();
     this.state = "DEAL";
     this.deal();
   }
 
+  // -------------------------
+  // 山構築（嶺上・ドラ）
+  // -------------------------
   buildWall() {
-  const tiles = generateTiles(); // 108枚（3麻）
-  shuffle(tiles);
+    const tiles = generateTiles();
+    shuffle(tiles);
 
-  // 嶺上牌（4枚）を後ろから確保
-  this.rinshan = tiles.splice(-4);
+    this.rinshan = tiles.splice(-4);
+    this.doraIndicators = [tiles.splice(-1)[0]];
+    this.uraIndicators = [];
 
-  // ドラ表示牌（1枚）
-  this.doraIndicators = [ tiles.splice(-1)[0] ];
-
-  // 裏ドラはリーチ時にめくるので今は空
-  this.uraIndicators = [];
-
-  // 残りが通常山
-  this.wall = tiles;
-
-}
-
+    this.wall = tiles;
+    this.wallIndex = 0;
+  }
 
   // -------------------------
-  // DEAL → 配牌
+  // 配牌
   // -------------------------
   deal() {
     for (let i = 0; i < 13; i++) {
       this.players.forEach(p => p.draw(this.wall[this.wallIndex++]));
     }
 
-    if (this.autoSort){
-      this.sortHand(0);
-    }
+    if (this.autoSort) this.sortHand(0);
 
     this.state = "TURN_START";
     this.updateUI();
@@ -112,248 +90,182 @@ this.players[0].position = "bottom";
   // -------------------------
   // UI 更新
   // -------------------------
-updateUI() {
-  renderState(this.state, this.turn);
+  updateUI() {
+    renderState(this.state, this.turn);
 
-  // プレイヤーの手牌
-  renderPlayerHand(
-    this.players[0],
-    index => this.onPlayerDiscard(index),
-    this.autoSort
-  );
+    renderPlayerHand(
+      this.players[0],
+      index => this.onPlayerDiscard(index),
+      this.autoSort
+    );
 
-  // CPU の手牌
-  renderCPUHand(1, this.players[1].hand.length);
-  renderCPUHand(2, this.players[2].hand.length);
+    renderCPUHand(1, this.players[1].hand.length);
+    renderCPUHand(2, this.players[2].hand.length);
 
-  // 捨て牌
-  renderDiscards(0, this.players[0].discards);
-  renderDiscards(1, this.players[1].discards);
-  renderDiscards(2, this.players[2].discards);
-}
-
-  // ------------------------------
-  // ドラ表示エリア
-  // ------------------------------
-  updateDoraUI() {
-  const area = document.getElementById("dora-indicators");
-  area.innerHTML = "";
-
-  this.doraIndicators.forEach(tile => {
-    const img = document.createElement("img");
-    img.src = tileToImage(tile); // あなたの tileToImage() を使用
-    area.appendChild(img);
-  });
-
-  document.getElementById("honba-count").textContent = this.honba;
-  document.getElementById("kyotaku-count").textContent = this.kyotaku;
-}
-
-  setPlayMode(mode) {
-  document.getElementById("play-mode").textContent = mode;
-}
-
-
-  // ------------------------------
-  // 一発フラグ
-  // ------------------------------
-
-　/*
-  
-  // 立直時
-  player.isRiichi = true;
-　player.isIppatsu = true;
-
-  // 誰かの副露が入ったとき一発を消す
-　for (const pl of this.players) {
-  pl.isIppatsu = false;
-}
-
-  // 次巡の打牌で一発を消す
-  player.isIppatsu = false;
-
-*/
-
-  clearIppatsu() {
-  for (const p of this.players) {
-    p.isIppatsu = false;
+    renderDiscards(0, this.players[0].discards);
+    renderDiscards(1, this.players[1].discards);
+    renderDiscards(2, this.players[2].discards);
   }
-}
 
+  // -------------------------
+  // 一発クリア
+  // -------------------------
+  clearIppatsu() {
+    for (const p of this.players) {
+      p.isIppatsu = false;
+    }
+  }
 
-
-  // ------------------------------
+  // -------------------------
   // 自動理牌
-  // ------------------------------
+  // -------------------------
   sortHand(playerIndex) {
-  const p = this.players[playerIndex];
+    const p = this.players[playerIndex];
+    if (p.hand.length !== 13) return;
 
-  // 手牌が14枚の時は理牌しない
-  if (p.hand.length !== 13) return;
+    const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
+    const dragonOrder = { 1: 0, 2: 1, 3: 2 };
+    const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
 
-  const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
-  const dragonOrder = { 1: 0, 2: 1, 3: 2 };
-  const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
+    p.hand.sort((a, b) => {
+      if (suitOrder[a.suit] !== suitOrder[b.suit]) {
+        return suitOrder[a.suit] - suitOrder[b.suit];
+      }
 
-  p.hand.sort((a, b) => {
-    // 種類順
-    if (suitOrder[a.suit] !== suitOrder[b.suit]) {
-      return suitOrder[a.suit] - suitOrder[b.suit];
-    }
+      if (a.suit === "man" || a.suit === "pin" || a.suit === "sou") {
+        if (a.value !== b.value) return a.value - b.value;
+        return (a.red ? 1 : 0) - (b.red ? 1 : 0);
+      }
 
-    // 数牌
-    if (a.suit === "man" || a.suit === "pin" || a.suit === "sou") {
-      if (a.value !== b.value) return a.value - b.value;
-      // 赤牌は通常の5の直後
-      return (a.red ? 1 : 0) - (b.red ? 1 : 0);
-    }
+      if (a.suit === "wind") {
+        return windOrder[a.value] - windOrder[b.value];
+      }
 
-    // 風牌
-    if (a.suit === "wind") {
-      return windOrder[a.value] - windOrder[b.value];
-    }
+      if (a.suit === "dragon") {
+        return dragonOrder[a.value] - dragonOrder[b.value];
+      }
 
-    // 三元牌
-    if (a.suit === "dragon") {
-      return dragonOrder[a.value] - dragonOrder[b.value];
-    }
-
-    return 0;
-  });
-}
-
-
+      return 0;
+    });
+  }
 
   // =========================
   // 副露処理 
   // =========================
- 
-    // -------------------------
-    // ポン
-    // -------------------------
- 　 onPon(playerIndex, tile) {
-      const p = this.players[playerIndex];
 
-      // 手牌から2枚抜く
-      let removed = 0;
-      for (let i = 0; i < p.hand.length && removed < 2; i++) {
-        if (sameTile(p.hand[i], tile)) {
-          p.hand.splice(i, 1);
-          i--;
-          removed++;
-        }
+  // -------------------------
+  // ポン
+  // -------------------------
+  onPon(playerIndex, tile) {
+    const p = this.players[playerIndex];
+
+    let removed = 0;
+    for (let i = 0; i < p.hand.length && removed < 2; i++) {
+      if (sameTile(p.hand[i], tile)) {
+        p.hand.splice(i, 1);
+        i--;
+        removed++;
       }
-
-      // 副露情報を追加
-      p.melds.push({
-        type: "pon",
-        tiles: [tile, tile, tile]
-      });
-
-      p.isMenzen = false;
-
-      // 一発消滅
-      this.clearIppatsu();
-
-      this.turn = playerIndex;
-      this.state = "DISCARD";
     }
 
+    p.melds.push({
+      type: "pon",
+      tiles: [tile, tile, tile]
+    });
 
-  
-    // -------------------------
-    // カン
-    // -------------------------
+    p.isMenzen = false;
+    this.clearIppatsu();
 
-      // 1. 暗槓
-      onAnkan(playerIndex, tile) {
-      const p = this.players[playerIndex];
+    this.turn = playerIndex;
+    this.state = "DISCARD";
+    this.updateUI();
+  }
 
-      // 手牌から4枚抜く
-      let removed = 0;
-      for (let i = 0; i < p.hand.length && removed < 4; i++) {
-        if (sameTile(p.hand[i], tile)) {
-          p.hand.splice(i, 1);
-          i--;
-          removed++;
-        }
+  // -------------------------
+  // 暗槓
+  // -------------------------
+  onAnkan(playerIndex, tile) {
+    const p = this.players[playerIndex];
+
+    let removed = 0;
+    for (let i = 0; i < p.hand.length && removed < 4; i++) {
+      if (sameTile(p.hand[i], tile)) {
+        p.hand.splice(i, 1);
+        i--;
+        removed++;
       }
-
-      p.melds.push({
-        type: "ankan",
-        tiles: [tile, tile, tile, tile]
-      });
-
-      p.kanCount++;
-
-      // カンドラ追加
-      this.addKanDora();
-
-      // 一発消滅
-      this.clearIppatsu();
-
-      this.state = "DRAW"; // 嶺上牌ツモ
     }
 
+    p.melds.push({
+      type: "ankan",
+      tiles: [tile, tile, tile, tile]
+    });
 
-  
-      // 2. 大明槓
-      onDaiminkan(playerIndex, tile) {
-      const p = this.players[playerIndex];
+    p.kanCount++;
+    this.addKanDora();
+    this.clearIppatsu();
 
-      // 手牌から3枚抜く
-      let removed = 0;
-      for (let i = 0; i < p.hand.length && removed < 3; i++) {
-        if (sameTile(p.hand[i], tile)) {
-          p.hand.splice(i, 1);
-          i--;
-          removed++;
-        }
+    this.state = "DRAW";
+    this.updateUI();
+  }
+
+  // -------------------------
+  // 大明槓
+  // -------------------------
+  onDaiminkan(playerIndex, tile) {
+    const p = this.players[playerIndex];
+
+    let removed = 0;
+    for (let i = 0; i < p.hand.length && removed < 3; i++) {
+      if (sameTile(p.hand[i], tile)) {
+        p.hand.splice(i, 1);
+        i--;
+        removed++;
       }
-
-      p.melds.push({
-        type: "daiminkan",
-        tiles: [tile, tile, tile, tile]
-      });
-
-      p.isMenzen = false;
-       p.kanCount++;
-
-      this.addKanDora();
-      this.clearIppatsu();
-
-      this.turn = playerIndex;
-      this.state = "DRAW";
     }
 
+    p.melds.push({
+      type: "daiminkan",
+      tiles: [tile, tile, tile, tile]
+    });
 
-  
-      // 3. 加槓
-      onKakan(playerIndex, tile) {
-      const p = this.players[playerIndex];
+    p.isMenzen = false;
+    p.kanCount++;
 
-      // 手牌から1枚抜く
-      const idx = p.hand.findIndex(t => sameTile(t, tile));
-      p.hand.splice(idx, 1);
+    this.addKanDora();
+    this.clearIppatsu();
 
-      // 既存のポンをカンに昇格
-      const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
-      meld.type = "kakan";
-      meld.tiles.push(tile);
+    this.turn = playerIndex;
+    this.state = "DRAW";
+    this.updateUI();
+  }
 
-      p.kanCount++;
+  // -------------------------
+  // 加槓
+  // -------------------------
+  onKakan(playerIndex, tile) {
+    const p = this.players[playerIndex];
 
-      this.addKanDora();
-      this.clearIppatsu();
+    const idx = p.hand.findIndex(t => sameTile(t, tile));
+    p.hand.splice(idx, 1);
 
-      this.state = "DRAW";
-    }
+    const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
+    meld.type = "kakan";
+    meld.tiles.push(tile);
 
+    p.kanCount++;
 
-    // -------------------------
-    // 北抜き
-    // -------------------------
-    onNorth(playerIndex) {
+    this.addKanDora();
+    this.clearIppatsu();
+
+    this.state = "DRAW";
+    this.updateUI();
+  }
+
+  // -------------------------
+  // 北抜き
+  // -------------------------
+  onNorth(playerIndex) {
     const p = this.players[playerIndex];
 
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
@@ -364,23 +276,28 @@ updateUI() {
 
     p.northCount++;
 
-    // 北ドラ追加
     this.doraIndicators.push(tile);
 
-    // 一発消滅（北抜きは鳴き扱いではないので消さない）
+    // ★ あなたの仕様：北抜きでも一発消す
     this.clearIppatsu();
 
-    this.state = "DRAW"; // 嶺上牌ツモ
+    this.state = "DRAW";
+    this.updateUI();
   }
 
-
-
-
-
-  
   // -------------------------
-  // 外部から呼ぶ1ステップ
+  // カンドラ追加（仮実装）
   // -------------------------
+  addKanDora() {
+    if (this.wall.length > 0) {
+      this.doraIndicators.push(this.wall[this.wallIndex++]);
+    }
+  }
+
+  // =========================
+  // 進行処理
+  // =========================
+
   step() {
     switch (this.state) {
       case "TURN_START":
@@ -396,7 +313,6 @@ updateUI() {
         break;
 
       case "DISCARD":
-        // 人間はクリック待ちなのでここでは何もしない
         break;
 
       case "NEXT_TURN":
@@ -430,125 +346,90 @@ updateUI() {
     const tile = this.wall[this.wallIndex++];
     p.draw(tile);
 
-    // ツモ和了チェックへ
     this.state = "CHECK_WIN";
 
-    // ★ CPU のときは自動で次へ
     if (p.isCPU) {
       setTimeout(() => this.step(), 300);
     }
   }
 
-  // 通常ツモ
-  drawTile() {
-    return this.wall.pop();
-  }
-
-  // 嶺上牌ツモ
-  drawRinshan() {
-    return this.rinshan.pop();
-  }
-
-
   // -------------------------
-  // CHECK_WIN → 和了判定（最小）
+  // CHECK_WIN → 和了判定
   // -------------------------
   onCheckWin() {
-  const p = this.players[this.turn];
-  const lastTile = p.hand[p.hand.length - 1];
-
-  // 役判定
-  const result = judgeYaku(
-    p,                    // player
-    p.hand,               // handTiles
-    lastTile,             // winTile
-    true,                 // isTsumo
-    false,                // isRon 
-    this.playerWind,      // playerWind
-    1,                    // roundWind（東場固定）
-    this.doraIndicators,  // ドラ
-    this.uraIndicators,   // 裏ドラ
-    this.wallIndex >= this.wall.length // isLastTile (海底牌ならtrue)
-  );
-
-  const { han, yakuList } = result;
-
-  if (han > 0) {
-    const score = calcScore(
-      result,
-      30,
-      this.turn === 0,
-      true
-    );
-
-    console.log("和了！ han=", han, "yaku=", yakuList, "score=", score);
-    alert(`プレイヤー${this.turn} ツモ和了（仮） han=${han}\n${yakuList.join(" / ")}`);
-    this.state = "END_ROUND";
-    return;
-  }
-
-  // 和了でなければ捨て牌へ
-  if (p.isCPU) {
-    const idx = chooseDiscardIndex(p.hand);
-    const discardTile = p.hand[idx];
-    
-    p.discard(idx);
-
-    
-    // ロン確認
-    if (this.onCheckRon(discardTile, this.turn)) return;
-
-    if (this.autoSort) this.sortHand(this.turn);
-    this.state = "NEXT_TURN";
-
-  } else {
-    this.state = "DISCARD";
-  }
-}
-
-  // ------------------------------
-  // ロン判定
-  // ------------------------------
-  onCheckRon(discardTile, discarderIndex) {
-  // 全プレイヤーをチェック
-  for (let i = 0; i < 3; i++) {
-    if (i === discarderIndex) continue; // 自分の捨て牌ではロンできない
-
-    const p = this.players[i];
-
-    // CPU もプレイヤーも同じ判定
-    const tempHand = [...p.hand, discardTile];
+    const p = this.players[this.turn];
+    const lastTile = p.hand[p.hand.length - 1];
 
     const result = judgeYaku(
-      p,                                   // player
-      p.hand,                              // handTiles
-      lastTile,                            // winTile
-      true,                                // isTsumo
-      false,                               // isRon
-      this.playerWind,                     // playerWind
-      1,                                   // roundWind
-      this.doraIndicators,                 // ドラ
-      this.uraIndicators,                  // 裏ドラ
-      this.wallIndex >= this.wall.length   // isLastTile
+      p,
+      p.hand,
+      lastTile,
+      true,   // isTsumo
+      false,  // isRon
+      this.playerWind,
+      1,
+      this.doraIndicators,
+      this.uraIndicators,
+      this.wallIndex >= this.wall.length
     );
 
     if (result.han > 0) {
-      const score = calcScore(result, 30, i === 0, false);
+      const score = calcScore(result, 30, this.turn === 0, true);
 
-      alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
-
+      alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
       this.state = "END_ROUND";
-      return true;
+      return;
+    }
+
+    // 和了でなければ捨て牌へ
+    if (p.isCPU) {
+      const idx = chooseDiscardIndex(p.hand);
+      const discardTile = p.discard(idx);
+
+      if (this.onCheckRon(discardTile, this.turn)) return;
+
+      if (this.autoSort) this.sortHand(this.turn);
+      this.state = "NEXT_TURN";
+    } else {
+      this.state = "DISCARD";
     }
   }
 
-  return false;
-}
+  // -------------------------
+  // ロン判定
+  // -------------------------
+  onCheckRon(discardTile, discarderIndex) {
+    for (let i = 0; i < 3; i++) {
+      if (i === discarderIndex) continue;
 
+      const p = this.players[i];
+      const tempHand = [...p.hand, discardTile];
 
+      const result = judgeYaku(
+        p,
+        tempHand,
+        discardTile,
+        false,  // isTsumo
+        true,   // isRon
+        this.playerWind,
+        1,
+        this.doraIndicators,
+        this.uraIndicators,
+        this.wallIndex >= this.wall.length
+      );
 
-  
+      if (result.han > 0) {
+        const score = calcScore(result, 30, i === 0, false);
 
+        alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+
+        this.state = "END_ROUND";
+        return true;
+      }
+    }
+
+    return false;
+  }
 
   // -------------------------
   // DISCARD（人間）
@@ -557,21 +438,15 @@ updateUI() {
     if (this.state !== "DISCARD") return;
 
     const p = this.players[0];
-    const discardTile = p.hand[index];
-  
-    p.discard(index);
+    const discardTile = p.discard(index);
 
-    // ロン確認
     if (this.onCheckRon(discardTile, 0)) return;
 
-    // 打牌時に理牌
     if (this.autoSort) this.sortHand(0);
-    
+
     this.state = "NEXT_TURN";
     this.updateUI();
   }
-
-
 
   // -------------------------
   // NEXT_TURN
@@ -580,26 +455,9 @@ updateUI() {
     this.turn = (this.turn + 1) % 3;
     this.state = "TURN_START";
 
-    // ★ CPU のターンなら自動で進行
-  if (this.players[this.turn].isCPU) {
-    setTimeout(() => this.step(), 300); // 0.3秒後に自動進行
+    if (this.players[this.turn].isCPU) {
+      setTimeout(() => this.step(), 300);
+    }
   }
 }
-
-// -------------------------------
-// 画面切り替え
-// -------------------------------
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
-
-  
-  if (id === "game-screen") {
-    document.getElementById(id).style.display = "block"; // ゲーム画面はblock
-  } else {
-    document.getElementById(id).style.display = "flex";
-  }
-  
-}
-
-
 
