@@ -7,12 +7,12 @@ import { tileToImage } from "./tiles.js";
 // 牌画像を作る
 // -------------------------
 export function createTileImg(tile) {
-  const tileId = tileToId(tile);
   const img = document.createElement("img");
-  img.src = `img/${tileId}.png`;
+  img.src = tileToImage(tile);
   img.className = "tile";
   return img;
 }
+
 
 
 export function createBackImg() {
