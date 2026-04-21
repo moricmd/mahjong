@@ -106,8 +106,9 @@ export class Game {
       this.autoSort
     );
 
-    renderCPUHand(1, this.players[1].hand.length);
-    renderCPUHand(2, this.players[2].hand.length);
+    renderCPUHand(1, this.players[1].hand.length, this.players[1].position);
+    renderCPUHand(2, this.players[2].hand.length, this.players[2].position);
+
 
     renderDiscards(0, this.players[0].discards);
     renderDiscards(1, this.players[1].discards);
