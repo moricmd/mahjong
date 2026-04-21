@@ -264,6 +264,33 @@ function checkPinfu(tiles, playerWind, roundWind, winTile) {
   return 1;
 }
 
+// 補助関数: 順子が4つあるか判定
+function isAllShuntsu(tiles) {
+  const arr = tiles.slice().sort((a, b) => a.id - b.id);
+
+  function dfs(list) {
+    if (list.length === 0) return true;
+
+    const first = list[0];
+
+    // 順子
+    if (first.suit === "man" || first.suit === "pin" || first.suit === "sou") {
+      const t2 = list.find(t => t.suit === first.suit && t.value === first.value + 1);
+      const t3 = list.find(t => t.suit === first.suit && t.value === first.value + 2);
+
+      if (t2 && t3) {
+        const rest = removeSpecificTiles(list, [first, t2, t3]);
+        if (dfs(rest)) return true;
+      }
+    }
+
+    return false;
+  }
+
+  return dfs(arr);
+}
+
+
 
 // ------------------------------
 // ドラ
