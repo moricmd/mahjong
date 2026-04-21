@@ -37,6 +37,40 @@ export function generateTiles() {
   return tiles;
 }
 
+
+// 牌画像をidに変換
+export function tileToId(tile) {
+  if (tile.suit === "man") {
+    return `m${tile.value}`;
+  }
+
+  if (tile.suit === "pin") {
+    if (tile.red && tile.value === 5) return "p5r";
+    return `p${tile.value}`;
+  }
+
+  if (tile.suit === "sou") {
+    if (tile.red && tile.value === 5) return "s5r";
+    return `s${tile.value}`;
+  }
+
+  if (tile.suit === "wind") {
+    return `w${tile.value}`;   // 東=1, 南=2, 西=3, 北=4
+  }
+
+  if (tile.suit === "dragon") {
+    return `d${tile.value}`;   // 白=1, 發=2, 中=3
+  }
+}
+
+
+
+// 牌の画像パスを返す
+export function tileToImage(tile) {
+  return `img/${tileToId(tile)}.png`;
+}
+
+
 export function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
