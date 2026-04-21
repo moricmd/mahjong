@@ -31,6 +31,16 @@ export function judgeYaku(
     han += 1;
   }
 
+
+    // ------------------------------
+  // 一発）
+  // ------------------------------
+  if (player.isRiichi && player.isIppatsu) {
+    yakuList.push("一発");
+    han += 1;
+  }
+
+
   // ツモ（門前のみ）
   if (isTsumo && player.isMenzen) {
     yakuList.push("門前清自摸和");
