@@ -124,6 +124,32 @@ export function judgeYaku(
   }
 
 
+    // ------------------------------
+  // ダブル立直
+  // ------------------------------
+  if (player.isDoubleRiichi) {
+    yakuList.push("ダブル立直");
+    han += 2;
+  }
+
+  // ------------------------------
+  // 三槓子
+  // ------------------------------
+  if (checkSankantsu(player)) {
+    yakuList.push("三槓子");
+    han += 2;
+  }
+
+  // ------------------------------
+  // 三暗刻
+  // ------------------------------
+  if (checkSanankou(player, winTile, isRon)) {
+    yakuList.push("三暗刻");
+    han += 2;
+  }
+
+
+
   // ------------------------------
   // 混老頭（ホンロウトウ）
   // ------------------------------
@@ -476,6 +502,50 @@ function checkIttsuu(tiles) {
   }
 
   return 0;
+}
+
+
+
+// ------------------------------
+// 三暗刻
+// ------------------------------
+function checkSanankou(player, winTile, isRon) {
+  let anko = 0;
+
+  // player.melds に「ポン」「チー」「カン」が入っている前提
+  // 暗刻 = ポンしていない刻子
+  for (const meld of player.melds) {
+    if (meld.type === "pon") continue; // 鳴いてるので暗刻ではない
+    if (meld.type === "kan") continue; // カンは別扱い
+  }
+
+  // 手牌から刻子を数える
+  const counts = {};
+  for (const t of player.hand) {
+    const key = `${t.suit}-${t.value}`;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+
+  for (const key in counts) {
+    if (counts[key] >= 3) {
+      // ロン和了の場合、和了牌を含む刻子は暗刻にしない
+      if (isRon) {
+        const [suit, value] = key.split("-");
+        if (winTile.suit === suit && winTile.value == value) continue;
+      }
+      anko++;
+    }
+  }
+
+  return anko >= 3;
+}
+
+
+// ------------------------------
+// 三槓子
+// ------------------------------
+function checkSankantsu(player) {
+  return player.kanCount >= 3;
 }
 
 
