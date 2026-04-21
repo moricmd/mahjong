@@ -344,12 +344,16 @@ updateUI() {
     const tempHand = [...p.hand, discardTile];
 
     const result = judgeYaku(
-      p,
-      tempHand,
-      discardTile,
-      false,              // isTsumo = false（ロン）
-      this.playerWind,    // 自風
-      1                   // 場風（東場固定）
+      p,                                   // player
+      p.hand,                              // handTiles
+      lastTile,                            // winTile
+      true,                                // isTsumo
+      false,                               // isRon
+      this.playerWind,                     // playerWind
+      1,                                   // roundWind
+      this.doraIndicators,                 // ドラ
+      this.uraIndicators,                  // 裏ドラ
+      this.wallIndex >= this.wall.length   // isLastTile
     );
 
     if (result.han > 0) {
