@@ -137,15 +137,15 @@ export class Game {
   const bottomWind = this.playerWind;
 
   // CPU1（players[1]）の風
-  let topWind, rightWind;
+  let leftWind, topWind, rightWind;
 
   if (this.playerWind === 1) {      // 自分が東
-    topWind = 2;                    // 南
-    rightWind = 3;                  // 西
-  }
-  else if (this.playerWind === 2) { // 自分が南
+    rightWind = 2;                  // 南
     topWind = 3;                    // 西
-    rightWind = 1;                  // 東
+  }
+  else if (this.playerWind === 2) {  // 自分が南
+    leftWind = 1;                    // 西
+    rightWind = 3;                   // 東
   }
   else if (this.playerWind === 3) { // 自分が西
     topWind = 1;                    // 東
