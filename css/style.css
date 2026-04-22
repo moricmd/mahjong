@@ -19,7 +19,14 @@ body {
 }
 
 
-  
+/* げーム画面 */
+#game-screen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+ 
 
 .hand {
   display: flex;
