@@ -137,44 +137,68 @@ export class Game {
   const bottomWind = this.playerWind;
 
   // CPU1（players[1]）の風
-  let leftWind, topWind, rightWind;
+  let rightWind, topWind, leftWind;
 
   if (this.playerWind === 1) {      // 自分が東
     rightWind = 2;                  // 南
     topWind = 3;                    // 西
+
+    document.getElementById("wind-left").display = "none"; // leftは使わない
+    document.getElementById("left-score").display = "none";
   }
   else if (this.playerWind === 2) {  // 自分が南
-    leftWind = 1;                    // 西
-    rightWind = 3;                   // 東
+    leftWind = 1;                    // 東
+    rightWind = 3;                   // 西
+
+    document.getElementById("wind-top").display = "none"; // topは使わない
+    document.getElementById("top-score").display = "none";
   }
   else if (this.playerWind === 3) { // 自分が西
     topWind = 1;                    // 東
-    rightWind = 2;                  // 南
+    leftWind = 2;                   // 南
+
+    document.getElementById("wind-right").display = "none"; // rightは使わない
+    document.getElementById("right-score").display = "none";
   }
 
   // UI に反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
-  document.getElementById("wind-top").textContent    = windChar[topWind];
   document.getElementById("wind-right").textContent  = windChar[rightWind];
+  document.getElementById("wind-top").textContent    = windChar[topWind];
+  document.getElementById("wind-left").textContent  = windChar[leftWind];
+  
 
-  // ★ 三麻なので左側は非表示にする
-  document.getElementById("wind-left").style.display = "none";
-  document.getElementById("score-left").style.display = "none";
 
   // 赤背景リセット
-  ["wind-bottom","wind-top","wind-right"].forEach(id=>{
+  ["wind-bottom", "wind-right", "wind-top", "wind-left"].forEach(id=>{
     document.getElementById(id).classList.remove("east-wind");
   });
 
   // 東のプレイヤーだけ赤背景
   if (bottomWind === 1) document.getElementById("wind-bottom").classList.add("east-wind");
-  if (topWind === 1)    document.getElementById("wind-top").classList.add("east-wind");
   if (rightWind === 1)  document.getElementById("wind-right").classList.add("east-wind");
+  if (topWind === 1)    document.getElementById("wind-top").classList.add("east-wind");
+  if (leftWind === 1)  document.getElementById("wind-left").classList.add("east-wind");
 
+  
   // 点数表示
-  document.getElementById("score-bottom").textContent = this.scores[0];
-  document.getElementById("score-top").textContent    = this.scores[1];
-  document.getElementById("score-right").textContent  = this.scores[2];
+  if (this.playerWind === 1) {      // 自分が東
+    document.getElementById("score-bottom").textContent = this.scores[0];
+    document.getElementById("score-right").textContent  = this.scores[1];
+    document.getElementById("score-top").textContent    = this.scores[2];
+  }
+  else if (this.playerWind === 2) {  // 自分が南
+    document.getElementById("score-bottom").textContent = this.scores[0];
+    document.getElementById("score-left").textContent   = this.scores[1];
+    document.getElementById("score-right").textContent  = this.scores[2];
+  }
+  else if (this.playerWind === 3) { // 自分が西
+    document.getElementById("score-bottom").textContent = this.scores[0];
+    document.getElementById("score-top").textContent   = this.scores[1];
+    document.getElementById("score-lrft").textContent  = this.scores[2];
+  }
+
+  
 }
 
   
