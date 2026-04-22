@@ -296,31 +296,6 @@ body {
 
 
 
-
-
-#cpu1-hand {
-  position: absolute;
-  top: 20px;
-  left: 50px;
-  transform: translateX(20%) rotate(180deg);
-  
-  display: flex;
-  margin: 0 auto;
-  gap: 4px;
-  z-index: 1000;
-}
-
-#cpu2-hand {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateX(-40%) rotate(90deg);
-
-  display: flex;
-  gap: 4px;
-  z-index: 1000;
-}
-
 #player-hand {
   position: absolute;
   bottom: 20px;
