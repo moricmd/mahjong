@@ -7,7 +7,10 @@ import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
 
 export class Game {
-  constructor() {
+  constructor(index, isCPU) {
+
+    this.index = index;
+    this.isCPU = isCPU;
     this.players = [
       new Player(0, false),
       new Player(1, true),
