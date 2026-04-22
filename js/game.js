@@ -121,6 +121,53 @@ export class Game {
 
 
   // -------------------------
+  // 風の割り当て
+  // -------------------------
+  assignSeatsByWind() {
+  const bottomWind = this.playerWind;
+
+  let rightWind, topWind, leftWind;
+
+    this.players[0].position = "bottom";
+    this.players[0].wind = bottomWind;
+
+  if (bottomWind === 1) {      // 自分が東
+    rightWind = 2;             // 南
+    topWind = 3;               // 西
+
+    this.players[1].position = "right";
+    this.players[2].position = "top";
+
+    this.players[1].wind = rightWind;
+    this.players[2].wind = topWind;
+    
+    } else if (bottomWind === 2) { // 自分が南
+      leftWind = 1;              // 東
+      rightWind = 3;             // 西
+
+      this.players[1].position = "left";
+      this.players[2].position = "right";
+
+      this.players[1].wind = leftWind;
+      this.players[2].wind = rightWind;
+    
+    } else if (bottomWind === 3) { // 自分が西
+      topWind = 1;               // 東
+      leftWind = 2;              // 南
+
+      this.players[1].position = "top";
+      this.players[2].position = "left";
+
+      this.players[1].wind = topWind;
+      this.players[2].wind = leftWind;
+    }
+
+  }
+
+  
+
+
+  // -------------------------
   // 山の表示
   // -------------------------
   updateTableInfo() {
@@ -133,33 +180,6 @@ export class Game {
 
   const windChar = {1:"東", 2:"南", 3:"西"};
 
- // 自分の風
-  const bottomWind = this.playerWind;
-
-  // CPU1（players[1]）の風
-  let rightWind, topWind, leftWind;
-
-  if (this.playerWind === 1) {      // 自分が東
-    rightWind = 2;                  // 南
-    topWind = 3;                    // 西
-
-    document.getElementById("wind-left").display = "none"; // leftは使わない
-    document.getElementById("left-score").display = "none";
-  }
-  else if (this.playerWind === 2) {  // 自分が南
-    leftWind = 1;                    // 東
-    rightWind = 3;                   // 西
-
-    document.getElementById("wind-top").display = "none"; // topは使わない
-    document.getElementById("top-score").display = "none";
-  }
-  else if (this.playerWind === 3) { // 自分が西
-    topWind = 1;                    // 東
-    leftWind = 2;                   // 南
-
-    document.getElementById("wind-right").display = "none"; // rightは使わない
-    document.getElementById("right-score").display = "none";
-  }
 
   // UI に反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
