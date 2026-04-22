@@ -232,6 +232,8 @@ body {
 /* 手牌の表示 */
 .hand-area {
   position: absolute;
+  display: flex;
+  gap: 4px;
 }
 
 .hand-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
