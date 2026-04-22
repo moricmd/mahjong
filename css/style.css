@@ -247,13 +247,6 @@ body {
   position: absolute;
   display: flex;
   gap: 4px;
-}
-
-
-.hand-area {
-  position: absolute;
-  display: flex;
-  gap: 4px;
   z-index: 50;
 }
 
