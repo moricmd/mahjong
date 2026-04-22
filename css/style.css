@@ -243,7 +243,10 @@ body {
 
 
 /* 捨て牌の表示 */
-.discard-area { position: absolute; }
+.discard-area {
+  position: absolute;
+  display: flex;
+  gap: 4px;}
 
 .discard-bottom { bottom: 80px; left: 50%; transform: translateX(-50%); }
 .discard-top    { top: 80px;    left: 50%; transform: translateX(-50%) rotate(180deg); }
