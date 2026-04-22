@@ -103,8 +103,11 @@ export class Game {
     renderDiscards(1, this.players[1].discards, this.players[1].position);
     renderDiscards(2, this.players[2].discards, this.players[2].position);
 
+ 
+
 
     this.updateTableInfo();
+    this.updateCPUHandPosition();
 
   }
 
@@ -112,8 +115,6 @@ export class Game {
   // -------------------------
   // 風の割り当て
   // -------------------------  
-
-
   assignSeatsByWind() {
   const bottomWind = this.playerWind; //自分は常に下
 
@@ -154,6 +155,28 @@ export class Game {
     }
 
   }
+
+  // -------------------------
+  // CPUの手牌のクラスを指定
+  // -------------------------
+  updateCPUHandPosition() {
+  const cpu1 = this.players[1];
+  const cpu2 = this.players[2];
+
+  const area1 = document.getElementById("cpu1-hand");
+  const area2 = document.getElementById("cpu2-hand");
+
+  // 既存クラスをリセット
+  area1.className = "hand-area";
+  area2.className = "hand-area";
+
+  // CPU1
+  area1.classList.add(`hand-${cpu1.position}`);
+
+  // CPU2
+  area2.classList.add(`hand-${cpu2.position}`);
+}
+
 
   
 
