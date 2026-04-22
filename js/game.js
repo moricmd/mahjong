@@ -171,16 +171,20 @@ export class Game {
 
   const windChar = {1:"東", 2:"南", 3:"西"};
 
-  //
+  // ★ assignSeatsByWind() が wind をセット済み
   const bottomWind = this.players[0].wind;
   const rightWind  = this.players[1].wind;
   const topWind    = this.players[2].wind;
-  const leftWind   = null; // 三麻なので基本使わない
+
+  // ★ 左側は「position が left のプレイヤー」を探して決める
+  let leftWind = null;
+  const leftPlayer = this.players.find(p => p.position === "left");
+  if (leftPlayer) leftWind = leftPlayer.wind;
 
   // UI に反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
-  document.getElementById("wind-right").textContent  = windChar[rightWind];
-  document.getElementById("wind-top").textContent    = windChar[topWind];
+  document.getElementById("wind-right").textContent  = rightWind ? windChar[rightWind] : "";
+  document.getElementById("wind-top").textContent    = topWind ? windChar[topWind] : "";
   document.getElementById("wind-left").textContent   = leftWind ? windChar[leftWind] : "";
 
   // 赤背景リセット
@@ -194,12 +198,11 @@ export class Game {
   if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
   if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
 
-  // 点数表示
+  // 点数表示（座席順に合わせる）
   document.getElementById("score-bottom").textContent = this.scores[0];
   document.getElementById("score-right").textContent  = this.scores[1];
   document.getElementById("score-top").textContent    = this.scores[2];
 }
-
 
   
   // ------------------------------
