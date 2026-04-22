@@ -249,10 +249,35 @@ body {
   gap: 4px;
 }
 
-.hand-bottom { bottom: 0; left: 50%; transform: translateX(-50%); }
-.hand-top    { top: 0;    left: 50%; transform: translateX(-50%) rotate(180deg); }
-.hand-right  { right: 0;  top: 50%;  transform: translateY(-50%) rotate(90deg); }
-.hand-left   { left: 0;   top: 50%;  transform: translateY(-50%) rotate(-90deg); }
+
+.hand-area {
+  position: absolute;
+  display: flex;
+  gap: 4px;
+  z-index: 50;
+}
+
+/* 上側 */
+.hand-top {
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+
+/* 左側 */
+.hand-left {
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* 右側 */
+.hand-right {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
 
 
 /* 捨て牌の表示 */
