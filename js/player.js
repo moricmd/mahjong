@@ -1,8 +1,8 @@
 // player.js
 
 export class Player {
-  constructor(id, isCPU = false) {
-    this.id = id;
+  constructor(index, isCPU = false) {
+    this.index = index;
     this.isCPU = isCPU;
 
     // 手牌・捨て牌
