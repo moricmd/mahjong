@@ -152,6 +152,7 @@ body {
   width: 300px;
   height: 300px;
   pointer-events: none;
+  transform(-50%, -50%);
 
   background: rgba(0, 0, 0, 0.15); /* 半透明グレー */
   padding: 8px 12px;
