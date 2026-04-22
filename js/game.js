@@ -229,10 +229,24 @@ export class Game {
   if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
   if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
 
-  // ★ 点数表示（座席順に合わせる）
-  document.getElementById("score-bottom").textContent = this.scores[0];
-  document.getElementById("score-right").textContent  = this.scores[1];
-  document.getElementById("score-top").textContent    = this.scores[2];
+// ★ 点数表示（座席順に合わせる）
+for (let i = 0; i < 3; i++) {
+  const pos = this.players[i].position;
+
+  if (pos === "bottom") {
+    document.getElementById("score-bottom").textContent = this.scores[i];
+  }
+  if (pos === "right") {
+    document.getElementById("score-right").textContent = this.scores[i];
+  }
+  if (pos === "top") {
+    document.getElementById("score-top").textContent = this.scores[i];
+  }
+  if (pos === "left") {
+    document.getElementById("score-left").textContent = this.scores[i];
+  }
+}
+
 }
 
 
