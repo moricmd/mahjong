@@ -171,15 +171,19 @@ export class Game {
 
   const windChar = {1:"東", 2:"南", 3:"西"};
 
-  // ★ assignSeatsByWind() が wind をセット済み
+  // ★ まず全員の風を取得
   const bottomWind = this.players[0].wind;
-  const rightWind  = this.players[1].wind;
-  const topWind    = this.players[2].wind;
 
-  // ★ 左側に座っているプレイヤーを探す
-  let leftWind = null;
-  const leftPlayer = this.players.find(p => p.position === "left");
-  if (leftPlayer) leftWind = leftPlayer.wind;
+  // ★ 右・上・左に誰が座っているかを position から判定
+  let rightWind = null;
+  let topWind   = null;
+  let leftWind  = null;
+
+  for (const p of this.players) {
+    if (p.position === "right") rightWind = p.wind;
+    if (p.position === "top")   topWind   = p.wind;
+    if (p.position === "left")  leftWind  = p.wind;
+  }
 
   // UI に反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
@@ -203,6 +207,7 @@ export class Game {
   document.getElementById("score-right").textContent  = this.scores[1];
   document.getElementById("score-top").textContent    = this.scores[2];
 }
+
 
   
   // ------------------------------
