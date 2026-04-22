@@ -171,10 +171,10 @@ export class Game {
 
   const windChar = {1:"東", 2:"南", 3:"西"};
 
-  // ★ まず全員の風を取得
+  // ★ assignSeatsByWind() が wind をセット済み
   const bottomWind = this.players[0].wind;
 
-  // ★ 右・上・左に誰が座っているかを position から判定
+  // ★ 右・上・左のプレイヤーを position から判定
   let rightWind = null;
   let topWind   = null;
   let leftWind  = null;
@@ -185,24 +185,51 @@ export class Game {
     if (p.position === "left")  leftWind  = p.wind;
   }
 
-  // UI に反映
+  // ★ まず全枠を非表示にする
+  document.getElementById("wind-right").style.display = "none";
+  document.getElementById("wind-top").style.display   = "none";
+  document.getElementById("wind-left").style.display  = "none";
+
+  document.getElementById("score-right").style.display = "none";
+  document.getElementById("score-top").style.display   = "none";
+  document.getElementById("score-left").style.display  = "none";
+
+  // ★ bottom は必ず表示
+  document.getElementById("wind-bottom").style.display = "flex";
+  document.getElementById("score-bottom").style.display = "block";
+
+  // ★ 存在する座席だけ表示
+  if (rightWind !== null) {
+    document.getElementById("wind-right").style.display = "flex";
+    document.getElementById("score-right").style.display = "block";
+  }
+  if (topWind !== null) {
+    document.getElementById("wind-top").style.display = "flex";
+    document.getElementById("score-top").style.display = "block";
+  }
+  if (leftWind !== null) {
+    document.getElementById("wind-left").style.display = "flex";
+    document.getElementById("score-left").style.display = "block";
+  }
+
+  // ★ 風文字を反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
   document.getElementById("wind-right").textContent  = rightWind ? windChar[rightWind] : "";
   document.getElementById("wind-top").textContent    = topWind ? windChar[topWind] : "";
   document.getElementById("wind-left").textContent   = leftWind ? windChar[leftWind] : "";
 
-  // 赤背景リセット
+  // ★ 赤背景リセット
   ["wind-bottom", "wind-right", "wind-top", "wind-left"].forEach(id=>{
     document.getElementById(id).classList.remove("east-wind");
   });
 
-  // 東のプレイヤーだけ赤背景
+  // ★ 東のプレイヤーだけ赤背景
   if (bottomWind === 1) document.getElementById("wind-bottom").classList.add("east-wind");
   if (rightWind  === 1) document.getElementById("wind-right").classList.add("east-wind");
   if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
   if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
 
-  // 点数表示
+  // ★ 点数表示（座席順に合わせる）
   document.getElementById("score-bottom").textContent = this.scores[0];
   document.getElementById("score-right").textContent  = this.scores[1];
   document.getElementById("score-top").textContent    = this.scores[2];
