@@ -135,7 +135,7 @@ body {
 
 /* 雀卓 */
 #table {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100vw;
