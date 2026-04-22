@@ -58,7 +58,11 @@ export function renderPlayerHand(player, onClick, autoSort) {
 export function renderCPUHand(player) {
   const area = document.getElementById(`cpu${player.index}-hand`);
 
-  // 初期化
+  if (!area) {
+    console.error("CPU hand area not found:", `cpu${player.index}-hand`);
+    return;
+  }
+
   area.className = "hand-area";
   area.classList.add(`hand-${player.position}`);
 
@@ -71,6 +75,7 @@ export function renderCPUHand(player) {
     area.appendChild(img);
   }
 }
+
 
 
 
