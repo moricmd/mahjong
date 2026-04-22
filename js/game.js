@@ -122,9 +122,11 @@ export class Game {
 
   // -------------------------
   // 風の割り当て
-  // -------------------------
-  assignSeatsByWind() {
+  // -------------------------  
   const bottomWind = this.playerWind;
+
+  assignSeatsByWind() {
+
 
   let rightWind, topWind, leftWind;
 
