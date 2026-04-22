@@ -60,8 +60,6 @@ export function renderCPUHand(player) {
 
   // 初期化
   area.className = "hand-area";
-
-  // 座り順クラス
   area.classList.add(`hand-${player.position}`);
 
   area.innerHTML = "";
@@ -73,6 +71,7 @@ export function renderCPUHand(player) {
     area.appendChild(img);
   }
 }
+
 
 
 
