@@ -60,6 +60,8 @@ export class Game {
 
     this.players[0].position = "bottom";
 
+    this.assignSeatsByWind();
+
     this.buildWall();
     this.state = "DEAL";
     this.deal();
@@ -182,14 +184,17 @@ export class Game {
 
   const windChar = {1:"東", 2:"南", 3:"西"};
 
+  //
+  const bottomWind = this.players[0].wind;
+  const rightWind  = this.players[1].wind;
+  const topWind    = this.players[2].wind;
+  const leftWind   = null; // 三麻なので基本使わない
 
   // UI に反映
   document.getElementById("wind-bottom").textContent = windChar[bottomWind];
   document.getElementById("wind-right").textContent  = windChar[rightWind];
   document.getElementById("wind-top").textContent    = windChar[topWind];
-  document.getElementById("wind-left").textContent  = windChar[leftWind];
-  
-
+  document.getElementById("wind-left").textContent   = leftWind ? windChar[leftWind] : "";
 
   // 赤背景リセット
   ["wind-bottom", "wind-right", "wind-top", "wind-left"].forEach(id=>{
@@ -198,30 +203,16 @@ export class Game {
 
   // 東のプレイヤーだけ赤背景
   if (bottomWind === 1) document.getElementById("wind-bottom").classList.add("east-wind");
-  if (rightWind === 1)  document.getElementById("wind-right").classList.add("east-wind");
-  if (topWind === 1)    document.getElementById("wind-top").classList.add("east-wind");
-  if (leftWind === 1)  document.getElementById("wind-left").classList.add("east-wind");
+  if (rightWind  === 1) document.getElementById("wind-right").classList.add("east-wind");
+  if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
+  if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
 
-  
   // 点数表示
-  if (this.playerWind === 1) {      // 自分が東
-    document.getElementById("score-bottom").textContent = this.scores[0];
-    document.getElementById("score-right").textContent  = this.scores[1];
-    document.getElementById("score-top").textContent    = this.scores[2];
-  }
-  else if (this.playerWind === 2) {  // 自分が南
-    document.getElementById("score-bottom").textContent = this.scores[0];
-    document.getElementById("score-left").textContent   = this.scores[1];
-    document.getElementById("score-right").textContent  = this.scores[2];
-  }
-  else if (this.playerWind === 3) { // 自分が西
-    document.getElementById("score-bottom").textContent = this.scores[0];
-    document.getElementById("score-top").textContent   = this.scores[1];
-    document.getElementById("score-lrft").textContent  = this.scores[2];
-  }
-
-  
+  document.getElementById("score-bottom").textContent = this.scores[0];
+  document.getElementById("score-right").textContent  = this.scores[1];
+  document.getElementById("score-top").textContent    = this.scores[2];
 }
+
 
   
   // ------------------------------
