@@ -176,7 +176,7 @@ export class Game {
   const rightWind  = this.players[1].wind;
   const topWind    = this.players[2].wind;
 
-  // ★ 左側は「position が left のプレイヤー」を探して決める
+  // ★ 左側に座っているプレイヤーを探す
   let leftWind = null;
   const leftPlayer = this.players.find(p => p.position === "left");
   if (leftPlayer) leftWind = leftPlayer.wind;
@@ -198,7 +198,7 @@ export class Game {
   if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
   if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
 
-  // 点数表示（座席順に合わせる）
+  // 点数表示
   document.getElementById("score-bottom").textContent = this.scores[0];
   document.getElementById("score-right").textContent  = this.scores[1];
   document.getElementById("score-top").textContent    = this.scores[2];
