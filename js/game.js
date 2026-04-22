@@ -160,6 +160,11 @@ export class Game {
   // CPUの手牌のクラスを指定
   // -------------------------
   updateCPUHandPosition() {
+
+  // 確認用
+  console.log("CPU1 pos:", this.players[1].position);
+  console.log("CPU2 pos:", this.players[2].position);
+
   const cpu1 = this.players[1];
   const cpu2 = this.players[2];
 
