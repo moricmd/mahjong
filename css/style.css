@@ -209,14 +209,14 @@ body {
   position: absolute;
   left: 0;
   top: 50%;
-  transform: translateX(-10px) translateY(-50%) rotate(90deg);
+  transform: translateX(-20px) translateY(-50%) rotate(90deg);
 }
 
 .side-info.right {
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateX(10px) translateY(-50%) rotate(-90deg);
+  transform: translateX(20px) translateY(-50%) rotate(-90deg);
 }
 
 .wind-box {
