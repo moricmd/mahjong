@@ -45,19 +45,6 @@ export class Game {
     const winds = [1, 2, 3];
     this.playerWind = winds[Math.floor(Math.random() * winds.length)];
 
-    if (this.playerWind === 1) {
-      this.players[1].position = "top";
-      this.players[2].position = "right";
-    }
-    if (this.playerWind === 2) {
-      this.players[1].position = "left";
-      this.players[2].position = "right";
-    }
-    if (this.playerWind === 3) {
-      this.players[1].position = "top";
-      this.players[2].position = "left";
-    }
-
     this.players[0].position = "bottom";
 
     this.assignSeatsByWind();
