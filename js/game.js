@@ -123,7 +123,7 @@ export class Game {
   // -------------------------
   // 風の割り当て
   // -------------------------  
-  const bottomWind = this.playerWind;
+  const bottomWind = this.playerWind; //自分は常に下
 
   assignSeatsByWind() {
 
