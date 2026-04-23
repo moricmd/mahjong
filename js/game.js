@@ -55,6 +55,8 @@ export class Game {
 
     this.assignSeatsByWind();
 
+    this.dealer = this.players.findIndex(p => p.wind === 1);
+    this.turn = this.dealer;
     this.buildWall();
     this.state = "DEAL";
     this.deal();
