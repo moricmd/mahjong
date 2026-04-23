@@ -696,10 +696,8 @@ autoContinue() {
   onNextTurn() {
     this.turn = (this.turn + 1) % 3;
     this.state = "TURN_START";
-    setTimeout(() => this.step(), 0)
 
     if (this.players[this.turn].isCPU) {
-      setTimeout(() => this.step(), 300);
     }
   }
 
