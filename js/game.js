@@ -57,6 +57,7 @@ export class Game {
 
     this.dealer = this.players.findIndex(p => p.wind === 1);
     this.turn = this.dealer;
+    
     this.buildWall();
     this.state = "DEAL";
     this.deal();
@@ -674,6 +675,8 @@ autoContinue() {
 
     this.state = "NEXT_TURN";
     this.updateUI();
+
+    this.autoContinue();
   }
 
   onCPUDiscard() {
