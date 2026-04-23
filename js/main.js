@@ -7,10 +7,10 @@ window.addEventListener("load", () => {
   game = new Game();
 
   
-// モード表示
-if (true){
-  game.setPlayMode("CPU戦");
-} 
+  // モード表示
+  if (true){
+    game.setPlayMode("CPU戦");
+  } 
 
 /*
 else {
@@ -19,32 +19,34 @@ else {
 */
 
 
-// game画面を呼ぶ
-function startCPUmode() {
-  window.game = new Game();
-  game.setPlayMode("CPU戦");
-}
+  // game画面を呼ぶ
+  function startCPUmode() {
+    window.game = new Game();
+    game.setPlayMode("CPU戦");
+  }
 
-function startPVPmode() {
-  window.game = new Game();
-  game.setPlayMode("対人戦");
-}
+  function startPVPmode() {
+    window.game = new Game();
+    game.setPlayMode("対人戦");
+  }
 
 
   // ------------------------------
 // 画面遷移(ログインをスキップ)
 // ------------------------------
 
-// タイトル → メニュー
-document.getElementById("start-btn").onclick = () => {
-  showScreen("menu-screen");
-};
+  // タイトル → メニュー
+  document.getElementById("start-btn").onclick = () => {
+    showScreen("menu-screen");
+  };
 
-// メニュー → CPU戦（ゲーム画面）
-document.getElementById("cpu-mode").onclick = () => {
-  showScreen("game-screen");
-  startCPUmode();
-};
+  // メニュー → CPU戦（ゲーム画面）
+  document.getElementById("cpu-mode").onclick = () => {
+    showScreen("game-screen");
+    startCPUmode();
+  };
+
+}
 
 /*
 
