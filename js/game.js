@@ -530,7 +530,6 @@ for (let i = 0; i < 3; i++) {
       return;
     }
     this.state = "DRAW";
-    setTimeout(() => this.step(), 0);
   }
 
   // -------------------------
@@ -542,7 +541,6 @@ for (let i = 0; i < 3; i++) {
     p.draw(tile);
 
     this.state = "CHECK_WIN";
-    setTimeout(() => this.step(), 0);
   }
 
   // ------------------------------
@@ -688,6 +686,7 @@ autoContinue() {
   if (this.autoSort) this.sortHand(this.turn);
 
   this.state = "NEXT_TURN";
+  setTimeout(() => this.step(), 300);
 }
 
 
