@@ -19,7 +19,7 @@ body {
 }
 
 
-/* げーム画面 */
+/* ゲーム画面 */
 #game-screen {
   position: relative;
   width: 100vw;
@@ -333,7 +333,7 @@ body {
 
 
 
- --- 河（捨て牌） --- 
+ /* 河（捨て牌） */
 #player-discards {
   position: absolute;
   bottom: 120px;     
@@ -363,7 +363,7 @@ body {
   gap: 4px;
 }
 
-*/
+
 
 /* --- 山（中央） --- */
 #wall {
