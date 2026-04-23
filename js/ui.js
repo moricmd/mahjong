@@ -97,6 +97,7 @@ export function renderDiscards(playerIndex, discards, position) {
   discards.forEach(tile => {
     const img = document.createElement("img");
     img.src = tileToImage(tile);
+    img.className = "tile";
     area.appendChild(img);
   });
 }
