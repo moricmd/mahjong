@@ -530,6 +530,7 @@ for (let i = 0; i < 3; i++) {
       return;
     }
     this.state = "DRAW";
+    setTimeout(() => this.step(), 0);
   }
 
   // -------------------------
@@ -541,6 +542,7 @@ for (let i = 0; i < 3; i++) {
     p.draw(tile);
 
     this.state = "CHECK_WIN";
+    setTimeout(() => this.step(), 0);
   }
 
   // ------------------------------
@@ -695,6 +697,7 @@ autoContinue() {
   onNextTurn() {
     this.turn = (this.turn + 1) % 3;
     this.state = "TURN_START";
+    setTimeout(() => this.step(), 0)
 
     if (this.players[this.turn].isCPU) {
       setTimeout(() => this.step(), 300);
