@@ -46,7 +46,7 @@ else {
     startCPUmode();
   };
 
-}
+});
 
 /*
 
