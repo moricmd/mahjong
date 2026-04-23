@@ -290,45 +290,71 @@ body {
   gap: 4px;}
 
 
+  
+.discard-bottom .tile {
+  transform: rotate(0deg);
+}
+  
+.discard-bottom {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+
+  
 .discard-right {
   right: 120px;
   top: 50%;
   transform: translate(-50%, 0);
-
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
   
 .discard-right .tile {
   transform: rotate(90deg);
 }
 
+
+
 .discard-top {
+  position; absolute;
   top: 120px;
   left: 50%;
   transform: translate(-50%, 0);
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
   
 .discard-top .tile {
   transform: rotate(180deg);
 }
 
+
+
+.discard-left {
+  position: absolute;
+  left: 120px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
   
 .discard-left .tile {
   transform: rotate(-90deg);
 }
-
-.discard-left {
-  left: 120px;
-  top: 50%;
-  transform: translate(0, -50%);
-}
-
-
-.discard-bottom {
-  bottom: 120px;
-  left: 50%;
-  transform: translateX(-50%, 0);
-}
-
-
 
 
 
