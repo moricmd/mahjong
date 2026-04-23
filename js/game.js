@@ -501,7 +501,7 @@ for (let i = 0; i < 3; i++) {
 
         // プレイヤー → UI で待つ
         if (!p.isCPU) {
-          return;
+          break;
         }
 
         // CPU → 自動打牌
