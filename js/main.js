@@ -23,6 +23,8 @@ else {
   function startCPUmode() {
     window.game = new Game();
     game.setPlayMode("CPU戦");
+
+    game.step();
   }
 
   function startPVPmode() {
