@@ -289,10 +289,18 @@ body {
   display: flex;
   gap: 4px;}
 
-.discard-bottom { bottom: 80px; left: 50%; transform: translateX(-50%); }
-.discard-top    { top: 80px;    left: 50%; transform: translateX(-50%) rotate(180deg); }
-.discard-right  { right: 80px;  top: 50%;  transform: translateY(-50%) rotate(90deg); }
-.discard-left   { left: 80px;   top: 50%;  transform: translateY(-50%) rotate(-90deg); }
+  
+.discard-right .tile {
+  transform: rotate(90deg);
+}
+  
+.discard-top .tile {
+  transform: rotate(180deg);
+}
+  
+.discard-left .tile {
+  transform: rotate(-90deg);
+}
 
 
  --- 河（捨て牌） --- 
@@ -301,7 +309,6 @@ body {
   bottom: 120px;     
   left: 50%;
 
-  transform: translateX(-20%)　translateY(20%);
   width: 300px;
   display: flex;
   flex-wrap: wrap;
@@ -310,9 +317,7 @@ body {
 
 #cpu1-discards {
   position: absolute;
-  top: 120px;        
-  left: 50%;
-  transform: translateX(-20%); translateY(-20%) rotate(180deg);
+
   width: 300px;
   display: flex;
   flex-wrap: wrap;
@@ -321,10 +326,7 @@ body {
 
 #cpu2-discards {
   position: absolute;
-  left: 120px;        
-  top: 40%;
   
-  transform: rotate(90deg);
   width: 300px;
   display: flex;
   flex-wrap: wrap;
