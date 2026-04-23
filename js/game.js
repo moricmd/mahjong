@@ -532,8 +532,6 @@ for (let i = 0; i < 3; i++) {
     p.draw(tile);
 
     this.state = "CHECK_WIN";
-
-      setTimeout(() => this.step(), 300);
   }
 
   // ------------------------------
