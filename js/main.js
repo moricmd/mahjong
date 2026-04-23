@@ -88,12 +88,6 @@ document.getElementById("pvp-mode").onclick = () => {
 
 
 
-  
-  document.getElementById("next-btn").onclick = () => {
-    game.step();
-  };
-});
-
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach(s => s.style.display = "none");
   document.getElementById(id).style.display = "flex";
