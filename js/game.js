@@ -486,6 +486,15 @@ for (let i = 0; i < 3; i++) {
   // ===========================================================================
 
   step() {
+
+    {
+    // ★ デバッグログ（開発用）
+    console.log(
+      `%c[STEP] Player=${this.turn} (${this.players[this.turn].isCPU ? "CPU" : "YOU"})  State=${this.state}`,
+      "color: #4CAF50; font-weight: bold;"
+    );
+  
+    
     switch (this.state) {
       case "TURN_START":
         this.onTurnStart();
