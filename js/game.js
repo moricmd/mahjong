@@ -768,4 +768,5 @@ for (let i = 0; i < 3; i++) {
   alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
   this.state = "END_ROUND";
 }
+}
 
