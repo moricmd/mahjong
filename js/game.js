@@ -461,7 +461,7 @@ for (let i = 0; i < 3; i++) {
 
     this.doraIndicators.push(tile);
 
-    // ★ あなたの仕様：北抜きでも一発消す
+    // 一発を消す
     this.clearIppatsu();
 
     this.state = "DRAW";
