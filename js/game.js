@@ -537,22 +537,23 @@ for (let i = 0; i < 3; i++) {
   // ------------------------------
   // 処理待ちとCPUの自動進行
   // ------------------------------
-  autoContinue() {
+autoContinue() {
   const p = this.players[this.turn];
 
-  // ① プレイヤーのツモ → 打牌待ち
+  // プレイヤーの打牌待ちだけ止める
   if (!p.isCPU && this.state === "DISCARD") {
-    return; // プレイヤーが捨てるまで待つ
+    return;
   }
 
-  // ② 他家の捨て牌でポン・カン可能 → 選択待ち
+  // ポン・カン選択待ち
   if (this.state === "WAIT_PON_KAN") {
-    return; // UI で選択するまで待つ
+    return;
   }
 
-  // ③ それ以外は自動で次へ
+  // それ以外は必ず進める
   setTimeout(() => this.step(), 300);
 }
+
 
   
 
