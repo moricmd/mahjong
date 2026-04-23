@@ -533,9 +533,7 @@ for (let i = 0; i < 3; i++) {
 
     this.state = "CHECK_WIN";
 
-    if (p.isCPU) {
       setTimeout(() => this.step(), 300);
-    }
   }
 
   // ------------------------------
