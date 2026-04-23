@@ -497,6 +497,15 @@ for (let i = 0; i < 3; i++) {
         break;
 
       case "DISCARD":
+        const p = this.players[this.turn];
+
+        // プレイヤー → UI で待つ
+        if (!p.isCPU) {
+          return;
+        }
+
+        // CPU → 自動打牌
+        this.onCPUDiscard();
         break;
 
       case "NEXT_TURN":
@@ -649,7 +658,7 @@ autoContinue() {
 
 
   // -------------------------
-  // DISCARD（人間）
+  // DISCARD
   // -------------------------
   onPlayerDiscard(index) {
     if (this.state !== "DISCARD") return;
@@ -664,6 +673,21 @@ autoContinue() {
     this.state = "NEXT_TURN";
     this.updateUI();
   }
+
+  onCPUDiscard() {
+  const p = this.players[this.turn];
+
+  const idx = chooseDiscardIndex(p.hand);
+  const discardTile = p.discard(idx);
+
+  // ロン判定
+  if (this.onCheckRon(discardTile, this.turn)) return;
+
+  if (this.autoSort) this.sortHand(this.turn);
+
+  this.state = "NEXT_TURN";
+}
+
 
   // -------------------------
   // NEXT_TURN
