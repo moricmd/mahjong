@@ -472,7 +472,7 @@ function countDora(tiles, indicators) {
   let count = 0;
 
   for (const ind of indicators) {
-    const next = nextTile(ind);
+    const next = nextDoraTile(ind);
     for (const t of tiles) {
       if (t.suit === next.suit && t.value === next.value) count++;
     }
@@ -480,6 +480,34 @@ function countDora(tiles, indicators) {
 
   return count;
 }
+
+
+// 補助関数: ドラ牌の処理
+function nextDoraTile(ind) {
+
+  // 数牌
+  if (ind.suit === "man" || ind.suit === "pin" || ind.suit === "sou") {
+    const nextValue = ind.value === 9 ? 1 : ind.value + 1;
+    return { suit: ind.suit, value: nextValue };
+  }
+
+  // 風牌：1=東, 2=南, 3=西, 4=北
+  if (ind.suit === "wind") {
+    const nextValue = ind.value === 4 ? 1 : ind.value + 1;
+    return { suit: "wind", value: nextValue };
+  }
+
+  // 三元牌：1=白, 2=發, 3=中
+  if (ind.suit === "dragon") {
+    const nextValue = ind.value === 3 ? 1 : ind.value + 1;
+    return { suit: "dragon", value: nextValue };
+  }
+
+  // 念のため
+  return ind;
+}
+
+
 
 // ------------------------------
 // 三色同刻
