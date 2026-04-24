@@ -487,12 +487,14 @@ for (let i = 0; i < 3; i++) {
 
   step() {
 
-    {
-    // ★ デバッグログ（開発用）
-    console.log(
-      `%c[STEP] Player=${this.turn} (${this.players[this.turn].isCPU ? "CPU" : "YOU"})  State=${this.state}`,
-      "color: #4CAF50; font-weight: bold;"
-    );
+  // ★ デバッグログ（開発用）
+  const p = this.players[this.turn];
+  const windChar = {1:"東", 2:"南", 3:"西"};
+  console.log(
+    `%c[STEP] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
+    "color:#4CAF50; font-weight:bold;"
+  );
+
   
     
     switch (this.state) {
