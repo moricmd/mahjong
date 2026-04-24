@@ -1,5 +1,5 @@
 リンク
 
-:pleading_face:
+- :pleading_face:
   
 - **https://moricmd.github.io/mahjong/**
