@@ -287,55 +287,46 @@ body {
 /* 捨て牌の表示 */
 .discard-area {
   position: absolute;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 横6枚 */
   gap: 4px;
+  width: 240px; /* 40px × 6枚 = 240px */
 }
 
+
+
+.discard-bottom {
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 .discard-bottom .tile {
   transform: rotate(0deg);
 }
-  
-.discard-bottom {
-  position: absolute;
-  bottom: 120px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  width: 300px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
+
 
 
   
 .discard-right {
   right: 120px;
   top: 50%;
-  transform: translate(-50%, 0);
-  width: 300px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  transform: translateY(-50%) rotate(-90deg);
 }
-  
+
 .discard-right .tile {
   transform: rotate(90deg);
 }
 
 
 
+
 .discard-top {
-  position: absolute;
   top: 120px;
   left: 50%;
-  transform: translate(-50%, 0);
-  width: 300px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  transform: translateX(-50%) rotate(180deg);
 }
-  
+
 .discard-top .tile {
   transform: rotate(180deg);
 }
