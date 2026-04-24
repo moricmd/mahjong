@@ -143,8 +143,8 @@ body {
 /* 雀卓 */
 #table {
   position: relative;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
   width: 95vw;
   height: 80vh;
   overflow: hidden;
