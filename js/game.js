@@ -112,12 +112,10 @@ export class Game {
     renderDiscards(1, this.players[1].discards, this.players[1].position);
     renderDiscards(2, this.players[2].discards, this.players[2].position);
 
- 
-
-
     this.updateTableInfo();
     this.updateCPUHandPosition();
 
+    renderDoraIndicators(this.doraIndicators);
   }
 
 
