@@ -315,7 +315,7 @@ body {
 }
 
 .discard-right .tile {
-  transform: rotate(90deg);
+  transform: rotate(-90deg);
 }
 
 
@@ -345,7 +345,7 @@ body {
 }
   
 .discard-left .tile {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
 }
 
 
