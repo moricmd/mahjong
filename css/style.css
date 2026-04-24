@@ -301,9 +301,7 @@ body {
   transform: translateX(-50%);
 }
 
-.discard-bottom .tile {
-  transform: rotate(0deg);
-}
+
 
 
 
@@ -314,9 +312,7 @@ body {
   transform: translateY(-50%) rotate(-90deg);
 }
 
-.discard-right .tile {
-  transform: rotate(-90deg);
-}
+
 
 
 
@@ -327,9 +323,7 @@ body {
   transform: translateX(-50%) rotate(180deg);
 }
 
-.discard-top .tile {
-  transform: rotate(180deg);
-}
+
 
 
 
@@ -344,9 +338,7 @@ body {
   gap: 4px;
 }
   
-.discard-left .tile {
-  transform: rotate(90deg);
-}
+
 
 
 
