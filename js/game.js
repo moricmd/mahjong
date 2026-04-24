@@ -805,3 +805,37 @@ autoContinue() {
 }
 }
 
+
+// ------------------------------
+// 画面中央から均等に配置
+// ------------------------------
+function updateDiscardPositions() {
+  const center = document.getElementById("table-info").getBoundingClientRect();
+
+  const cx = center.left + center.width / 2;
+  const cy = center.top + center.height / 2;
+
+  // bottom
+  const bottom = document.getElementById("discards-0");
+  bottom.style.left = `${cx}px`;
+  bottom.style.top = `${cy + 250}px`;
+  bottom.style.transform = "translateX(-50%)";
+
+  // top
+  const top = document.getElementById("discards-1");
+  top.style.left = `${cx}px`;
+  top.style.top = `${cy - 250}px`;
+  top.style.transform = "translateX(-50%) rotate(180deg)";
+
+  // right
+  const right = document.getElementById("discards-2");
+  right.style.left = `${cx + 250}px`;
+  right.style.top = `${cy}px`;
+  right.style.transform = "translateY(-50%) rotate(-90deg)";
+
+  // left（CPU2）
+  const left = document.getElementById("discards-3");
+  left.style.left = `${cx - 250}px`;
+  left.style.top = `${cy}px`;
+  left.style.transform = "translateY(-50%) rotate(90deg)";
+}
