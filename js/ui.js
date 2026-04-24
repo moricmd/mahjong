@@ -36,12 +36,11 @@ export function renderDoraIndicators(doraIndicators) {
 
   for (const tile of doraIndicators) {
     const img = document.createElement("img");
-    img.src = `./img/${tile.suit}-${tile.value}.png`;  // ← 牌画像パスに合わせて変更
+    img.src = tileToImage(tile);
     img.className = "tile dora-tile";
     area.appendChild(img);
   }
 }
-
 
 
 // -------------------------
