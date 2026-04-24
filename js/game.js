@@ -116,6 +116,9 @@ export class Game {
     this.updateCPUHandPosition();
 
     renderDoraIndicators(this.doraIndicators);
+    
+    updateTurnIndicator(this.turn);
+
   }
 
 
@@ -279,6 +282,32 @@ for (let i = 0; i < 3; i++) {
 }
 
 }
+
+
+// ------------------------------ 
+// ターンインジケーター
+// ------------------------------
+function updateTurnIndicator(currentPlayer) {
+  const winds = ["bottom", "right", "top", "left"]; // あなたの座席順に合わせて調整
+
+  // まず全てのハイライトを消す
+  winds.forEach(pos => {
+    document.getElementById(`wind-${pos}`).classList.remove("turn-highlight");
+    document.getElementById(`score-${pos}`).classList.remove("turn-highlight");
+  });
+
+  // 山の点滅も消す
+  document.getElementById("table-info").classList.remove("wall-blink");
+
+  // 現在の手番にハイライトを付ける
+  const pos = winds[currentPlayer];
+  document.getElementById(`wind-${pos}`).classList.add("turn-highlight");
+  document.getElementById(`score-${pos}`).classList.add("turn-highlight");
+
+  // 山を点滅させる
+  document.getElementById("table-info").classList.add("wall-blink");
+}
+
 
 
   
