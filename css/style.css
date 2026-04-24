@@ -297,7 +297,7 @@ body {
 
 .discard-bottom {
   position: absolute;
-  top: calc(50% + 140px);
+  top: calc(50% + 100px);
   left: 50%;
   transform: translateX(-50%);
 }
@@ -305,7 +305,7 @@ body {
 
 .discard-right {
   position: absolute;
-  left: calc(50% + 140px);
+  left: calc(50% + 100px);
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
@@ -313,7 +313,7 @@ body {
 
 .discard-top {
   position: absolute;
-  top: calc(50% - 140px);
+  top: calc(50% - 100px);
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
@@ -321,7 +321,7 @@ body {
 
 .discard-left {
   position: absolute;
-  left: calc(50% - 140px);
+  left: calc(50% - 100px);
   top: 50%;
   transform: translate(0, -50%) rotate(90deg);
 }
