@@ -6,6 +6,8 @@ import { tileToImage } from "./tiles.js";
 // -------------------------
 // 牌画像を作る
 // -------------------------
+
+// 表面
 export function createTileImg(tile) {
   const img = document.createElement("img");
   img.src = tileToImage(tile);
@@ -13,14 +15,34 @@ export function createTileImg(tile) {
   return img;
 }
 
-
-
+// 裏面
 export function createBackImg() {
   const img = document.createElement("img");
   img.src = "img/back.png";
   img.className = "tile";
   return img;
 }
+
+
+
+// -------------------------
+// ドラ表示
+// -------------------------
+export function renderDoraIndicators(doraIndicators) {
+  const area = document.getElementById("dora-indicators");
+  if (!area) return;
+
+  area.innerHTML = ""; // 一旦クリア
+
+  for (const tile of doraIndicators) {
+    const img = document.createElement("img");
+    img.src = `./img/${tile.suit}-${tile.value}.png`;  // ← 牌画像パスに合わせて変更
+    img.className = "tile dora-tile";
+    area.appendChild(img);
+  }
+}
+
+
 
 // -------------------------
 // 手牌表示（プレイヤー）
