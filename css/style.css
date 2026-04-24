@@ -258,28 +258,28 @@ body {
 .hand-top {
   top: 80px;
   left: 50%;
-  transform: translate(-50%, 0) rotate(180deg);
+  transform: translate(-35%, 0) rotate(180deg);
 }
 
 /* 左側 */
 .hand-left {
   top: 50%;
   left: 80px;
-  transform: translate(-50%, -50%) rotate(90deg);
+  transform: translate(-65%, -0%) rotate(90deg);
 }
 
 /* 右側 */
 .hand-right {
   top: 50%;
   right: 80px;
-  transform: translate(50%, -50%) rotate(-90deg);
+  transform: translate(65%, -50%) rotate(-90deg);
 }
 
 /* 下側 */
 .hand-bottom {
   bottom: 80px;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, -15%);
 }
 
 
