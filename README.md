@@ -1,5 +1,3 @@
 # リンク
-
-- これをアドレスバーにコピペしてね
   
-**https://moricmd.github.io/mahjong/**
+- **https://moricmd.github.io/mahjong/**
