@@ -244,6 +244,23 @@ body {
   color: #000;
 }
 
+/* 手番プレイヤーのスコア枠を光らせる */
+.turn-highlight {
+  box-shadow: 0 0 12px 4px rgba(255, 220, 0, 0.9);
+  background: rgba(255, 230, 120, 0.6);
+  transition: 0.2s;
+}
+
+/* 山の縁を点滅させる */
+@keyframes blink-border {
+  0%   { box-shadow: 0 0 0px 0px rgba(255, 220, 0, 0.0); }
+  50%  { box-shadow: 0 0 18px 6px rgba(255, 220, 0, 1.0); }
+  100% { box-shadow: 0 0 0px 0px rgba(255, 220, 0, 0.0); }
+}
+
+.wall-blink {
+  animation: blink-border 1s infinite;
+}
 
 
 /* 手牌の表示 */
