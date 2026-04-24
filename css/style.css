@@ -302,19 +302,11 @@ body {
 }
 
 
-
-
-
-  
 .discard-right {
   right: 120px;
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
-
-
-
-
 
 
 .discard-top {
@@ -324,18 +316,10 @@ body {
 }
 
 
-
-
-
 .discard-left {
-  position: absolute;
   left: 120px;
   top: 50%;
   transform: translate(0, -50%)　rotate(90deg);
-  width: 300px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
 }
   
 
