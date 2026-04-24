@@ -296,28 +296,32 @@ body {
 
 
 .discard-bottom {
-  bottom: 120px;
+  position: absolute;
+  top: calc(50% + 140px);
   left: 50%;
   transform: translateX(-50%);
 }
 
 
 .discard-right {
-  right: 120px;
+  position: absolute;
+  left: calc(50% + 140px);
   top: 50%;
   transform: translateY(-50%) rotate(-90deg);
 }
 
 
 .discard-top {
-  top: 120px;
+  position: absolute;
+  top: calc(50% - 140px);
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
 
 
 .discard-left {
-  left: 120px;
+  position: absolute;
+  left: calc(50% - 140px);
   top: 50%;
   transform: translate(0, -50%) rotate(90deg);
 }
