@@ -331,7 +331,7 @@ body {
   position: absolute;
   left: 120px;
   top: 50%;
-  transform: translate(0, -50%);
+  transform: translate(0, -50%)　rotate(90deg);
   width: 300px;
   display: flex;
   flex-wrap: wrap;
