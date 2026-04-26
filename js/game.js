@@ -287,7 +287,7 @@ for (let i = 0; i < 3; i++) {
 // ------------------------------ 
 // ターンインジケーター
 // ------------------------------
-function updateTurnIndicator(currentPlayer) {
+updateTurnIndicator(currentPlayer) {
   const winds = ["bottom", "right", "top", "left"]; // あなたの座席順に合わせて調整
 
   // まず全てのハイライトを消す
