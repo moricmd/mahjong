@@ -117,7 +117,7 @@ export class Game {
 
     renderDoraIndicators(this.doraIndicators);
     
-    updateTurnIndicator(this.turn);
+    this.updateTurnIndicator(this.turn);
 
   }
 
