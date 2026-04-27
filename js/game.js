@@ -922,7 +922,7 @@ updateTurnIndicator(currentPlayer) {
   // 山のサイズに応じて距離を調整
   const yama = document.getElementById("table-info");
   const yamaRect = yama.getBoundingClientRect();
-  const offset = yamaRect.width * 0.75;   // 手牌より少し近めが自然
+  const offset = yamaRect.width * 0.75;
 
   // bottom
   const discBottom = document.querySelector(".discard-bottom");
