@@ -598,31 +598,41 @@ updateTurnIndicator(currentPlayer) {
   // ------------------------------
   // 処理待ちとCPUの自動進行
   // ------------------------------
-autoContinue() {
-  const p = this.players[this.turn];
+  autoContinue() {
+    const p = this.players[this.turn];
 
-  // プレイヤーの打牌待ちだけ止める
-  if (!p.isCPU && this.state === "DISCARD") {
-    return;
+    // プレイヤーの打牌待ちだけ止める
+    if (!p.isCPU && this.state === "DISCARD") {
+      return;
+    }
+
+    // ポン・カン選択待ち
+    if (this.state === "WAIT_PON_KAN") {
+      return;
+    }
+
+    // 基本の処理遅延は300ms
+    if (this.state !== "DISCARD") {
+      setTimeout(() => this.step(), 300);
+      return;
+    }
+
+
+    // 次のプレイヤーに移るときのみ500ms
+    if (this.state !== "DISCARD") {
+      setTimeout(() => this.step(), 300);
+      return;  
+    }
+    
   }
-
-  // ポン・カン選択待ち
-  if (this.state === "WAIT_PON_KAN") {
-    return;
-  }
-
-  // それ以外は必ず進める
-  const delay = this.getRandomDelay();
-  setTimeout(() => this.step(), delay);
-}
-
+ 
   // ------------------------------
   // CPUの思考時間をランダム生成
   // ------------------------------
   getRandomDelay() {
+    // CPUの打牌時のみ2500〜3500ms
     return 2500 + Math.floor(Math.random() * 1000); 
-  // 2500〜3499ms（≒2.5〜3.5秒）
-}
+  }
 
 
   
