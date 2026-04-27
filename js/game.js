@@ -119,6 +119,8 @@ export class Game {
     
     this.updateTurnIndicator(this.turn);
 
+    this.updateHandPositions();
+    this.updateDiscardPositions();
   }
 
 
