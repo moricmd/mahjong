@@ -288,31 +288,35 @@ for (let i = 0; i < 3; i++) {
 // ターンインジケーター
 // ------------------------------
 updateTurnIndicator(currentPlayer) {
-  const winds = ["bottom", "right", "top"];
-
-  // スコア枠のハイライトをリセット
-  winds.forEach(pos => {
-    document.getElementById(`wind-${pos}`).classList.remove("turn-highlight");
-    document.getElementById(`score-${pos}`).classList.remove("turn-highlight");
+  // まず全部リセット
+  ["bottom", "right", "top", "left"].forEach(pos => {
+    const w = document.getElementById(`wind-${pos}`);
+    const s = document.getElementById(`score-${pos}`);
+    if (w) w.classList.remove("turn-highlight");
+    if (s) s.classList.remove("turn-highlight");
   });
 
-  // 山の縁を全部消す
   ["wall-top", "wall-right", "wall-bottom", "wall-left"].forEach(id => {
-    document.getElementById(id).style.display = "none";
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
   });
 
-  // 現在の手番
-  const pos = winds[currentPlayer];
+  // 今の手番プレイヤーの座席を取得
+  const pos = this.players[currentPlayer].position; // ← ここがポイント
 
   // スコア枠を光らせる
-  document.getElementById(`wind-${pos}`).classList.add("turn-highlight");
-  document.getElementById(`score-${pos}`).classList.add("turn-highlight");
+  const w = document.getElementById(`wind-${pos}`);
+  const s = document.getElementById(`score-${pos}`);
+  if (w) w.classList.add("turn-highlight");
+  if (s) s.classList.add("turn-highlight");
 
   // 山の縁を方向に応じて点滅
   if (pos === "bottom") document.getElementById("wall-bottom").style.display = "block";
   if (pos === "right")  document.getElementById("wall-right").style.display  = "block";
   if (pos === "top")    document.getElementById("wall-top").style.display    = "block";
+  if (pos === "left")   document.getElementById("wall-left").style.display   = "block";
 }
+
 
 
 
