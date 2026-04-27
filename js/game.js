@@ -868,38 +868,39 @@ updateTurnIndicator(currentPlayer) {
   // ------------------------------
   // 画面中央から均等に配置
   // ------------------------------
- updateDiscardPositions() {
+updateDiscardPositions() {
   const table = document.getElementById("table");
   const tableRect = table.getBoundingClientRect();
 
-  const info = document.getElementById("table-info");
-  const infoRect = info.getBoundingClientRect();
+  const yama = document.getElementById("table-info");
+  const yamaRect = yama.getBoundingClientRect();
 
-  // #table 内での山の中心座標を計算
-  const cx = infoRect.left - tableRect.left + infoRect.width / 2;
-  const cy = infoRect.top  - tableRect.top  + infoRect.height / 2;
+  // #table 内での山の中心座標（絶対にズレない）
+  const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
+  const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
 
-  const offset = 250; // 山からの距離（調整可）
+  // 山からの距離（調整可能）
+  const offset = 250;
 
-  // bottom
+  // bottom（自分）
   const bottom = document.getElementById("discards-0");
   bottom.style.left = `${cx}px`;
   bottom.style.top  = `${cy + offset}px`;
   bottom.style.transform = "translateX(-50%)";
 
-  // top
+  // top（対面）
   const top = document.getElementById("discards-1");
   top.style.left = `${cx}px`;
   top.style.top  = `${cy - offset}px`;
   top.style.transform = "translateX(-50%) rotate(180deg)";
 
-  // right
+  // right（上家）
   const right = document.getElementById("discards-2");
   right.style.left = `${cx + offset}px`;
   right.style.top  = `${cy}px`;
   right.style.transform = "translateY(-50%) rotate(-90deg)";
 
-  // left
+  // left（下家）
   const left = document.getElementById("discards-3");
   left.style.left = `${cx - offset}px`;
   left.style.top  = `${cy}px`;
