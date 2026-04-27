@@ -882,7 +882,7 @@ updateTurnIndicator(currentPlayer) {
     const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
 
     // 山からの距離
-    const offset = 350;
+    const offset = yamaRect.width * 0.0;
 
     // bottom
     const handBottom = document.querySelector(".hand-bottom");
@@ -927,7 +927,7 @@ updateTurnIndicator(currentPlayer) {
     const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
 
     // 山からの距離
-    const offset = 250;
+    const offset = yamaRect.width * 0.9;
 
     // bottom
     const discBottom = document.querySelector(".discard-bottom");
