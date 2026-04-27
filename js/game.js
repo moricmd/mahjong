@@ -612,7 +612,7 @@ autoContinue() {
   }
 
   // それ以外は必ず進める
-  const delay = getRandomDelay();
+  const delay = this.getRandomDelay();
   setTimeout(() => this.step(), delay);
 }
 
@@ -750,7 +750,7 @@ autoContinue() {
 
     this.state = "NEXT_TURN";
     
-    const delay = getRandomDelay();
+    const delay = this.getRandomDelay();
     setTimeout(() => this.step(), delay);
   }
 
