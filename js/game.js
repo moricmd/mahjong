@@ -868,43 +868,101 @@ updateTurnIndicator(currentPlayer) {
   // ------------------------------
   // 画面中央から均等に配置
   // ------------------------------
-updateDiscardPositions() {
-  const table = document.getElementById("table");
-  const tableRect = table.getBoundingClientRect();
+  updateHandPositions() {
+    const table = document.getElementById("table");
+    const tableRect = table.getBoundingClientRect();
 
-  const yama = document.getElementById("table-info");
-  const yamaRect = yama.getBoundingClientRect();
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
 
-  // #table 内での山の中心座標（絶対にズレない）
-  const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
-  const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
+    // 山の中心（#table 内座標）
+    const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
+    const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
 
-  // 山からの距離（調整可能）
-  const offset = 250;
+    // 山からの距離
+    const offset = 350;
 
-  // bottom（自分）
-  const bottom = document.getElementById("discards-0");
-  bottom.style.left = `${cx}px`;
-  bottom.style.top  = `${cy + offset}px`;
-  bottom.style.transform = "translateX(-50%)";
+    // bottom
+    const handBottom = document.querySelector(".hand-bottom");
+      if (handBottom) {
+        handBottom.style.left = `${cx}px`;
+        handBottom.style.top  = `${cy + offset}px`;
+        handBottom.style.transform = "translateX(-50%)";
+      }
 
-  // top（対面）
-  const top = document.getElementById("discards-1");
-  top.style.left = `${cx}px`;
-  top.style.top  = `${cy - offset}px`;
-  top.style.transform = "translateX(-50%) rotate(180deg)";
+    // top
+    const handTop = document.querySelector(".hand-top");
+      if (handTop) {
+        handTop.style.left = `${cx}px`;
+        handTop.style.top  = `${cy - offset}px`;
+        handTop.style.transform = "translateX(-50%) rotate(180deg)";
+      }
 
-  // right（上家）
-  const right = document.getElementById("discards-2");
-  right.style.left = `${cx + offset}px`;
-  right.style.top  = `${cy}px`;
-  right.style.transform = "translateY(-50%) rotate(-90deg)";
+    // right
+    const handRight = document.querySelector(".hand-right");
+      if (handRight) {
+        handRight.style.left = `${cx + offset}px`;
+        handRight.style.top  = `${cy}px`;
+        handRight.style.transform = "translateY(-50%) rotate(-90deg)";
+      }
 
-  // left（下家）
-  const left = document.getElementById("discards-3");
-  left.style.left = `${cx - offset}px`;
-  left.style.top  = `${cy}px`;
-  left.style.transform = "translateY(-50%) rotate(90deg)";
-}
+    // left
+    const handLeft = document.querySelector(".hand-left");
+      if (handLeft) {
+        handLeft.style.left = `${cx - offset}px`;
+        handLeft.style.top  = `${cy}px`;
+        handLeft.style.transform = "translateY(-50%) rotate(90deg)";
+      }
+  }
+
+
+  
+  updateDiscardPositions() {
+    const table = document.getElementById("table");
+    const tableRect = table.getBoundingClientRect();
+
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
+
+    // 山の中心（#table 内座標）
+    const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
+    const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
+
+    // 山からの距離
+    const offset = 250;
+
+    // bottom
+    const discBottom = document.querySelector(".discard-bottom");
+      if (discBottom) {
+        discBottom.style.left = `${cx}px`;
+        discBottom.style.top  = `${cy + offset}px`;
+        discBottom.style.transform = "translateX(-50%)";
+      }
+
+    // top
+    const discTop = document.querySelector(".discard-top");
+      if (discTop) {
+        discTop.style.left = `${cx}px`;
+        discTop.style.top  = `${cy - offset}px`;
+        discTop.style.transform = "translateX(-50%) rotate(180deg)";
+    }
+
+    // right
+    const discRight = document.querySelector(".discard-right");
+      if (discRight) {
+        discRight.style.left = `${cx + offset}px`;
+        discRight.style.top  = `${cy}px`;
+        discRight.style.transform = "translateY(-50%) rotate(-90deg)";
+    }
+
+    // left
+    const discLeft = document.querySelector(".discard-left");
+      if (discLeft) {
+        discLeft.style.left = `${cx - offset}px`;
+        discLeft.style.top  = `${cy}px`;
+        discLeft.style.transform = "translateY(-50%) rotate(90deg)";
+      }
+  }
+
 
 }
