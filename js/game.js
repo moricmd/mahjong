@@ -616,7 +616,7 @@ autoContinue() {
   // CPUの思考時間をランダム生成
   // ------------------------------
   getRandomDelay() {
-  return 2500 + Math.floor(Math.random() * 1000); 
+    return 2500 + Math.floor(Math.random() * 1000); 
   // 2500〜3499ms（≒2.5〜3.5秒）
 }
 
@@ -747,7 +747,7 @@ autoContinue() {
     this.state = "NEXT_TURN";
     
     const delay = getRandomDelay();
-    setTimeout(() => this.step(), 300);
+    setTimeout(() => this.step(), delay);
   }
 
 
