@@ -347,33 +347,21 @@ body {
 
 
 .discard-bottom {
-  position: absolute;
-  top: calc(50% + 250px);
-  left: 50%;
   transform: translate(-50%, 0);
 }
 
 
 .discard-right {
-  position: absolute;
-  left: calc(50% + 250px);
-  top: 50%;
   transform: translate(0, -50%) rotate(-90deg);
 }
 
 
 .discard-top {
-  position: absolute;
-  bottom: calc(50% - 250px);
-  left: 50%;
   transform: translate(-50%, 0) rotate(180deg);
 }
 
 
 .discard-left {
-  position: absolute;
-  left: calc(50% - 250px);
-  top: 50%;
   transform: translate(0, -50%) rotate(90deg);
 }
   
