@@ -798,95 +798,95 @@ autoContinue() {
     return this.startNewHand();
   }
 
-  // ------------------------------
-  // 親交代
-  // ------------------------------
-  this.dealer = (this.dealer + 1) % 3;
+    // ------------------------------
+    // 親交代
+    // ------------------------------
+    this.dealer = (this.dealer + 1) % 3;
 
-  // 局進行
-  this.kyoku++;
+    // 局進行
+    this.kyoku++;
 
-  if (this.kyoku > 3) {
-    this.kyoku = 1;
-    this.round++;
-  }
-
-  // ------------------------------
-  // 東3 → 南入
-  // ------------------------------
-  if (this.round === 2 && this.kyoku === 1) {
-    if (!this.hasPlayerOver40000()) {
-      // 南入
+    if (this.kyoku > 3) {
+      this.kyoku = 1;
+      this.round++;
     }
-  }
 
-  // ------------------------------
-  // 南3 → 西入
-  // ------------------------------
-  if (this.round === 3 && this.kyoku === 1) {
-    if (!this.hasPlayerOver40000()) {
-      // 西入
+    // ------------------------------
+    // 東3 → 南入
+    // ------------------------------
+    if (this.round === 2 && this.kyoku === 1) {
+      if (!this.hasPlayerOver40000()) {
+        // 南入
+      }
     }
-  }
 
-  // ------------------------------
-  // 西3 → 強制終了
-  // ------------------------------
-  if (this.round === 4) {
-    this.endGame();
-    return;
-  }
+    // ------------------------------
+    // 南3 → 西入
+    // ------------------------------
+    if (this.round === 3 && this.kyoku === 1) {
+      if (!this.hasPlayerOver40000()) {
+        // 西入
+      }
+    }
 
-  this.startNewHand();
-}
+    // ------------------------------
+    // 西3 → 強制終了
+    // ------------------------------
+    if (this.round === 4) {
+      this.endGame();
+      return;
+    }
+
+    this.startNewHand();
+  }
 
   // 40000点持ちのプレイヤーがいるか
-  hasPlayerOver40000() {
-  return this.scores.some(s => s >= 40000);
-}
+   hasPlayerOver40000() {
+    return this.scores.some(s => s >= 40000);
+  }
 
 
   // 対局終了
   endGame() {
-  const maxScore = Math.max(...this.scores);
-  const winner = this.scores.indexOf(maxScore);
+    const maxScore = Math.max(...this.scores);
+    const winner = this.scores.indexOf(maxScore);
 
-  alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
-  this.state = "END_ROUND";
-}
-}
+    alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
+    this.state = "END_ROUND";
+  }
 
 
-// ------------------------------
-// 画面中央から均等に配置
-// ------------------------------
-function updateDiscardPositions() {
-  const center = document.getElementById("table-info").getBoundingClientRect();
+  // ------------------------------
+  // 画面中央から均等に配置
+  // ------------------------------
+  updateDiscardPositions() {
+    const center = document.getElementById("table-info").getBoundingClientRect();
 
-  const cx = center.left + center.width / 2;
-  const cy = center.top + center.height / 2;
+    const cx = center.left + center.width / 2;
+    const cy = center.top + center.height / 2;
 
-  // bottom
-  const bottom = document.getElementById("discards-0");
-  bottom.style.left = `${cx}px`;
-  bottom.style.top = `${cy + 250}px`;
-  bottom.style.transform = "translateX(-50%)";
+    // bottom
+    const bottom = document.getElementById("discards-0");
+    bottom.style.left = `${cx}px`;
+    bottom.style.top = `${cy + 250}px`;
+    bottom.style.transform = "translateX(-50%)";
 
-  // top
-  const top = document.getElementById("discards-1");
-  top.style.left = `${cx}px`;
-  top.style.top = `${cy - 250}px`;
-  top.style.transform = "translateX(-50%) rotate(180deg)";
+    // top
+    const top = document.getElementById("discards-1");
+    top.style.left = `${cx}px`;
+    top.style.top = `${cy - 250}px`;
+    top.style.transform = "translateX(-50%) rotate(180deg)";
 
-  // right
-  const right = document.getElementById("discards-2");
-  right.style.left = `${cx + 250}px`;
-  right.style.top = `${cy}px`;
-  right.style.transform = "translateY(-50%) rotate(-90deg)";
+    // right
+    const right = document.getElementById("discards-2");
+    right.style.left = `${cx + 250}px`;
+    right.style.top = `${cy}px`;
+    right.style.transform = "translateY(-50%) rotate(-90deg)";
 
-  // left（CPU2）
-  const left = document.getElementById("discards-3");
-  left.style.left = `${cx - 250}px`;
-  left.style.top = `${cy}px`;
-  left.style.transform = "translateY(-50%) rotate(90deg)";
+    // left（CPU2）
+    const left = document.getElementById("discards-3");
+    left.style.left = `${cx - 250}px`;
+    left.style.top = `${cy}px`;
+    left.style.transform = "translateY(-50%) rotate(90deg)";
+  }
 }
