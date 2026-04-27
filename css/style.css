@@ -366,7 +366,7 @@ body {
 
 .discard-top {
   position: absolute;
-  top: calc(50% - 250px);
+  bottom: calc(50% - 250px);
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
