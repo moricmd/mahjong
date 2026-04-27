@@ -608,7 +608,16 @@ autoContinue() {
   }
 
   // それ以外は必ず進める
-  setTimeout(() => this.step(), 300);
+  const delay = getRandomDelay();
+  setTimeout(() => this.step(), delay);
+}
+
+  // ------------------------------
+  // CPUの思考時間をランダム生成
+  // ------------------------------
+  getRandomDelay() {
+  return 2500 + Math.floor(Math.random() * 1000); 
+  // 2500〜3499ms（≒2.5〜3.5秒）
 }
 
 
@@ -725,19 +734,21 @@ autoContinue() {
   }
 
   onCPUDiscard() {
-  const p = this.players[this.turn];
+    const p = this.players[this.turn];
 
-  const idx = chooseDiscardIndex(p.hand);
-  const discardTile = p.discard(idx);
+    const idx = chooseDiscardIndex(p.hand);
+    const discardTile = p.discard(idx);
 
-  // ロン判定
-  if (this.onCheckRon(discardTile, this.turn)) return;
+    // ロン判定
+    if (this.onCheckRon(discardTile, this.turn)) return;
 
-  if (this.autoSort) this.sortHand(this.turn);
+    if (this.autoSort) this.sortHand(this.turn);
 
-  this.state = "NEXT_TURN";
-  setTimeout(() => this.step(), 300);
-}
+    this.state = "NEXT_TURN";
+    
+    const delay = getRandomDelay();
+    setTimeout(() => this.step(), 300);
+  }
 
 
   // -------------------------
