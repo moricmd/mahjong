@@ -887,7 +887,7 @@ updateTurnIndicator(currentPlayer) {
       if (handBottom) {
         handBottom.style.left = `${cx}px`;
         handBottom.style.top  = `${cy + offset}px`;
-        handBottom.style.transform = "translateX(-50%)";
+        handBottom.style.transform = "translate(-50%, 0)";
       }
 
     // top
@@ -895,7 +895,7 @@ updateTurnIndicator(currentPlayer) {
       if (handTop) {
         handTop.style.left = `${cx}px`;
         handTop.style.top  = `${cy - offset}px`;
-        handTop.style.transform = "translateX(-50%) rotate(180deg)";
+        handTop.style.transform = "translate(-50%, 0) rotate(180deg)";
       }
 
     // right
@@ -903,7 +903,7 @@ updateTurnIndicator(currentPlayer) {
       if (handRight) {
         handRight.style.left = `${cx + offset}px`;
         handRight.style.top  = `${cy}px`;
-        handRight.style.transform = "translateY(-50%) rotate(-90deg)";
+        handRight.style.transform = "translate(0, -50%) rotate(-90deg)";
       }
 
     // left
@@ -911,7 +911,7 @@ updateTurnIndicator(currentPlayer) {
       if (handLeft) {
         handLeft.style.left = `${cx - offset}px`;
         handLeft.style.top  = `${cy}px`;
-        handLeft.style.transform = "translateY(-50%) rotate(90deg)";
+        handLeft.style.transform = "translate(0, -50%) rotate(90deg)";
       }
   }
 
@@ -936,7 +936,7 @@ updateTurnIndicator(currentPlayer) {
       if (discBottom) {
         discBottom.style.left = `${cx}px`;
         discBottom.style.top  = `${cy + offset}px`;
-        discBottom.style.transform = "translateX(-50%)";
+        discBottom.style.transform = "translate(-50%, 0)";
       }
 
     // top
@@ -944,7 +944,7 @@ updateTurnIndicator(currentPlayer) {
       if (discTop) {
         discTop.style.left = `${cx}px`;
         discTop.style.top  = `${cy - offset}px`;
-        discTop.style.transform = "translateX(-50%) rotate(180deg)";
+        discTop.style.transform = "translate(-50%, 0) rotate(180deg)";
     }
 
     // right
@@ -952,7 +952,7 @@ updateTurnIndicator(currentPlayer) {
       if (discRight) {
         discRight.style.left = `${cx + offset}px`;
         discRight.style.top  = `${cy}px`;
-        discRight.style.transform = "translateY(-50%) rotate(-90deg)";
+        discRight.style.transform = "translate(0, -50%) rotate(-90deg)";
     }
 
     // left
@@ -960,7 +960,7 @@ updateTurnIndicator(currentPlayer) {
       if (discLeft) {
         discLeft.style.left = `${cx - offset}px`;
         discLeft.style.top  = `${cy}px`;
-        discLeft.style.transform = "translateY(-50%) rotate(90deg)";
+        discLeft.style.transform = "translate(0, -50%) rotate(90deg)";
       }
   }
 
