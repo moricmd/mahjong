@@ -288,25 +288,32 @@ for (let i = 0; i < 3; i++) {
 // ターンインジケーター
 // ------------------------------
 updateTurnIndicator(currentPlayer) {
-  const winds = ["bottom", "right", "top", "left"]; // あなたの座席順に合わせて調整
+  const winds = ["bottom", "right", "top"];
 
-  // まず全てのハイライトを消す
+  // スコア枠のハイライトをリセット
   winds.forEach(pos => {
     document.getElementById(`wind-${pos}`).classList.remove("turn-highlight");
     document.getElementById(`score-${pos}`).classList.remove("turn-highlight");
   });
 
-  // 山の点滅も消す
-  document.getElementById("table-info").classList.remove("wall-blink");
+  // 山の縁を全部消す
+  ["wall-top", "wall-right", "wall-bottom", "wall-left"].forEach(id => {
+    document.getElementById(id).style.display = "none";
+  });
 
-  // 現在の手番にハイライトを付ける
+  // 現在の手番
   const pos = winds[currentPlayer];
+
+  // スコア枠を光らせる
   document.getElementById(`wind-${pos}`).classList.add("turn-highlight");
   document.getElementById(`score-${pos}`).classList.add("turn-highlight");
 
-  // 山を点滅させる
-  document.getElementById("table-info").classList.add("wall-blink");
+  // 山の縁を方向に応じて点滅
+  if (pos === "bottom") document.getElementById("wall-bottom").style.display = "block";
+  if (pos === "right")  document.getElementById("wall-right").style.display  = "block";
+  if (pos === "top")    document.getElementById("wall-top").style.display    = "block";
 }
+
 
 
 
