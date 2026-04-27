@@ -309,22 +309,16 @@ body {
 
 /* 上側 */
 .hand-top {
-  top: 80px;
-  left: 50%;
   transform: translate(-50%, 0) rotate(180deg);
 }
 
 /* 左側 */
 .hand-left {
-  top: 50%;
-  left: 80px;
   transform: translate(0, -50%) rotate(90deg);
 }
 
 /* 右側 */
 .hand-right {
-  top: 50%;
-  right: 80px;
   transform: translate(0, -50%) rotate(-90deg);
 }
 
