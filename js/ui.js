@@ -49,7 +49,7 @@ export function renderDoraIndicators(doraIndicators) {
 export function renderPlayerHand(player, onClick, autoSort) {
   const area = document.getElementById("player-hand");
 
-  area.className = "hand-area";
+  area.classList.remove("hand-top", "hand-right", "hand-bottom", "hand-left");
 
   // 座り順に応じて位置クラスを付与
   area.classList.add(`hand-${player.position}`);
@@ -84,7 +84,7 @@ export function renderCPUHand(player) {
     return;
   }
 
-  area.className = "hand-area";
+  area.classList.remove("hand-top", "hand-right", "hand-bottom", "hand-left");
   area.classList.add(`hand-${player.position}`);
 
   area.innerHTML = "";
