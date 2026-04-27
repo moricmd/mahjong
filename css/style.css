@@ -352,7 +352,7 @@ body {
   position: absolute;
   top: calc(50% + 250px);
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 0);
 }
 
 
@@ -360,7 +360,7 @@ body {
   position: absolute;
   left: calc(50% + 250px);
   top: 50%;
-  transform: translateY(-50%) rotate(-90deg);
+  transform: translate(0, -50%) rotate(-90deg);
 }
 
 
@@ -368,7 +368,7 @@ body {
   position: absolute;
   bottom: calc(50% - 250px);
   left: 50%;
-  transform: translateX(-50%) rotate(180deg);
+  transform: translate(-50%, 0) rotate(180deg);
 }
 
 
