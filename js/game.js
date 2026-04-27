@@ -610,19 +610,18 @@ updateTurnIndicator(currentPlayer) {
     if (this.state === "WAIT_PON_KAN") {
       return;
     }
+    
+    // onCPUDiscardで管理
+    if (p.isCPU && this.state === "DISCARD") return;
 
-    // 基本の処理遅延は300ms
-    if (this.state !== "DISCARD") {
-      setTimeout(() => this.step(), 300);
+    // 次のプレイヤーに移る際は500ms
+    if (this.state === "NEXT_TURN") {
+      setTimeout(() => this.step(), 500);
       return;
     }
 
-
-    // 次のプレイヤーに移るときのみ500ms
-    if (this.state !== "DISCARD") {
-      setTimeout(() => this.step(), 300);
-      return;  
-    }
+    // 基本の処理遅延は300ms
+    setTimeout(() => this.step(), 300);
     
   }
  
