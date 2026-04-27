@@ -871,92 +871,88 @@ updateTurnIndicator(currentPlayer) {
   // 画面中央から均等に配置
   // ------------------------------
   updateHandPositions() {
-    const table = document.getElementById("table");
-    const tableRect = table.getBoundingClientRect();
+  const table = document.getElementById("table");
+  const tableRect = table.getBoundingClientRect();
 
-    const yama = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
+  // #table の中心（絶対に動かない）
+  const cx = tableRect.width / 2;
+  const cy = tableRect.height / 2;
 
-    // 山の中心（#table 内座標）
-    const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
-    const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
+  // 山のサイズに応じて距離を調整
+  const yama = document.getElementById("table-info");
+  const yamaRect = yama.getBoundingClientRect();
+  const offset = yamaRect.width * 0.9;
 
-    // 山からの距離
-    const offset = yamaRect.width * 0.0;
-
-    // bottom
-    const handBottom = document.querySelector(".hand-bottom");
-      if (handBottom) {
-        handBottom.style.left = `${cx}px`;
-        handBottom.style.top  = `${cy + offset}px`;
-      }
-
-    // top
-    const handTop = document.querySelector(".hand-top");
-      if (handTop) {
-        handTop.style.left = `${cx}px`;
-        handTop.style.top  = `${cy - offset}px`;
-      }
-
-    // right
-    const handRight = document.querySelector(".hand-right");
-      if (handRight) {
-        handRight.style.left = `${cx + offset}px`;
-        handRight.style.top  = `${cy}px`;
-      }
-
-    // left
-    const handLeft = document.querySelector(".hand-left");
-      if (handLeft) {
-        handLeft.style.left = `${cx - offset}px`;
-        handLeft.style.top  = `${cy}px`;
-      }
+  const handBottom = document.querySelector(".hand-bottom");
+  if (handBottom) {
+    handBottom.style.left = `${cx}px`;
+    handBottom.style.top  = `${cy + offset}px`;
   }
+
+  const handTop = document.querySelector(".hand-top");
+  if (handTop) {
+    handTop.style.left = `${cx}px`;
+    handTop.style.top  = `${cy - offset}px`;
+  }
+
+  const handRight = document.querySelector(".hand-right");
+  if (handRight) {
+    handRight.style.left = `${cx + offset}px`;
+    handRight.style.top  = `${cy}px`;
+  }
+
+  const handLeft = document.querySelector(".hand-left");
+  if (handLeft) {
+    handLeft.style.left = `${cx - offset}px`;
+    handLeft.style.top  = `${cy}px`;
+  }
+}
+
 
 
   
   updateDiscardPositions() {
-    const table = document.getElementById("table");
-    const tableRect = table.getBoundingClientRect();
+  const table = document.getElementById("table");
+  const tableRect = table.getBoundingClientRect();
 
-    const yama = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
+  // #table の中心（絶対に動かない）
+  const cx = tableRect.width / 2;
+  const cy = tableRect.height / 2;
 
-    // 山の中心（#table 内座標）
-    const cx = (yamaRect.left - tableRect.left) + yamaRect.width  / 2;
-    const cy = (yamaRect.top  - tableRect.top ) + yamaRect.height / 2;
+  // 山のサイズに応じて距離を調整
+  const yama = document.getElementById("table-info");
+  const yamaRect = yama.getBoundingClientRect();
+  const offset = yamaRect.width * 0.75;   // 手牌より少し近めが自然
 
-    // 山からの距離
-    const offset = yamaRect.width * 0.9;
-
-    // bottom
-    const discBottom = document.querySelector(".discard-bottom");
-      if (discBottom) {
-        discBottom.style.left = `${cx}px`;
-        discBottom.style.top  = `${cy + offset}px`;
-      }
-
-    // top
-    const discTop = document.querySelector(".discard-top");
-      if (discTop) {
-        discTop.style.left = `${cx}px`;
-        discTop.style.top  = `${cy - offset}px`;
-    }
-
-    // right
-    const discRight = document.querySelector(".discard-right");
-      if (discRight) {
-        discRight.style.left = `${cx + offset}px`;
-        discRight.style.top  = `${cy}px`;
-    }
-
-    // left
-    const discLeft = document.querySelector(".discard-left");
-      if (discLeft) {
-        discLeft.style.left = `${cx - offset}px`;
-        discLeft.style.top  = `${cy}px`;
-      }
+  // bottom
+  const discBottom = document.querySelector(".discard-bottom");
+  if (discBottom) {
+    discBottom.style.left = `${cx}px`;
+    discBottom.style.top  = `${cy + offset}px`;
   }
+
+  // top
+  const discTop = document.querySelector(".discard-top");
+  if (discTop) {
+    discTop.style.left = `${cx}px`;
+    discTop.style.top  = `${cy - offset}px`;
+  }
+
+  // right
+  const discRight = document.querySelector(".discard-right");
+  if (discRight) {
+    discRight.style.left = `${cx + offset}px`;
+    discRight.style.top  = `${cy}px`;
+  }
+
+  // left
+  const discLeft = document.querySelector(".discard-left");
+  if (discLeft) {
+    discLeft.style.left = `${cx - offset}px`;
+    discLeft.style.top  = `${cy}px`;
+  }
+}
+
 
 
 }
