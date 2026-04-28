@@ -10,9 +10,13 @@ window.addEventListener("load", () => {
   // game画面を呼ぶ
   function startCPUmode() {
     showScreen("game-screen");
-    window.game = new Game();
-    game.setPlayMode("CPU戦");
-    game.step();
+
+     // DOM が描画されるのを待つ
+    requestAnimationFrame(() => {
+      window.game = new Game();
+      game.setPlayMode("CPU戦");
+      game.step();
+    });
   }
 
   function startPVPmode() {
