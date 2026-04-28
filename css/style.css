@@ -311,7 +311,7 @@ body {
 }
 
 
-.hand-area .opponent .tile {
+.hand-area.opponent .tile {
   width: calc(var(--tile-width) * 0.7); /* 相手の手牌は元のサイズの70% */
   height: calc(var(--tile-height) * 0.7);
 }
