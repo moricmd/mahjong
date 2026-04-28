@@ -873,15 +873,11 @@ updateTurnIndicator(currentPlayer) {
 
   // 手牌
   updateHandPositions() {
-    const yama = document.getElementById("table-info");
     const yamaRect = yama.getBoundingClientRect();
     
     const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-
-    const yama = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
     const offset = yamaRect.width * 0.9;
 
     const set = (cls, x, y) => {
@@ -902,15 +898,11 @@ updateTurnIndicator(currentPlayer) {
 
   // 捨て牌
   updateDiscardPositions() {
-    const yama = document.getElementById("table-info");
     const yamaRect = yama.getBoundingClientRect();
     
     const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-
-    const yama = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
     const offset = yamaRect.width * 0.75;
 
     const set = (cls, x, y) => {
