@@ -12,7 +12,7 @@ window.addEventListener("load", () => {
     showScreen("game-screen");
 
     setTimeout(() => {
-      window.game = new Game();
+      game = new Game();
       game.setPlayMode("CPU戦");
       game.step();
     }, 0);
@@ -20,7 +20,7 @@ window.addEventListener("load", () => {
 
   function startPVPmode() {
     setTimeout(() => {
-      window.game = new Game();
+      game = new Game();
       game.setPlayMode("対人戦");
       game.step();
     }, 0);
