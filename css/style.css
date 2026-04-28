@@ -308,6 +308,7 @@ body {
 .hand-area, .discard-area {
   position: absolute;
   display: flex;
+  transform-origin: center center; /* 基準を要素の中心にする */
 }
 
 
