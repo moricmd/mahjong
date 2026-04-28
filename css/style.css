@@ -307,7 +307,6 @@ body {
 /* 手牌：捨て牌共通 */
 .hand-area, .discard-area {
   position: absolute;
-  transform: translate(-50%, -50%);
 }
 
 
@@ -358,22 +357,22 @@ body {
 
 
 .discard-bottom {
-  transform: translate(-50%, 0);
+
 }
 
 
 .discard-right {
-  transform: translate(0, -50%) rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 
 .discard-top {
-  transform: translate(-50%, 0) rotate(180deg);
+  transform: rotate(180deg);
 }
 
 
 .discard-left {
-  transform: translate(0, -50%) rotate(90deg);
+  transform: rotate(90deg);
 }
   
 
