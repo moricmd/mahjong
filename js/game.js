@@ -870,55 +870,62 @@ updateTurnIndicator(currentPlayer) {
   // ------------------------------
   // 画面中央から均等に配置
   // ------------------------------
+
+  // 手牌
   updateHandPositions() {
-  const table = document.getElementById("table");
-  const rect = table.getBoundingClientRect();
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
+    
+    const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
+    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-  const cx = rect.width / 2;
-  const cy = rect.height / 2;
 
-  const yama = document.getElementById("table-info");
-  const yamaRect = yama.getBoundingClientRect();
-  const offset = yamaRect.width * 0.9;
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
+    const offset = yamaRect.width * 0.9;
 
-  const set = (cls, x, y) => {
-    const el = document.querySelector(cls);
-    if (el) {
-      el.style.left = `${x}px`;
-      el.style.top  = `${y}px`;
-    }
-  };
+    const set = (cls, x, y) => {
+      const el = document.querySelector(cls);
+      if (el) {
+        el.style.left = `${x}px`;
+        el.style.top  = `${y}px`;
+      }
+    };
 
-  set(".hand-bottom", cx, cy + offset);
-  set(".hand-top",    cx, cy - offset);
-  set(".hand-right",  cx + offset, cy);
-  set(".hand-left",   cx - offset, cy);
-}
+    set(".hand-bottom", cx, cy + offset);
+    set(".hand-top",    cx, cy - offset);
+    set(".hand-right",  cx + offset, cy);
+    set(".hand-left",   cx - offset, cy);
+  }
 
-updateDiscardPositions() {
-  const table = document.getElementById("table");
-  const rect = table.getBoundingClientRect();
 
-  const cx = rect.width / 2;
-  const cy = rect.height / 2;
 
-  const yama = document.getElementById("table-info");
-  const yamaRect = yama.getBoundingClientRect();
-  const offset = yamaRect.width * 0.75;
+  // 捨て牌
+  updateDiscardPositions() {
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
+    
+    const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
+    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-  const set = (cls, x, y) => {
-    const el = document.querySelector(cls);
-    if (el) {
-      el.style.left = `${x}px`;
-      el.style.top  = `${y}px`;
-    }
-  };
 
-  set(".discard-bottom", cx, cy + offset);
-  set(".discard-top",    cx, cy - offset);
-  set(".discard-right",  cx + offset, cy);
-  set(".discard-left",   cx - offset, cy);
-}
+    const yama = document.getElementById("table-info");
+    const yamaRect = yama.getBoundingClientRect();
+    const offset = yamaRect.width * 0.75;
+
+    const set = (cls, x, y) => {
+      const el = document.querySelector(cls);
+      if (el) {
+        el.style.left = `${x}px`;
+        el.style.top  = `${y}px`;
+      }
+    };
+
+    set(".discard-bottom", cx, cy + offset);
+    set(".discard-top",    cx, cy - offset);
+    set(".discard-right",  cx + offset, cy);
+    set(".discard-left",   cx - offset, cy);
+  }
 
 
 
