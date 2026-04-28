@@ -307,6 +307,7 @@ body {
 /* 手牌：捨て牌共通 */
 .hand-area, .discard-area {
   position: absolute;
+  display: flex;
 }
 
 
