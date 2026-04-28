@@ -180,8 +180,8 @@ export class Game {
   const area2 = document.getElementById("cpu2-hand");
 
   // 既存クラスをリセット
-  area1.className = "hand-area";
-  area2.className = "hand-area";
+  area1.className = "hand-area opponent";
+  area2.className = "hand-area opponent";
 
   // CPU1
   area1.classList.add(`hand-${cpu1.position}`);
