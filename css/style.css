@@ -326,7 +326,6 @@ body {
 
 /* 右側 */
 .hand-right {
-  flex-direction: column;
   transform: rotate(-90deg);
 }
 
@@ -337,7 +336,6 @@ body {
 
 /* 左側 */
 .hand-left {
-  flex-direction: column;
   transform: rotate(90deg);
 }
 
