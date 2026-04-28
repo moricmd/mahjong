@@ -304,7 +304,7 @@ body {
 }
 
 
-/* 手牌：捨てh愛共通 */
+/* 手牌：捨て牌共通 */
 .hand-area, .discard-area {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -339,6 +339,11 @@ body {
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
   gap: 4px;
   width: 240px; /* 40px × 6枚 = 240px */
+}
+
+.discard-area .tile {
+  width: calc(var(--tile-width) * 0.9); /* 元のサイズの9割 */
+  height: calc(var(--tile-height) * 0.9);
 }
 
 
