@@ -21,10 +21,9 @@ body {
 
 /* ゲーム画面 */
 #game-screen {
-  position: relative;
+  display: flex;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
 }
  
 
@@ -57,6 +56,13 @@ body {
 .tile.cpu {
   background: #ddd;
   cursor: default;
+}
+
+
+#left-info {
+  widthj: 220px;
+  background: transparent;
+  padding: 10px;
 }
 
 
@@ -142,6 +148,7 @@ body {
 
 /* 雀卓 */
 #table {
+  flex: 1;
   position: relative;
   top: 0;
   left: 0;
@@ -161,13 +168,10 @@ body {
   pointer-events: none;
   transform: translate(-50%, -50%);
 
-  background: rgba(0, 0, 0, 0.15); /* 半透明グレー */
+  background: rgba(0, 0, 0, 0.15);
   padding: 12px;
   border-radius: 6px;
   display: inline-flex;
-  flex-direction: column;
-  gap: 6px;
-  z-index: 10;
 }
 
 .center-info {
@@ -299,12 +303,10 @@ body {
 }
 
 
-/* 手牌の表示 */
-.hand-area {
+/* 手牌：捨てh愛共通 */
+.hand-area, .discard-area {
   position: absolute;
-  display: flex;
-  gap: 4px;
-  z-index: 2000;
+  transform: translate(-50%, -50%);
 }
 
 /* 上側 */
