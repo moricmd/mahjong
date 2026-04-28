@@ -318,6 +318,18 @@ body {
 }
 
 
+
+/* 下側 */
+.hand-bottom {
+  transform: rotate(0deg);
+}
+
+/* 右側 */
+.hand-right {
+  flex-direction: column;
+  transform: rotate(-90deg);
+}
+
 /* 上側 */
 .hand-top {
   transform:rotate(180deg);
@@ -329,16 +341,6 @@ body {
   transform: rotate(90deg);
 }
 
-/* 右側 */
-.hand-right {
-  flex-direction: column;
-  transform: rotate(-90deg);
-}
-
-/* 下側 */
-.hand-bottom {
-  transform: rotate(0deg);
-}
 
 
 
@@ -366,6 +368,7 @@ body {
 
 
 .discard-right {
+  flex-direction: column;
   transform: rotate(-90deg);
 }
 
@@ -376,6 +379,7 @@ body {
 
 
 .discard-left {
+  flex-direction: column;
   transform: rotate(90deg);
 }
   
