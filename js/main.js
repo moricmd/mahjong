@@ -19,8 +19,11 @@ window.addEventListener("load", () => {
   }
 
   function startPVPmode() {
-    window.game = new Game();
-    game.setPlayMode("対人戦");
+    setTimeout(() => {
+      window.game = new Game();
+      game.setPlayMode("対人戦");
+      game.step();
+    }, 0);
   }
 
 
@@ -40,45 +43,6 @@ window.addEventListener("load", () => {
 
 });
 
-/*
-
-
-画面遷移
-
-タイトル → ログイン
-document.getElementById("to-login").onclick = () => {
-  showScreen("login-screen");
-};
-
-ログイン → メニュー（認証は後で実装）
-document.getElementById("login-btn").onclick = () => {
-  認証処理は後で追加
-  showScreen("menu-screen");
-};
-
-ログイン → アカウント作成
-document.getElementById("to-register").onclick = () => {
-  showScreen("register-screen");
-};
-
-アカウント作成 → ログイン
-document.getElementById("back-login").onclick = () => {
-  showScreen("login-screen");
-};
-
-メニュー → CPU戦
-document.getElementById("cpu-mode").onclick = () => {
-  showScreen("game-screen");
-  startCPUmode();
-};
-
-メニュー → 対人戦
-document.getElementById("pvp-mode").onclick = () => {
-  showScreen("game-screen");
-  startPVPmode();
-};
-
-*/
 
 
 
