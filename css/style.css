@@ -310,6 +310,13 @@ body {
   transform: translate(-50%, -50%);
 }
 
+
+.hand-area .opponent .tile {
+  width: calc(var(--tile-width) * 0.7); /* 相手の手牌は元のサイズの70% */
+  height: calc(var(--tile-height) * 0.7);
+}
+
+
 /* 上側 */
 .hand-top {
   transform: translate(-50%, 0) rotate(180deg);
@@ -332,6 +339,8 @@ body {
 
 
 
+
+
 /* 捨て牌の表示 */
 .discard-area {
   position: absolute;
@@ -342,7 +351,7 @@ body {
 }
 
 .discard-area .tile {
-  width: calc(var(--tile-width) * 0.9); /* 元のサイズの9割 */
+  width: calc(var(--tile-width) * 0.9); /* 捨て牌は元のサイズの90% */
   height: calc(var(--tile-height) * 0.9);
 }
 
