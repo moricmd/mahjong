@@ -11,10 +11,11 @@ window.addEventListener("load", () => {
   function startCPUmode() {
     showScreen("game-screen");
 
+    setTimeout(() => {
       window.game = new Game();
       game.setPlayMode("CPU戦");
       game.step();
-  }
+    }, 0);
 
   function startPVPmode() {
     window.game = new Game();
