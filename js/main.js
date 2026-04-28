@@ -5,17 +5,6 @@ let game = null;
 
 window.addEventListener("load", () => {
 
-  
-  // モード表示
-  if (true){
-    game.setPlayMode("CPU戦");
-  } 
-
-/*
-else {
-  game.setPlayMode("対人戦");
-}
-*/
 
 
   // game画面を呼ぶ
