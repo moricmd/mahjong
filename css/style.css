@@ -21,9 +21,10 @@ body {
 
 /* ゲーム画面 */
 #game-screen {
-  display: flex;
+  display: none;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
 }
  
 
