@@ -107,7 +107,7 @@ export function renderCPUHand(player) {
 // -------------------------
 export function renderDiscards(playerIndex, discards, position) {
   const area = document.getElementById(`discards-${playerIndex}`);
-  area.className = "discard-area";
+  area.className = "discard-area　opponent";
 
   if (position === "top") area.classList.add("discard-top");
   if (position === "right") area.classList.add("discard-right");
