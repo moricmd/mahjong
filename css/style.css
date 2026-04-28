@@ -320,22 +320,22 @@ body {
 
 /* 上側 */
 .hand-top {
-  transform: translate(-50%, 0) rotate(180deg);
+  transform:rotate(180deg);
 }
 
 /* 左側 */
 .hand-left {
-  transform: translate(0, -50%) rotate(90deg);
+  transform: rotate(90deg);
 }
 
 /* 右側 */
 .hand-right {
-  transform: translate(0, -50%) rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 /* 下側 */
 .hand-bottom {
-  transform: translate(-50%, 0);
+  transform: rotate(0deg);
 }
 
 
