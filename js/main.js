@@ -20,9 +20,9 @@ else {
 
   // game画面を呼ぶ
   function startCPUmode() {
+    showScreen("game-screen");
     window.game = new Game();
     game.setPlayMode("CPU戦");
-
     game.step();
   }
 
@@ -43,7 +43,6 @@ else {
 
   // メニュー → CPU戦（ゲーム画面）
   document.getElementById("cpu-mode").onclick = () => {
-    showScreen("game-screen");
     startCPUmode();
   };
 
