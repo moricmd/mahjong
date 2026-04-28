@@ -4,7 +4,6 @@ import { Game } from "./game.js";
 let game = null;
 
 window.addEventListener("load", () => {
-  game = new Game();
 
   
   // モード表示
