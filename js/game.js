@@ -871,7 +871,7 @@ updateTurnIndicator(currentPlayer) {
   // 画面中央から均等に配置
   // ------------------------------
   updateHandPositions() {
-  const table = document.getElementById("table-area");
+  const table = document.getElementById("table");
   const rect = table.getBoundingClientRect();
 
   const cx = rect.width / 2;
@@ -896,7 +896,7 @@ updateTurnIndicator(currentPlayer) {
 }
 
 updateDiscardPositions() {
-  const table = document.getElementById("table-area");
+  const table = document.getElementById("table");
   const rect = table.getBoundingClientRect();
 
   const cx = rect.width / 2;
