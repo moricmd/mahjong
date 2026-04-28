@@ -311,8 +311,8 @@ body {
 
 
 .hand-area.opponent .tile{
-  width: calc(40 * 0.7); /* 相手の手牌は元のサイズの70% */
-  height: calc(60 * 0.7);
+  width: calc(40px * 0.7); /* 相手の手牌は元のサイズの70% */
+  height: calc(60px * 0.7);
 }
 
 
@@ -350,8 +350,8 @@ body {
 }
 
 .discard-area .tile {
-  width: calc(40 * 0.9); /* 捨て牌は元のサイズの90% */
-  height: calc(60 * 0.9);
+  width: calc(40px * 0.9); /* 捨て牌は元のサイズの90% */
+  height: calc(60px * 0.9);
 }
 
 
