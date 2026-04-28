@@ -16,6 +16,7 @@ window.addEventListener("load", () => {
       game.setPlayMode("CPU戦");
       game.step();
     }, 0);
+  }
 
   function startPVPmode() {
     window.game = new Game();
