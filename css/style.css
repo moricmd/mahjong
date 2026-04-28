@@ -357,7 +357,7 @@ body {
 
 
 .discard-bottom {
-
+  transform: rotate(0deg);
 }
 
 
