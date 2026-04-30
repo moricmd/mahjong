@@ -902,6 +902,10 @@ updateTurnIndicator(currentPlayer) {
 
   // 捨て牌
   updateDiscardPositions() {
+    const table = document.getElementById("table");
+    const rect  = table.getBoundingClientRect();
+
+    const yama     = document.getElementById("table-info");
     const yamaRect = yama.getBoundingClientRect();
     
     const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
