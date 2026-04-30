@@ -153,8 +153,8 @@ body {
   position: relative;
   top: 0;
   left: 0;
-  width: 95vw;
-  height: 80vh;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 
