@@ -885,26 +885,19 @@ updateTurnIndicator(currentPlayer) {
 
   const offset = yamaRect.width * 0.9;
 
-  // 方向ごとに複数要素を取得して forEach で適用
-  document.querySelectorAll(".hand-bottom").forEach(el => {
-    el.style.left = `${cx}px`;
-    el.style.top  = `${cy + offset}px`;
-  });
+    
+  const set = (cls, x, y) => {
+      const el = document.querySelector(cls);
+      if (el) {
+        el.style.left = `${x}px`;
+        el.style.top  = `${y}px`;
+      }
+    };
 
-  document.querySelectorAll(".hand-top").forEach(el => {
-    el.style.left = `${cx}px`;
-    el.style.top  = `${cy - offset}px`;
-  });
-
-  document.querySelectorAll(".hand-right").forEach(el => {
-    el.style.left = `${cx + offset}px`;
-    el.style.top  = `${cy}px`;
-  });
-
-  document.querySelectorAll(".hand-left").forEach(el => {
-    el.style.left = `${cx - offset}px`;
-    el.style.top  = `${cy}px`;
-  });
+    set(".discard-bottom", cx, cy + offset);
+    set(".discard-top",    cx, cy - offset);
+    set(".discard-right",  cx + offset, cy);
+    set(".discard-left",   cx - offset, cy);
 }
 
 
@@ -923,25 +916,18 @@ updateTurnIndicator(currentPlayer) {
 
   const offset = yamaRect.width * 0.75;
 
-  // 方向ごとに複数要素へ座標を適用
-  document.querySelectorAll(".discard-bottom").forEach(el => {
-    el.style.left = `${cx}px`;
-    el.style.top  = `${cy + offset}px`;
-  });
+  const set = (cls, x, y) => {
+      const el = document.querySelector(cls);
+      if (el) {
+        el.style.left = `${x}px`;
+        el.style.top  = `${y}px`;
+      }
+    };
 
-  document.querySelectorAll(".discard-top").forEach(el => {
-    el.style.left = `${cx}px`;
-    el.style.top  = `${cy - offset}px`;
-  });
-
-  document.querySelectorAll(".discard-right").forEach(el => {
-    el.style.left = `${cx + offset}px`;
-    el.style.top  = `${cy}px`;
-  });
-
-  document.querySelectorAll(".discard-left").forEach(el => {
-    el.style.left = `${cx - offset}px`;
-    el.style.top  = `${cy}px`;
+    set(".discard-bottom", cx, cy + offset);
+    set(".discard-top",    cx, cy - offset);
+    set(".discard-right",  cx + offset, cy);
+    set(".discard-left",   cx - offset, cy);
   });
 }
 
