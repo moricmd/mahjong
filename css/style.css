@@ -150,12 +150,12 @@ body {
 /* 雀卓 */
 #table {
   flex: 1;
-  position: relative;
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80vw;
-  height: 80vh;
+  width: 70vw;
+  height: 70vh;
   overflow: hidden;
 }
 
