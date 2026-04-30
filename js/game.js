@@ -876,7 +876,7 @@ updateTurnIndicator(currentPlayer) {
 const table = document.getElementById("table");
   const rect  = table.getBoundingClientRect();
 
-  const yama     = document.getElementById("table-info");
+  const yama = document.getElementById("table-info");
   const yamaRect = yama.getBoundingClientRect();
 
   // 山の中心（画面座標）
@@ -911,7 +911,7 @@ const table = document.getElementById("table");
   const table = document.getElementById("table");
   const rect  = table.getBoundingClientRect();
 
-  const yama     = document.getElementById("table-info");
+  const yama = document.getElementById("table-info");
   const yamaRect = yama.getBoundingClientRect();
 
   // 山の中心（table 内座標）
@@ -932,8 +932,7 @@ const table = document.getElementById("table");
     set(".discard-top",    cx, cy - offset);
     set(".discard-right",  cx + offset, cy);
     set(".discard-left",   cx - offset, cy);
-  });
-}
+  }
 
 
 
