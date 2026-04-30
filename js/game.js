@@ -873,15 +873,19 @@ updateTurnIndicator(currentPlayer) {
 
   // 手牌
   updateHandPositions() {
-  const table = document.getElementById("table");
+const table = document.getElementById("table");
   const rect  = table.getBoundingClientRect();
 
   const yama     = document.getElementById("table-info");
   const yamaRect = yama.getBoundingClientRect();
 
+  // 山の中心（画面座標）
+  const yamaCenterX = yamaRect.left + yamaRect.width  / 2;
+  const yamaCenterY = yamaRect.top  + yamaRect.height / 2;
+
   // 山の中心（table 内座標）
-  const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
-  const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
+  const cx = yamaCenterX - rect.left;
+  const cy = yamaCenterY - rect.top;
 
   const offset = yamaRect.width * 0.9;
 
