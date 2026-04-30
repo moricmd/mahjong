@@ -873,59 +873,78 @@ updateTurnIndicator(currentPlayer) {
 
   // 手牌
   updateHandPositions() {
-    const table = document.getElementById("table");
-    const rect  = table.getBoundingClientRect();
+  const table = document.getElementById("table");
+  const rect  = table.getBoundingClientRect();
 
-    const yama     = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
-    
-    const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
-    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
+  const yama     = document.getElementById("table-info");
+  const yamaRect = yama.getBoundingClientRect();
 
-    const offset = yamaRect.width * 0.9;
+  // 山の中心（table 内座標）
+  const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
+  const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-    const set = (cls, x, y) => {
-      const el = document.querySelector(cls);
-      if (el) {
-        el.style.left = `${x}px`;
-        el.style.top  = `${y}px`;
-      }
-    };
+  const offset = yamaRect.width * 0.9;
 
-    set(".hand-bottom", cx, cy + offset);
-    set(".hand-top",    cx, cy - offset);
-    set(".hand-right",  cx + offset, cy);
-    set(".hand-left",   cx - offset, cy);
-  }
+  // 方向ごとに複数要素を取得して forEach で適用
+  document.querySelectorAll(".hand-bottom").forEach(el => {
+    el.style.left = `${cx}px`;
+    el.style.top  = `${cy + offset}px`;
+  });
+
+  document.querySelectorAll(".hand-top").forEach(el => {
+    el.style.left = `${cx}px`;
+    el.style.top  = `${cy - offset}px`;
+  });
+
+  document.querySelectorAll(".hand-right").forEach(el => {
+    el.style.left = `${cx + offset}px`;
+    el.style.top  = `${cy}px`;
+  });
+
+  document.querySelectorAll(".hand-left").forEach(el => {
+    el.style.left = `${cx - offset}px`;
+    el.style.top  = `${cy}px`;
+  });
+}
 
 
 
   // 捨て牌
   updateDiscardPositions() {
-    const table = document.getElementById("table");
-    const rect  = table.getBoundingClientRect();
+  const table = document.getElementById("table");
+  const rect  = table.getBoundingClientRect();
 
-    const yama     = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
-    
-    const cx = (yamaRect.left - rect.left) + yamaRect.width / 2;
-    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
+  const yama     = document.getElementById("table-info");
+  const yamaRect = yama.getBoundingClientRect();
 
-    const offset = yamaRect.width * 0.75;
+  // 山の中心（table 内座標）
+  const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
+  const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-    const set = (cls, x, y) => {
-      const el = document.querySelector(cls);
-      if (el) {
-        el.style.left = `${x}px`;
-        el.style.top  = `${y}px`;
-      }
-    };
+  const offset = yamaRect.width * 0.75;
 
-    set(".discard-bottom", cx, cy + offset);
-    set(".discard-top",    cx, cy - offset);
-    set(".discard-right",  cx + offset, cy);
-    set(".discard-left",   cx - offset, cy);
-  }
+  // 方向ごとに複数要素へ座標を適用
+  document.querySelectorAll(".discard-bottom").forEach(el => {
+    el.style.left = `${cx}px`;
+    el.style.top  = `${cy + offset}px`;
+  });
+
+  document.querySelectorAll(".discard-top").forEach(el => {
+    el.style.left = `${cx}px`;
+    el.style.top  = `${cy - offset}px`;
+  });
+
+  document.querySelectorAll(".discard-right").forEach(el => {
+    el.style.left = `${cx + offset}px`;
+    el.style.top  = `${cy}px`;
+  });
+
+  document.querySelectorAll(".discard-left").forEach(el => {
+    el.style.left = `${cx - offset}px`;
+    el.style.top  = `${cy}px`;
+  });
+}
+
 
 
 
