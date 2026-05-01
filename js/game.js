@@ -898,10 +898,10 @@ const table = document.getElementById("table");
       }
     };
 
-    set(".discard-bottom", cx, cy + offset);
-    set(".discard-top",    cx, cy - offset);
-    set(".discard-right",  cx + offset, cy);
-    set(".discard-left",   cx - offset, cy);
+    set(".hand-bottom", cx,          cy + offset);
+    set(".hand-top",    cx,          cy - offset);
+    set(".hand-right",  cx + offset, cy);
+    set(".hand-left",   cx - offset, cy);
 }
 
 
@@ -928,8 +928,8 @@ const table = document.getElementById("table");
       }
     };
 
-    set(".discard-bottom", cx, cy + offset);
-    set(".discard-top",    cx, cy - offset);
+    set(".discard-bottom", cx,          cy + offset);
+    set(".discard-top",    cx,          cy - offset);
     set(".discard-right",  cx + offset, cy);
     set(".discard-left",   cx - offset, cy);
   }
