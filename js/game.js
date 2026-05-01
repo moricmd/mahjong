@@ -662,7 +662,10 @@ updateTurnIndicator(currentPlayer) {
       const score = calcScore(result, 30, this.turn === 0, true);
 
       alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
-      this.state = "END_ROUND";
+      const winnerIndex = this.turn;
+      const renchan = (winnerIndex === this.dealer);
+
+      this.nextRound(renchan, winnerIndex);
       return;
     }
 
@@ -711,8 +714,11 @@ updateTurnIndicator(currentPlayer) {
 
         alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
 
-        this.state = "END_ROUND";
-        return true;
+       const winnerIndex = i;
+       const renchan = (winnerIndex === this.dealer);
+
+       this.nextRound(renchan, winnerIndex);
+       return true;
       }
     }
 
@@ -782,91 +788,97 @@ updateTurnIndicator(currentPlayer) {
   // -------------------------
   // 場進行
   // -------------------------
-  nextRound(renchan, winnerIndex = null) {
+  // 40000点以上のプレイヤーがいるか
+hasPlayerOver40000() {
+  return this.scores.some(s => s >= 40000);
+}
 
-  // ------------------------------
-  // あがりやめ・聴牌やめ
-  // ------------------------------
-  if (this.kyoku === 3) {
-    const parent = this.dealer;
+// 対局終了
+endGame() {
+  const maxScore = Math.max(...this.scores);
+  const winner = this.scores.indexOf(maxScore);
 
+  alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
+  this.state = "END_ROUND";
+}
+
+// 場進行
+nextRound(renchan, winnerIndex = null) {
+  const parent = this.dealer;
+  const someoneOver40k = this.hasPlayerOver40000();
+
+  // 今がオーラスかどうか（東3 / 南3 / 西3）
+  const isAllLast =
+    (this.round === 1 && this.kyoku === 3) ||
+    (this.round === 2 && this.kyoku === 3) ||
+    (this.round === 3 && this.kyoku === 3);
+
+  // --- 1) 東3局終了時の処理 ---
+  if (this.round === 1 && this.kyoku === 3) {
+    if (someoneOver40k) {
+      // 誰かが40000点以上 → 即終了
+      this.endGame();
+      return;
+    }
+    // 誰も40000に届いていない → 南1へ
+    this.round = 2;
+    this.kyoku = 1;
+    this.dealer = 0;      // 東場の親をどうするかは好みだが、ここではプレイヤー0を親にしている
+    this.startNewHand();
+    return;
+  }
+
+  // --- 2) 南場以降での40000点即終了ルール ---
+  if (this.round >= 2 && someoneOver40k) {
+    // 南1以降は、局数に関係なく誰かが40000点に到達した時点で終了
+    this.endGame();
+    return;
+  }
+
+  // --- 3) オーラスの親あがり/テンパイやめ ---
+  if (isAllLast && someoneOver40k) {
     const parentCondition =
       (winnerIndex === parent) || this.isTenpai(parent);
 
-    if (parentCondition && this.scores[parent] >= 40000) {
+    if (parentCondition) {
+      // 親が和了 or テンパイで40000到達 → 連荘せず終了
       this.endGame();
       return;
     }
   }
 
-  // ------------------------------
-  // 親の連荘
-  // ------------------------------
+  // --- 4) ここまで来たら通常の場進行 ---
+
   if (renchan) {
-    // 親は変わらず
+    // 親連荘：親はそのまま、局だけ進める
     this.kyoku++;
-    if (this.kyoku > 3) this.kyoku = 3;
-    return this.startNewHand();
-  }
-
-    // ------------------------------
-    // 親交代
-    // ------------------------------
-    this.dealer = (this.dealer + 1) % 3;
-
-    // 局進行
-    this.kyoku++;
-
-    if (this.kyoku > 3) {
-      this.kyoku = 1;
-      this.round++;
-    }
-
-    // ------------------------------
-    // 東3 → 南入
-    // ------------------------------
-    if (this.round === 2 && this.kyoku === 1) {
-      if (!this.hasPlayerOver40000()) {
-        // 南入
-      }
-    }
-
-    // ------------------------------
-    // 南3 → 西入
-    // ------------------------------
-    if (this.round === 3 && this.kyoku === 1) {
-      if (!this.hasPlayerOver40000()) {
-        // 西入
-      }
-    }
-
-    // ------------------------------
-    // 西3 → 強制終了
-    // ------------------------------
-    if (this.round === 4) {
-      this.endGame();
-      return;
-    }
-
+    if (this.kyoku > 3) this.kyoku = 3;  // 三麻なので3まで
+    // 本当は本場カウントを増やすならここで this.honba++ など
     this.startNewHand();
+    return;
   }
 
-  // 40000点持ちのプレイヤーがいるか
-   hasPlayerOver40000() {
-    return this.scores.some(s => s >= 40000);
+  // 親交代
+  this.dealer = (this.dealer + 1) % 3;
+
+  // 局進行
+  this.kyoku++;
+  if (this.kyoku > 3) {
+    this.kyoku = 1;
+    this.round++;
   }
 
-
-  // 対局終了
-  endGame() {
-    const maxScore = Math.max(...this.scores);
-    const winner = this.scores.indexOf(maxScore);
-
-    alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
-    this.state = "END_ROUND";
+  // 西3局を打ち終わったあと
+  if (this.round === 4) {
+    // まだ誰も40000に届いていない → 強制終了（トップ勝ち）
+    this.endGame();
+    return;
   }
 
+  this.startNewHand();
+}
 
+  
   // ------------------------------
   // 画面中央から均等に配置
   // ------------------------------
