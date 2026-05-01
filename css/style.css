@@ -162,7 +162,7 @@ body {
 
 /* 山 */
 #table-info {
-  position: relative;
+  position: absolute;
   top: 50%;
   left: 50%;
   width: 300px;
