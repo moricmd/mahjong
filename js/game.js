@@ -1087,7 +1087,9 @@ const table = document.getElementById("table");
  // ------------------------------
  // 副露可能か判断
  // ------------------------------
-canTsumo() { return false; }
+canTsumo() { return true; }
+
+canRon() { return false; }
   
  canRiichi() {
   const p = this.players[0];
