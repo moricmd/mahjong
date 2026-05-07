@@ -854,7 +854,7 @@ updateNorthTiles() {
   // -------------------------
   isTenpai(playerIndex) {
     const p = this.players[playerIndex];
-    return checkTenpai(p.hand); // あなたの checkTenpai() を使う
+    return this.checkTenpai(p.hand);
   }
 
 
