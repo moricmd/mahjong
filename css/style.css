@@ -483,3 +483,34 @@ body {
 }
 
 
+/* 副露エリア */
+.meld-area {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  width: 200px;
+  height: 100px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+
+/* 北抜きエリア */
+.north-area {
+  position: absolute;
+  bottom: 180px;
+  right: 20px;
+  width: 120px;
+  height: 60px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  gap: 4px;
+}
+
+
+
