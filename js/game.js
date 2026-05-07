@@ -121,6 +121,9 @@ export class Game {
 
     this.updateHandPositions();
     this.updateDiscardPositions();
+
+    this.updateRiichiButton();
+
   }
 
 
@@ -944,6 +947,28 @@ const table = document.getElementById("table");
     set(".discard-top",    cx,          cy - offset);
     set(".discard-right",  cx + offset, cy);
     set(".discard-left",   cx - offset, cy);
+  }
+
+
+  // 立直・副露ボタン
+  // ===========================================================================
+
+
+  // 立直ボタン
+  updateRiichiButton() {
+    const btn = document.getElementById("riichi-btn");
+
+    const p = this.players[0];
+
+    // 条件
+    const canRiichi =
+      this.turn === 0 &&
+      p.isMenzen &&
+      !p.isRiichi &&
+      this.isTenpai(0) &&
+      (this.wall.length - this.wallIndex) >= 4;
+
+    btn.style.display = canRiichi ? "block" : "none";
   }
 
 
