@@ -77,4 +77,11 @@ autoSortBtn.addEventListener("click", () => {
 
   }
 });
+
+
+// 立直ボタン
+document.getElementById("riichi-btn").addEventListener("click", () => {
+  game.onRiichi();
+});
+
   
