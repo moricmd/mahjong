@@ -383,6 +383,34 @@ updateTurnIndicator(currentPlayer) {
   // 副露処理 
   // ===========================================================================
 
+
+  // ------------------------------
+  // 立直
+  // ------------------------------
+  onRiichi() {
+    const p = this.players[0];
+
+    // 1000点支払い
+    this.scores[0] -= 1000;
+    this.kyotaku++;
+
+    p.isRiichi = true;
+    p.isIppatsu = true;
+
+    // UI更新
+    this.updateUI();
+
+    // 立直宣言牌をツモ切り
+    const discardTile = p.discard(p.hand.length - 1);
+
+    if (this.onCheckRon(discardTile, 0)) return;
+
+    this.state = "NEXT_TURN";
+    this.updateUI();
+    this.autoContinue();
+  }
+
+
   // -------------------------
   // ポン
   // -------------------------
@@ -672,6 +700,20 @@ updateTurnIndicator(currentPlayer) {
       return;
     }
 
+
+    // 立直していた場合
+    if (p.isRiichi) {
+      result.han += 1; // 立直
+
+      if (p.isIppatsu) {
+        result.han += 1; // 一発
+      }
+
+      // 裏ドラ
+      this.uraIndicators = [this.wall[this.wallIndex++]];
+    }
+
+
     // 和了でなければ捨て牌へ
     if (p.isCPU) {
       const idx = chooseDiscardIndex(p.hand);
@@ -745,6 +787,12 @@ updateTurnIndicator(currentPlayer) {
     if (this.state !== "DISCARD") return;
 
     const p = this.players[0];
+
+     // 立直後はツモ切りのみ
+    if (p.isRiichi) {
+      index = p.hand.length - 1;
+    }
+    
     const discardTile = p.discard(index);
 
     if (this.onCheckRon(discardTile, 0)) return;
