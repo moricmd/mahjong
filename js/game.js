@@ -899,7 +899,7 @@ const table = document.getElementById("table");
   const cx = yamaCenterX - rect.left;
   const cy = yamaCenterY - rect.top;
 
-  const offset = yamaRect.width * 1.5;
+  const offset = yamaRect.width * 1.2;
 
     
   const set = (cls, x, y) => {
@@ -930,7 +930,7 @@ const table = document.getElementById("table");
   const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
   const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-  const offset = yamaRect.width * 0.9;
+  const offset = yamaRect.width * 0.8;
 
   const set = (cls, x, y) => {
       const el = document.querySelector(cls);
