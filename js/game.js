@@ -766,6 +766,48 @@ updateNorthTiles() {
 
 
   
+  // ツモ判定
+  onTsumo() {
+  const p = this.players[this.turn];
+  const lastTile = p.hand[p.hand.length - 1];
+
+  const result = judgeYaku(
+    p,
+    p.hand,
+    lastTile,
+    true,   // isTsumo
+    false,  // isRon
+    this.playerWind,
+    1,
+    this.doraIndicators,
+    this.uraIndicators,
+    this.wallIndex >= this.wall.length
+  );
+
+  // 立直していた場合の処理
+  if (p.isRiichi) {
+    result.han += 1; // 立直
+    if (p.isIppatsu) result.han += 1; // 一発
+    this.uraIndicators = [this.wall[this.wallIndex++]];
+  }
+
+  if (result.han > 0) {
+    const score = calcScore(result, 30, this.turn === 0, true);
+
+    alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+
+    const winnerIndex = this.turn;
+    const renchan = (winnerIndex === this.dealer);
+
+    this.nextRound(renchan, winnerIndex);
+    return;
+  }
+
+  // 和了でなければ何もしない（ツモボタンは和了専用）
+}
+
+
+  
 
   // -------------------------
   // ロン判定
@@ -1087,6 +1129,13 @@ const table = document.getElementById("table");
  // ------------------------------
  // 副露可能か判断
  // ------------------------------
+
+  // 仮
+  checkTenpai(hand) {
+  // TODO: 本物のテンパイ判定を実装する
+  return false;
+}
+
 canTsumo() { return true; }
 
 canRon() { return false; }
