@@ -1020,6 +1020,80 @@ const table = document.getElementById("table");
   }
 
 
+  
+
+  updateActionButtons() {
+    const container = document.getElementById("action-buttons");
+    container.innerHTML = ""; // 一旦クリア
+
+    const p = this.players[0];
+
+    // 1. ツモ / ロン
+    if (this.canTsumo()) {
+      container.appendChild(this.createActionButton("ツモ", () => this.onTsumo()));
+    }
+    if (this.canRon()) {
+      container.appendChild(this.createActionButton("ロン", () => this.onRon()));
+    }
+
+    // 2. 立直
+    if (this.canRiichi()) {
+      container.appendChild(this.createActionButton("立直", () => this.onRiichi()));
+    }
+
+    // 3. ポン
+    if (this.canPon()) {
+      container.appendChild(this.createActionButton("ポン", () => this.onPonSelect()));
+    }
+
+    // 4. カン
+    if (this.canKan()) {
+      container.appendChild(this.createActionButton("カン", () => this.onKanSelect()));
+    }
+
+    // 5. 北抜き
+    if (this.canNorth()) {
+      container.appendChild(this.createActionButton("北抜き", () => this.onNorth(0)));
+    }
+  }
+
+  createActionButton(label, handler) {
+    const btn = document.createElement("button");
+    btn.className = "action-btn";
+    btn.textContent = label;
+    btn.onclick = handler;
+    return btn;
+}
+
+
+ // ------------------------------
+ // 副露可能か判断
+ // ------------------------------
+ canRiichi() {
+  const p = this.players[0];
+  return (
+    this.turn === 0 &&
+    p.isMenzen &&
+    !p.isRiichi &&
+    this.isTenpai(0) &&
+    (this.wall.length - this.wallIndex) >= 4
+  );
+}
+
+canPon() {
+  return this.state === "WAIT_PON_KAN" && this.ponCandidates?.length > 0;
+}
+
+canKan() {
+  return this.state === "WAIT_PON_KAN" && this.kanCandidates?.length > 0;
+}
+
+canNorth() {
+  const p = this.players[0];
+  return p.hand.some(t => t.suit === "wind" && t.value === 4);
+}
+
+
 
 
 }
