@@ -122,7 +122,10 @@ export class Game {
     this.updateHandPositions();
     this.updateDiscardPositions();
 
-    this.updateRiichiButton();
+    this.updateActionButtons();
+    this.updateMelds();
+    this.updateNorthTiles();
+
 
   }
 
@@ -551,6 +554,39 @@ updateTurnIndicator(currentPlayer) {
       this.doraIndicators.push(this.wall[this.wallIndex++]);
     }
   }
+
+
+  /* 副露後の牌描画*/
+  updateMelds() {
+  const area = document.getElementById("player-melds");
+  area.innerHTML = "";
+
+  const p = this.players[0];
+
+  p.melds.forEach(m => {
+    m.tiles.forEach(tile => {
+      const img = this.createTileElement(tile);
+      area.appendChild(img);
+    });
+  });
+}
+
+
+/* 北抜き後の牌描画*/
+updateNorthTiles() {
+  const area = document.getElementById("player-north");
+  area.innerHTML = "";
+
+  const p = this.players[0];
+
+  for (let i = 0; i < p.northCount; i++) {
+    const img = this.createTileElement({ suit:"wind", value:4 });
+    area.appendChild(img);
+  }
+}
+
+
+  
 
   
   // ゲーム進行
@@ -1000,24 +1036,6 @@ const table = document.getElementById("table");
 
   // 立直・副露ボタン
   // ===========================================================================
-
-
-  // 立直ボタン
-  updateRiichiButton() {
-    const btn = document.getElementById("riichi-btn");
-
-    const p = this.players[0];
-
-    // 条件
-    const canRiichi =
-      this.turn === 0 &&
-      p.isMenzen &&
-      !p.isRiichi &&
-      this.isTenpai(0) &&
-      (this.wall.length - this.wallIndex) >= 4;
-
-    btn.style.display = canRiichi ? "block" : "none";
-  }
 
 
   
