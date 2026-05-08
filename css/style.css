@@ -465,13 +465,30 @@ body {
 /* 立直・副露ボタン */
 #action-buttons {
   position: absolute;
-  bottom: 120px; /* 手牌の少し上 */
+  bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  gap: 10px;
-  z-index: 2000;
+  width: 360px; /* 120px × 3 */
+  height: 100px; /* 50px × 2 */
+  display: grid;
+  grid-template-columns: repeat(3, 120px);
+  grid-template-rows: repeat(2, 50px);
+  gap: 4px;
 }
+
+.action-btn {
+  background: white;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.empty-slot {
+  background: transparent;
+  border: none;
+}
+
 
 .action-btn {
   padding: 8px 14px;
