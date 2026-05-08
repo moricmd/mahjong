@@ -1082,40 +1082,75 @@ const table = document.getElementById("table");
 
   
 
-  updateActionButtons() {
-    const container = document.getElementById("action-buttons");
-    container.innerHTML = ""; // 一旦クリア
+updateActionButtons() {
+  const container = document.getElementById("action-buttons");
+  container.innerHTML = "";
 
-    const p = this.players[0];
+  const p = this.players[0];
 
-    // 1. ツモ / ロン
-    if (this.canTsumo()) {
-      container.appendChild(this.createActionButton("ツモ", () => this.onTsumo()));
+  // --- 1. 表示候補を作る（順序付き） ---
+  let list = [];
+
+  const menzen = p.isMenzen;
+
+  if (menzen && this.canRiichi()) list.push({ name: "立直", handler: () => this.onRiichi() });
+
+  // ツモ/ロンは面前かどうかで順序が変わる
+  if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
+  if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
+
+  if (this.canPon())   list.push({ name: "ポン", handler: () => this.onPonSelect() });
+  if (this.canKan())   list.push({ name: "カン", handler: () => this.onKanSelect() });
+  if (this.canNorth()) list.push({ name: "北抜き", handler: () => this.onNorth(0) });
+
+  // --- 2. スキップの追加 ---
+  const hasActions = list.length > 0;
+  if (hasActions) {
+    list.push({ name: "スキップ", handler: () => { container.innerHTML = ""; } });
+  } else {
+    return; // 何も表示しない
+  }
+
+  // --- 3. 2×3 の枠に配置する ---
+  const slots = new Array(6).fill(null);
+
+  // スキップは必ず右下（index 5）
+  const skip = list.pop();
+  slots[5] = skip;
+
+  const actions = list; // 残り
+
+  if (actions.length <= 2) {
+    // 下段左から詰める
+    for (let i = 0; i < actions.length; i++) {
+      slots[i] = actions[i];
     }
-    if (this.canRon()) {
-      container.appendChild(this.createActionButton("ロン", () => this.onRon()));
-    }
+  } else {
+    // 下段：1番目・2番目
+    slots[3] = actions[0];
+    slots[4] = actions[1];
 
-    // 2. 立直
-    if (this.canRiichi()) {
-      container.appendChild(this.createActionButton("立直", () => this.onRiichi()));
-    }
-
-    // 3. ポン
-    if (this.canPon()) {
-      container.appendChild(this.createActionButton("ポン", () => this.onPonSelect()));
-    }
-
-    // 4. カン
-    if (this.canKan()) {
-      container.appendChild(this.createActionButton("カン", () => this.onKanSelect()));
-    }
-
-    // 5. 北抜き
-    if (this.canNorth()) {
-      container.appendChild(this.createActionButton("北抜き", () => this.onNorth(0)));
+    // 上段：右から詰める
+    let pos = 2;
+    for (let i = 2; i < actions.length; i++) {
+      slots[pos] = actions[i];
+      pos--;
     }
   }
+
+  // --- 4. DOM に反映 ---
+  slots.forEach(item => {
+    if (!item) {
+      const empty = document.createElement("div");
+      empty.className = "action-btn empty-slot";
+      container.appendChild(empty);
+      return;
+    }
+    const btn = this.createActionButton(item.name, item.handler);
+    container.appendChild(btn);
+  });
+}
+
 
   createActionButton(label, handler) {
     const btn = document.createElement("button");
