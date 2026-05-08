@@ -1090,30 +1090,30 @@ const table = document.getElementById("table");
 
     // 1. ツモ / ロン
     if (this.canTsumo()) {
-      container.appendChild(createActionButton("ツモ", () => this.onTsumo()));
+      container.appendChild(this.createActionButton("ツモ", () => this.onTsumo()));
     }
     if (this.canRon()) {
-      container.appendChild(createActionButton("ロン", () => this.onRon()));
+      container.appendChild(this.createActionButton("ロン", () => this.onRon()));
     }
 
     // 2. 立直
     if (this.canRiichi()) {
-      container.appendChild(createActionButton("立直", () => this.onRiichi()));
+      container.appendChild(this.createActionButton("立直", () => this.onRiichi()));
     }
 
     // 3. ポン
     if (this.canPon()) {
-      container.appendChild(createActionButton("ポン", () => this.onPonSelect()));
+      container.appendChild(this.createActionButton("ポン", () => this.onPonSelect()));
     }
 
     // 4. カン
     if (this.canKan()) {
-      container.appendChild(createActionButton("カン", () => this.onKanSelect()));
+      container.appendChild(this.createActionButton("カン", () => this.onKanSelect()));
     }
 
     // 5. 北抜き
     if (this.canNorth()) {
-      container.appendChild(createActionButton("北抜き", () => this.onNorth(0)));
+      container.appendChild(this.createActionButton("北抜き", () => this.onNorth(0)));
     }
   }
 
