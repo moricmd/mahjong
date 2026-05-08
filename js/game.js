@@ -1078,78 +1078,75 @@ const table = document.getElementById("table");
 
   // 立直・副露ボタン
   // ===========================================================================
-
-
-  
-
 updateActionButtons() {
   const container = document.getElementById("action-buttons");
   container.innerHTML = "";
 
   const p = this.players[0];
 
-  // --- 1. 表示候補を作る（順序付き） ---
+  // --- 1. 表示候補を作る（優先順） ---
   let list = [];
 
-  const menzen = p.isMenzen;
+  // 立直（門前時のみ）
+  if (p.isMenzen && this.canRiichi()) {
+    list.push({ name: "立直", handler: () => this.onRiichi() });
+  }
 
-  if (menzen && this.canRiichi()) list.push({ name: "立直", handler: () => this.onRiichi() });
-
-  // ツモ/ロンは面前かどうかで順序が変わる
+  // 和了（ツモ／ロン）
   if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
   if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
 
-  if (this.canPon())   list.push({ name: "ポン", handler: () => this.onPonSelect() });
-  if (this.canKan())   list.push({ name: "カン", handler: () => this.onKanSelect() });
+  // ポン
+  if (this.canPon()) list.push({ name: "ポン", handler: () => this.onPonSelect() });
+
+  // カン
+  if (this.canKan()) list.push({ name: "カン", handler: () => this.onKanSelect() });
+
+  // 北抜き
   if (this.canNorth()) list.push({ name: "北抜き", handler: () => this.onNorth(0) });
 
-  // --- 2. スキップの追加 ---
-  const hasActions = list.length > 0;
-  if (hasActions) {
-    list.push({ name: "スキップ", handler: () => { container.innerHTML = ""; } });
-  } else {
-    return; // 何も表示しない
-  }
+  // --- 2. スキップ追加 ---
+  if (list.length === 0) return;
+  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } };
 
-  // --- 3. 2×3 の枠に配置する ---
+  const total = list.length + 1; // スキップ含む
   const slots = new Array(6).fill(null);
 
-  // スキップは必ず右下（index 5）
-  const skip = list.pop();
-  slots[5] = skip;
-
-  const actions = list; // 残り
-
-  if (actions.length <= 2) {
-    // 下段左から詰める
-    for (let i = 0; i < actions.length; i++) {
-      slots[i] = actions[i];
+  // --- 3. スロット配置 ---
+  if (total <= 3) {
+    // 3個以下 → 3,4,5 を使用
+    let pos = 3;
+    for (let i = 0; i < list.length; i++) {
+      slots[pos++] = list[i];
     }
+    slots[pos] = skip; // 最後にスキップ
   } else {
-    // 下段：1番目・2番目
-    slots[3] = actions[0];
-    slots[4] = actions[1];
+    // 4個以上 → スキップは5固定
+    slots[5] = skip;
 
-    // 上段：右から詰める
+    // 下段 3,4 に優先順の1番目・2番目
+    slots[3] = list[0];
+    slots[4] = list[1];
+
+    // 上段は右から左へ詰める（2 → 1 → 0）
     let pos = 2;
-    for (let i = 2; i < actions.length; i++) {
-      slots[pos] = actions[i];
-      pos--;
+    for (let i = 2; i < list.length; i++) {
+      slots[pos--] = list[i];
     }
   }
 
-  // --- 4. DOM に反映 ---
+  // --- 4. DOM に追加（null は描画しない） ---
   slots.forEach(item => {
-    if (!item) {
-      const empty = document.createElement("div");
-      empty.className = "action-btn empty-slot";
-      container.appendChild(empty);
-      return;
-    }
+    if (!item) return;
     const btn = this.createActionButton(item.name, item.handler);
     container.appendChild(btn);
   });
 }
+
+
+  
+
+
 
 
   createActionButton(label, handler) {
