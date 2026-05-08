@@ -123,6 +123,15 @@ export function renderDiscards(playerIndex, discards, position) {
   });
 }
 
+// 副露時の牌表示
+export function createTileElement(tile) {
+  const img = document.createElement("img");
+  img.src = tileToImage(tile);
+  img.className = "tile";
+  return img;
+}
+
+
 
 // -------------------------
 // 状態表示
