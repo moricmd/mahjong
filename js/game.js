@@ -565,7 +565,7 @@ updateTurnIndicator(currentPlayer) {
 
   p.melds.forEach(m => {
     m.tiles.forEach(tile => {
-      const img = this.createTileElement(tile);
+      const img = createTileElement(tile);
       area.appendChild(img);
     });
   });
@@ -580,7 +580,7 @@ updateNorthTiles() {
   const p = this.players[0];
 
   for (let i = 0; i < p.northCount; i++) {
-    const img = this.createTileElement({ suit:"wind", value:4 });
+    const img = createTileElement({ suit:"wind", value:4 });
     area.appendChild(img);
   }
 }
