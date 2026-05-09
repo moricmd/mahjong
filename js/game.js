@@ -1084,58 +1084,96 @@ updateActionButtons() {
 
   const p = this.players[0];
 
-  // --- 1. 表示候補を作る（優先順） ---
-  let list = [];
+  // -------------------------
+  // ① ボタンを表示する状況か？
+  // -------------------------
 
-  // 立直（門前時のみ）
-  if (p.isMenzen && this.canRiichi()) {
-    list.push({ name: "立直", handler: () => this.onRiichi() });
+  // 他家の捨て牌でポン・カン待ち
+  const isCallTurn = (this.state === "WAIT_PON_KAN");
+
+  // 自分のツモ番（CHECK_WIN → DISCARD）
+  const isMyTurn =
+    (this.turn === 0) &&
+    (this.state === "CHECK_WIN" || this.state === "DISCARD");
+
+  if (!isCallTurn && !isMyTurn) {
+    return; // 何も表示しない
   }
 
-  // 和了（ツモ／ロン）
-  if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
-  if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
+  // -------------------------
+  // ② ボタン候補を作る（優先順）
+  // -------------------------
+  let list = [];
 
-  // ポン
-  if (this.canPon()) list.push({ name: "ポン", handler: () => this.onPonSelect() });
+  if (isMyTurn) {
+    // 立直（門前時のみ）
+    if (p.isMenzen && this.canRiichi()) {
+      list.push({ name: "立直", handler: () => this.onRiichi() });
+    }
 
-  // カン
-  if (this.canKan()) list.push({ name: "カン", handler: () => this.onKanSelect() });
+    // 和了（ツモ / ロン）
+    if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
+    if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
 
-  // 北抜き
-  if (this.canNorth()) list.push({ name: "北抜き", handler: () => this.onNorth(0) });
+    // 暗槓（自分のツモ番のみ）
+    if (this.canAnkan()) {
+      list.push({ name: "カン", handler: () => this.onKanSelect() });
+    }
 
-  // --- 2. スキップ追加 ---
+    // 北抜き
+    if (this.canNorth()) {
+      list.push({ name: "北抜き", handler: () => this.onNorth(0) });
+    }
+
+  } else if (isCallTurn) {
+    // 他家の捨て牌 → ポン / 大明槓 のみ
+    if (this.canPon()) {
+      list.push({ name: "ポン", handler: () => this.onPonSelect() });
+    }
+    if (this.canDaiminkan()) {
+      list.push({ name: "カン", handler: () => this.onKanSelect() });
+    }
+  }
+
+  // -------------------------
+  // ③ スキップ追加（必ず最後）
+  // -------------------------
   if (list.length === 0) return;
-  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } };
 
-  const total = list.length + 1; // スキップ含む
+  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } };
+  const total = list.length + 1;
+
   const slots = new Array(6).fill(null);
 
-  // --- 3. スロット配置 ---
+  // -------------------------
+  // ④ レイアウト
+  // -------------------------
   if (total <= 3) {
     // 3個以下 → 3,4,5 を使用
     let pos = 3;
     for (let i = 0; i < list.length; i++) {
       slots[pos++] = list[i];
     }
-    slots[pos] = skip; // 最後にスキップ
+    slots[pos] = skip;
+
   } else {
     // 4個以上 → スキップは5固定
     slots[5] = skip;
 
-    // 下段 3,4 に優先順の1番目・2番目
+    // 下段 3,4 に優先順 1,2
     slots[3] = list[0];
     slots[4] = list[1];
 
-    // 上段は右から左へ詰める（2 → 1 → 0）
+    // 上段は右から左へ（2→1→0）
     let pos = 2;
     for (let i = 2; i < list.length; i++) {
       slots[pos--] = list[i];
     }
   }
 
-  // --- 4. DOM に追加（null は描画しない） ---
+  // -------------------------
+  // ⑤ DOM に追加（null は描画しない）
+  // -------------------------
   slots.forEach(item => {
     if (!item) return;
     const btn = this.createActionButton(item.name, item.handler);
@@ -1190,6 +1228,49 @@ canPon() {
 canKan() {
   return this.state === "WAIT_PON_KAN" && this.kanCandidates?.length > 0;
 }
+
+canKan() {
+  const p = this.players[0];
+
+  // -------------------------
+  // ① 他家の捨て牌 → 大明槓
+  // -------------------------
+  if (this.state === "WAIT_PON_KAN") {
+    return this.kanCandidates?.length > 0; // 大明槓候補がある
+  }
+
+  // -------------------------
+  // ② 自分のツモ番でなければカン不可
+  // -------------------------
+  const isMyTurn =
+    (this.turn === 0) &&
+    (this.state === "CHECK_WIN" || this.state === "DISCARD");
+
+  if (!isMyTurn) return false;
+
+  // -------------------------
+  // ③ 暗槓（手牌に4枚）
+  // -------------------------
+  const hasAnkan = p.hand.some(t =>
+    p.hand.filter(x => sameTile(x, t)).length === 4
+  );
+
+  if (hasAnkan) return true;
+
+  // -------------------------
+  // ④ 小明槓（ポン済み + 同じ牌をツモった）
+  // -------------------------
+  const lastTile = p.hand[p.hand.length - 1]; // ツモ牌
+
+  const hasKakan = p.melds.some(m =>
+    m.type === "pon" && sameTile(m.tiles[0], lastTile)
+  );
+
+  if (hasKakan) return true;
+
+  return false;
+}
+
 
 canNorth() {
   const p = this.players[0];
