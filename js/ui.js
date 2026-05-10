@@ -123,12 +123,125 @@ export function renderDiscards(playerIndex, discards, position) {
   });
 }
 
-// 副露時の牌表示
+
+// -------------------------
+// 副露牌表示
+// -------------------------
+function getMeldTilesForRender(meld) {
+  const tiles = [...meld.tiles];
+
+  if (meld.type === "pon") {
+    // 取った牌を左に倒す
+    const takenTile = tiles.pop(); // 最後が取った牌
+    return [
+      { tile: takenTile, rotate: true },
+      ...tiles.map(t => ({ tile: t, rotate: false }))
+    ];
+  }
+
+  if (meld.type === "daiminkan") {
+    const takenTile = tiles.pop();
+
+    if (meld.from === "left") {
+      // 左から → 左端
+      return [
+        { tile: takenTile, rotate: true },
+        ...tiles.map(t => ({ tile: t, rotate: false }))
+      ];
+    }
+
+    if (meld.from === "opposite") {
+      // 対面 → 左から2番目
+      return [
+        { tile: tiles[0], rotate: false },
+        { tile: takenTile, rotate: true },
+        { tile: tiles[1], rotate: false },
+        { tile: tiles[2], rotate: false }
+      ];
+    }
+
+    if (meld.from === "right") {
+      // 右から → 右端
+      return [
+        ...tiles.map(t => ({ tile: t, rotate: false })),
+        { tile: takenTile, rotate: true }
+      ];
+    }
+  }
+
+  if (meld.type === "kakan") {
+    // 小明槓 → ポン面子の横向き牌の上に重ねる
+    const base = getMeldTilesForRender({
+      type: "pon",
+      tiles: meld.tiles.slice(0, 3),
+      from: meld.from
+    });
+
+    const added = meld.tiles[3];
+
+    return base.map((obj, i) => {
+      if (obj.rotate) {
+        return {
+          tile: obj.tile,
+          rotate: true,
+          stacked: added // 上に重ねる牌
+        };
+      }
+      return obj;
+    });
+  }
+
+  if (meld.type === "ankan") {
+    // 暗槓 → 中2枚を裏向きにする
+    return [
+      { tile: tiles[0], rotate: false },
+      { tile: null,   rotate: false, dark: true },
+      { tile: null,   rotate: false, dark: true },
+      { tile: tiles[3], rotate: false }
+    ];
+  }
+}
+
+
+// 牌要素作成
 export function createTileElement(tile) {
   const img = document.createElement("img");
   img.src = tileToImage(tile);
   img.className = "tile";
   return img;
+}
+
+// 描画
+export function updateMelds() {
+  const area = document.getElementById("player-melds");
+  area.innerHTML = "";
+
+  const p = this.players[0];
+
+  p.melds.forEach(meld => {
+    const renderTiles = getMeldTilesForRender(meld);
+
+    renderTiles.forEach(obj => {
+      const img = createTileElement(obj.tile);
+
+      if (obj.rotate) {
+        img.style.transform = "rotate(-90deg)";
+      }
+
+      if (obj.dark) {
+        img.classList.add("tile-dark");
+      }
+
+      area.appendChild(img);
+
+      if (obj.stacked) {
+        const stackedImg = createTileElement(obj.stacked);
+        stackedImg.style.transform = "rotate(-90deg)";
+        stackedImg.classList.add("stacked-tile");
+        area.appendChild(stackedImg);
+      }
+    });
+  });
 }
 
 
