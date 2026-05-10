@@ -33,7 +33,9 @@ export class Game {
     this.scores = [35000, 35000, 35000]; // 点数
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3
-    this.dealer = 0;  
+    this.dealer = 0; 
+    
+    this.lastDiscarder = null;
 
 
     this.initGame();
@@ -57,6 +59,8 @@ export class Game {
 
     this.dealer = this.players.findIndex(p => p.wind === 1);
     this.turn = this.dealer;
+
+    this.lastDiscarder = null;
     
     this.buildWall();
     this.state = "DEAL";
@@ -420,6 +424,14 @@ updateTurnIndicator(currentPlayer) {
   onPon(playerIndex, tile) {
     const p = this.players[playerIndex];
 
+
+    // どの相手から鳴いたか
+    const fromPos = this.players[this.lastDiscarder].position;
+    let from = "opposite";
+    if (fromPos === "right") from = "right";
+    if (fromPos === "left")  from = "left";
+
+    // 手牌から2枚抜く
     let removed = 0;
     for (let i = 0; i < p.hand.length && removed < 2; i++) {
       if (sameTile(p.hand[i], tile)) {
@@ -448,6 +460,7 @@ updateTurnIndicator(currentPlayer) {
   onAnkan(playerIndex, tile) {
     const p = this.players[playerIndex];
 
+    // 手牌から4枚抜く
     let removed = 0;
     for (let i = 0; i < p.hand.length && removed < 4; i++) {
       if (sameTile(p.hand[i], tile)) {
@@ -476,6 +489,13 @@ updateTurnIndicator(currentPlayer) {
   onDaiminkan(playerIndex, tile) {
     const p = this.players[playerIndex];
 
+    // 誰から鳴いたか
+    const fromPos = this.players[this.lastDiscarder].position;
+    let from = "opposite";
+    if (fromPos === "right") from = "right";
+    if (fromPos === "left")  from = "left";
+
+    // 手牌から3枚抜く
     let removed = 0;
     for (let i = 0; i < p.hand.length && removed < 3; i++) {
       if (sameTile(p.hand[i], tile)) {
@@ -507,12 +527,19 @@ updateTurnIndicator(currentPlayer) {
   onKakan(playerIndex, tile) {
     const p = this.players[playerIndex];
 
+    // 既存のポン面子を探す
+    const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
+
+    // 手牌から1枚抜く
     const idx = p.hand.findIndex(t => sameTile(t, tile));
     p.hand.splice(idx, 1);
 
-    const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
+    // ポン → 加槓に変換
     meld.type = "kakan";
     meld.tiles.push(tile);
+
+    // from はポン時のものをそのまま使う
+    // meld.from は既に入っているので変更不要
 
     p.kanCount++;
 
@@ -877,6 +904,8 @@ updateNorthTiles() {
 
     if (this.autoSort) this.sortHand(0);
 
+    this.lastDiscarder = this.turn;
+
     this.state = "NEXT_TURN";
     this.updateUI();
 
@@ -893,6 +922,8 @@ updateNorthTiles() {
     if (this.onCheckRon(discardTile, this.turn)) return;
 
     if (this.autoSort) this.sortHand(this.turn);
+
+    this.lastDiscarder = this.turn;
 
     this.state = "NEXT_TURN";
     
