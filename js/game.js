@@ -397,11 +397,17 @@ updateTurnIndicator(currentPlayer) {
   onRiichi() {
     const p = this.players[0];
 
+
+    // テンパイしていなければ無効
+    if (!this.isTenpai(p)) return;
+
     // 1000点支払い
     this.scores[0] -= 1000;
     this.kyotaku++;
 
     p.isRiichi = true;
+    p.riichiTurn = this.turnCount;
+    p.riichiTile = this.discardTile;
     p.isIppatsu = true;
 
     // UI更新
@@ -613,6 +619,45 @@ updateNorthTiles() {
     area.appendChild(img);
   }
 }
+
+
+  // -------------------------
+  // フリテン
+  // -------------------------
+  checkDiscardFuriten(player) {
+  const waits = player.tenpaiWaits;
+  const discards = player.discards;
+
+  for (const w of waits) {
+    if (discards.includes(w)) {
+      player.isFuriten = true;
+      player.furitenType = "discard";
+      return;
+    }
+  }
+
+  player.isFuriten = false;
+  player.furitenType = "none";
+}
+
+
+  // 同巡フリテン 
+  onRonOpportunity(player, tile) {
+  if (player.isRiichi && player.missedRon) {
+    player.isFuriten = true;
+    player.furitenType = "riichi";
+    return false;
+  }
+
+  if (player.discards.includes(tile)) {
+    player.isFuriten = true;
+    player.furitenType = "sameTurn";
+    return false;
+  }
+
+  return true;
+}
+
 
 
   
@@ -1241,7 +1286,13 @@ updateActionButtons() {
 
 canTsumo() { return true; }
 
-canRon() { return false; }
+canRon() {
+  if (this.state === "WAIT_RON") {
+    if (!player.isFuriten) {
+      return true;
+    }
+  }
+}
   
  canRiichi() {
   const p = this.players[0];
