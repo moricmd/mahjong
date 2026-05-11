@@ -140,21 +140,21 @@ function getMeldTilesForRender(meld) {
   }
 
   if (meld.type === "daiminkan") {
-    const takenTile = tiles.pop();
+    const taken = tiles.pop();
 
     if (meld.from === "left") {
       // 左から → 左端
       return [
-        { tile: takenTile, rotate: true },
+        { tile: taken, rotate: true },
         ...tiles.map(t => ({ tile: t, rotate: false }))
       ];
     }
 
-    if (meld.from === "opposite") {
+    if (meld.from === "top") {
       // 対面 → 左から2番目
       return [
         { tile: tiles[0], rotate: false },
-        { tile: takenTile, rotate: true },
+        { tile: taken, rotate: true },
         { tile: tiles[1], rotate: false },
         { tile: tiles[2], rotate: false }
       ];
@@ -164,7 +164,7 @@ function getMeldTilesForRender(meld) {
       // 右から → 右端
       return [
         ...tiles.map(t => ({ tile: t, rotate: false })),
-        { tile: takenTile, rotate: true }
+        { tile: taken, rotate: true }
       ];
     }
   }
@@ -184,7 +184,10 @@ function getMeldTilesForRender(meld) {
         return {
           tile: obj.tile,
           rotate: true,
-          stacked: added // 上に重ねる牌
+          stacked: {
+            tile: added,
+            rotate: true // 上に重ねる牌
+          }
         };
       }
       return obj;
@@ -234,10 +237,12 @@ export function updateMelds() {
 
       area.appendChild(img);
 
+      
+      // 小明槓の牌描画
       if (obj.stacked) {
-        const stackedImg = createTileElement(obj.stacked);
+        const stackedImg = createTileElement(obj.stacked.tile);
         stackedImg.style.transform = "rotate(-90deg)";
-        stackedImg.classList.add("stacked-tile");
+        stackedImg.classList.add("kakan-stacked");
         area.appendChild(stackedImg);
       }
     });

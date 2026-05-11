@@ -127,7 +127,7 @@ export class Game {
     this.updateDiscardPositions();
 
     this.updateActionButtons();
-    this.updateMelds();
+    this.updateMelds(this.players[0]);
     this.updateNorthTiles();
 
 
@@ -427,9 +427,10 @@ updateTurnIndicator(currentPlayer) {
 
     // どの相手から鳴いたか
     const fromPos = this.players[this.lastDiscarder].position;
-    let from = "opposite";
+    let from = "top";
     if (fromPos === "right") from = "right";
     if (fromPos === "left")  from = "left";
+    if (fromPos === "top")  from = "top";
 
     // 手牌から2枚抜く
     let removed = 0;
@@ -491,9 +492,10 @@ updateTurnIndicator(currentPlayer) {
 
     // 誰から鳴いたか
     const fromPos = this.players[this.lastDiscarder].position;
-    let from = "opposite";
+    let from = "top";
     if (fromPos === "right") from = "right";
     if (fromPos === "left")  from = "left";
+    if (fromPos === "top")  from = "top";
 
     // 手牌から3枚抜く
     let removed = 0;
