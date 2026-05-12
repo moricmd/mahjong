@@ -61,7 +61,7 @@ body {
 
 
 #left-info {
-  widthj: 220px;
+  width: 220px;
   background: transparent;
   padding: 10px;
 }
@@ -167,7 +167,6 @@ body {
   left: 50%;
   width: 250px;
   height: 250px;
-  pointer-events: none;
   transform: translate(-50%, -50%);
 
   background: rgba(0, 0, 0, 0.15);
