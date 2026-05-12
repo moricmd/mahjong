@@ -80,4 +80,12 @@ autoSortBtn.addEventListener("click", () => {
 
 
 
+// game が変化したら常に window に反映する
+Object.defineProperty(window, "game", {
+  get() { return game; }
+});
+
+
+
+
   
