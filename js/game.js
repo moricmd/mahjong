@@ -33,7 +33,10 @@ export class Game {
     this.uraIndicators = [];
 
 
-    this.scores = [35000, 35000, 35000]; // 点数
+    // this.scores = [35000, 40000, 30000]; //動作確認用
+
+    this.scores = [35000, 35000, 35000]; // 点数 
+    this.showRelativeScores = false; // 相対点数表示（デフォルトはオフ）
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3
     this.dealer = 0; 
@@ -124,6 +127,7 @@ export class Game {
 
     renderDoraIndicators(this.doraIndicators);
     
+    this.updateRelativeScores();
     this.updateTurnIndicator(this.turn);
 
     this.updateHandPositions();
@@ -132,7 +136,6 @@ export class Game {
     this.updateActionButtons();
     this.updateMelds(this.players[0]);
     this.updateNorthTiles();
-
 
   }
 
@@ -297,6 +300,65 @@ for (let i = 0; i < 3; i++) {
 }
 
 }
+
+// ------------------------------ 
+// 相対点数表示
+// ------------------------------ 
+
+// 山をクリックで表示を切り替え
+onWallClick() {
+  this.showRelativeScores = !this.showRelativeScores;
+  this.updateUI();
+}
+
+// 表示設定
+updateRelativeScores() {
+  const selfIndex = 0; // 自分がプレイヤー0
+  const ids = ["score-bottom", "score-top", "score-right"];
+
+  for (let i = 0; i < this.players.length; i++) {
+    const elem = document.getElementById(ids[i]);
+    if (!elem) continue;
+
+    if (!this.showRelativeScores) {
+      // 通常表示
+      elem.textContent = this.scores[i];
+      elem.style.color = "black";
+      continue;
+    }
+
+    // 相対点数表示
+    if (i === selfIndex) {
+      // 自分は常に +0（グレー）
+      elem.textContent = "+0";
+      elem.style.color = "#888";
+      continue;
+    }
+
+    const diff = this.scores[i] - this.scores[selfIndex];
+
+    // diff = 0 のとき
+    if (diff === 0) {
+      elem.textContent = "+0";
+      elem.style.color = "#888"; // グレー
+      continue;
+    }
+
+    // diff > 0（相手のほうが点数が高い）
+    if (diff > 0) {
+      elem.textContent = `+${diff}`;
+      elem.style.color = "blue";
+      continue;
+    }
+
+    // diff < 0（自分のほうが点数が高い）
+    elem.textContent = `${diff}`; // diff は負なのでそのまま "-◯"
+    elem.style.color = "red";
+  }
+}
+
+
+
 
 
 // ------------------------------ 
