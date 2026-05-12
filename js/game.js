@@ -168,8 +168,8 @@ export class Game {
       this.players[1].position = "left";
       this.players[2].position = "right";
 
-      this.players[1].wind = leftWind;
-      this.players[2].wind = rightWind;
+      this.players[1].wind = rightWind;
+      this.players[2].wind = leftWind;
     
     } else if (bottomWind === 3) { // 自分が西
       topWind = 1;               // 東
