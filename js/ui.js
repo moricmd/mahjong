@@ -28,19 +28,28 @@ export function createBackImg() {
 // -------------------------
 // ドラ表示
 // -------------------------
-export function renderDoraIndicators(doraIndicators) {
+export function renderDoraIndicators(doraIndicators, openCount) {
   const area = document.getElementById("dora-indicators");
   if (!area) return;
 
   area.innerHTML = ""; // 一旦クリア
 
-  for (const tile of doraIndicators) {
+  for (let i = 0; i < doraIndicators.length; i++) {
     const img = document.createElement("img");
-    img.src = tileToImage(tile);
+
+    if (i < openCount) {
+      // 公開されているドラ（表）
+      img.src = tileToImage(doraIndicators[i]);
+    } else {
+      // 未公開のドラ（裏）
+      img.src = "img/back.png";
+    }
+
     img.className = "tile dora-tile";
     area.appendChild(img);
   }
 }
+
 
 
 // -------------------------

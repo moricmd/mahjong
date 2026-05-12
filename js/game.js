@@ -31,11 +31,9 @@ export class Game {
     this.rinshan = [];
     this.doraIndicators = [];
     this.uraIndicators = [];
+    this.openDoraCount = 0; // ドラ表示牌の公開枚数
 
-
-    this.scores = [35000, 40000, 30000]; //動作確認用
-
-    //this.scores = [35000, 35000, 35000]; // 点数 
+    this.scores = [35000, 35000, 35000]; // 点数 
     this.showRelativeScores = false; // 相対点数表示（デフォルトはオフ）
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3
@@ -80,9 +78,11 @@ export class Game {
     const tiles = generateTiles();
     shuffle(tiles);
 
-    this.rinshan = tiles.splice(-4);
-    this.doraIndicators = [tiles.splice(-1)[0]];
-    this.uraIndicators = [];
+    this.rinshan = tiles.splice(-8); // 嶺上牌: カン最大4回、北抜き最大4回
+    this.doraIndicators = tiles.splice(-5); // ドラ表示牌
+    this.uraIndicators = tiles.splice(-5); // 裏ドラ表示牌
+
+    this.openDoraCount = 1; // 1枚だけ公開
 
     this.wall = tiles;
     this.wallIndex = 0;
@@ -125,7 +125,7 @@ export class Game {
     this.updateTableInfo();
     this.updateCPUHandPosition();
 
-    renderDoraIndicators(this.doraIndicators);
+    renderDoraIndicators(this.doraIndicators, this.openDoraCount);
     
     this.updateRelativeScores();
     this.updateTurnIndicator(this.turn);
@@ -669,12 +669,15 @@ onDaiminkan(playerIndex, tile) {
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
     if (idx < 0) return;
 
-    const tile = p.hand[idx];
     p.hand.splice(idx, 1);
 
     p.northCount++;
 
-    this.doraIndicators.push(tile);
+    // 嶺上牌から1枚ツモる
+  if (this.rinshan.length > 0) {
+    const rinshanTile = this.rinshan.pop();
+    p.draw(rinshanTile);
+  }
 
 
     this.canDoubleRiichi = false;
@@ -687,11 +690,12 @@ onDaiminkan(playerIndex, tile) {
   // -------------------------
   // カンドラ追加（仮実装）
   // -------------------------
-  addKanDora() {
-    if (this.wall.length > 0) {
-      this.doraIndicators.push(this.wall[this.wallIndex++]);
-    }
+ addKanDora() {
+  if (this.openDoraCount < this.doraIndicators.length) {
+    this.openDoraCount++;  // 左から順に公開枚数を増やすだけ
   }
+}
+
 
 
   /* 副露後の牌描画*/
@@ -1446,7 +1450,24 @@ updateActionButtons() {
   return false;
 }
 
-canTsumo() { return true; }
+
+canTsumo(player) {
+  const lastTile = player.hand[player.hand.length - 1];
+  const result = judgeYaku(
+    player,
+    player.hand,
+    lastTile,
+    true,  // ツモ
+    false, // ロン
+    this.playerWind,
+    1,
+    this.doraIndicators,
+    this.uraIndicators,
+    this.wallIndex >= this.wall.length
+  );
+  return result.han > 0;
+}
+
 
 canRon() {
   if (this.state === "WAIT_RON") {
