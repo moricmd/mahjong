@@ -16,7 +16,10 @@ export class Game {
     ];
 
     this.state = "INIT";
-    this.turn = 0;
+    this.turn = 0; // 手番管理
+    this.turnCount = 0; // 巡目カウンター
+
+    this.canDoubleRiichi = true;
 
     this.wallIndex = 0;
     this.autoSort = true;
@@ -334,200 +337,235 @@ updateTurnIndicator(currentPlayer) {
 
 
   
-  // ------------------------------
-  // プレイモード表示
-  // ------------------------------
-  setPlayMode(mode) {
-    const el = document.getElementById("play-mode");
-    if (el) el.textContent = mode;
+// ------------------------------
+// プレイモード表示
+// ------------------------------
+setPlayMode(mode) {
+  const el = document.getElementById("play-mode");
+  if (el) el.textContent = mode;
+}
+
+
+
+// -------------------------
+// 一発クリア
+// -------------------------
+clearIppatsu() {
+  for (const p of this.players) {
+    p.isIppatsu = false;
   }
+}
 
+// -------------------------
+// 自動理牌
+// -------------------------
+sortHand(playerIndex) {
+  const p = this.players[playerIndex];
+  if (p.hand.length !== 13) return;
 
+  const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
+  const dragonOrder = { 1: 0, 2: 1, 3: 2 };
+  const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
 
-  // -------------------------
-  // 一発クリア
-  // -------------------------
-  clearIppatsu() {
-    for (const p of this.players) {
-      p.isIppatsu = false;
+  p.hand.sort((a, b) => {
+    if (suitOrder[a.suit] !== suitOrder[b.suit]) {
+      return suitOrder[a.suit] - suitOrder[b.suit];
     }
-  }
 
-  // -------------------------
-  // 自動理牌
-  // -------------------------
-  sortHand(playerIndex) {
-    const p = this.players[playerIndex];
-    if (p.hand.length !== 13) return;
+    if (a.suit === "man" || a.suit === "pin" || a.suit === "sou") {
+      if (a.value !== b.value) return a.value - b.value;
+      return (a.red ? 1 : 0) - (b.red ? 1 : 0);
+    }
 
-    const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
-    const dragonOrder = { 1: 0, 2: 1, 3: 2 };
-    const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
+    if (a.suit === "wind") {
+      return windOrder[a.value] - windOrder[b.value];
+    }
 
-    p.hand.sort((a, b) => {
-      if (suitOrder[a.suit] !== suitOrder[b.suit]) {
-        return suitOrder[a.suit] - suitOrder[b.suit];
-      }
+    if (a.suit === "dragon") {
+      return dragonOrder[a.value] - dragonOrder[b.value];
+    }
 
-      if (a.suit === "man" || a.suit === "pin" || a.suit === "sou") {
-        if (a.value !== b.value) return a.value - b.value;
-        return (a.red ? 1 : 0) - (b.red ? 1 : 0);
-      }
-
-      if (a.suit === "wind") {
-        return windOrder[a.value] - windOrder[b.value];
-      }
-
-      if (a.suit === "dragon") {
-        return dragonOrder[a.value] - dragonOrder[b.value];
-      }
-
-      return 0;
-    });
-  }
+    return 0;
+  });
+}
 
   
-  // 副露処理 
-  // ===========================================================================
+// 副露処理 
+// ===========================================================================
 
 
-  // ------------------------------
-  // 立直
-  // ------------------------------
-  onRiichi() {
-    const p = this.players[0];
+// ------------------------------
+// 立直
+// ------------------------------
+onRiichi() {
+  const p = this.players[0];
 
+  // すでにリーチしているなら無効
+  if (p.isRiichi) return;
 
-    // テンパイしていなければ無効
-    if (!this.isTenpai(p)) return;
+  // 門前でないとリーチ不可
+  if (!p.isMenzen) return;
 
-    // 1000点支払い
-    this.scores[0] -= 1000;
-    this.kyotaku++;
+  // テンパイしていなければ無効
+  if (!this.isTenpai(p)) return;
+  
+  // 点数不足
+  if (this.scores[0] < 1000) return;
 
-    p.isRiichi = true;
-    p.riichiTurn = this.turnCount;
-    p.riichiTile = this.discardTile;
-    p.isIppatsu = true;
+  // 1000点支払い
+  this.scores[0] -= 1000;
+  this.kyotaku++;
 
-    // UI更新
-    this.updateUI();
+  // リーチフラグ
+  p.isRiichi = true;
+  p.riichiTurn = this.turnCount;
+  p.riichiTile = this.lastDrawnTile;
+  p.isIppatsu = true;
 
-    // 立直宣言牌をツモ切り
-    const discardTile = p.discard(p.hand.length - 1);
-
-    if (this.onCheckRon(discardTile, 0)) return;
-
-    this.state = "NEXT_TURN";
-    this.updateUI();
-    this.autoContinue();
+  /* ダブル立直
+  
+   ・turnCount === 1（第一ツモ）
+   ・canDoubleRiichi が true（誰も鳴いていない） */
+  if (this.turnCount === 1 && this.canDoubleRiichi) {
+    p.isDoubleRiichi = true;
   }
 
+  // UI更新（リーチボタン消すなど）
+  this.updateUI();
 
   // -------------------------
-  // ポン
+  // リーチ宣言牌をツモ切り
   // -------------------------
-  onPon(playerIndex, tile) {
-    const p = this.players[playerIndex];
+  const discardTile = p.discard(p.hand.length - 1);
+
+  // -------------------------
+  // リーチ後のフリテン判定
+  // -------------------------
+  // 自分の捨て牌に待ち牌が含まれていればフリテン
+  this.checkDiscardFuriten(p);
+
+  // -------------------------
+  // ロンチェック（他家がロンできるか）
+  // -------------------------
+  if (this.onCheckRon(discardTile, 0)) return;
+
+  // 次のターンへ
+  this.state = "NEXT_TURN";
+  this.updateUI();
+  this.autoContinue();
+}
 
 
-    // どの相手から鳴いたか
-    const fromPos = this.players[this.lastDiscarder].position;
-    let from = "top";
-    if (fromPos === "right") from = "right";
-    if (fromPos === "left")  from = "left";
-    if (fromPos === "top")  from = "top";
 
-    // 手牌から2枚抜く
-    let removed = 0;
-    for (let i = 0; i < p.hand.length && removed < 2; i++) {
-      if (sameTile(p.hand[i], tile)) {
-        p.hand.splice(i, 1);
-        i--;
-        removed++;
-      }
+// -------------------------
+// ポン
+// -------------------------
+onPon(playerIndex, tile) {
+  const p = this.players[playerIndex];
+
+
+  // どの相手から鳴いたか
+  const fromPos = this.players[this.lastDiscarder].position;
+  let from = "top";
+  if (fromPos === "right") from = "right";
+  if (fromPos === "left")  from = "left";
+  if (fromPos === "top")  from = "top";
+
+  // 手牌から2枚抜く
+  let removed = 0;
+  for (let i = 0; i < p.hand.length && removed < 2; i++) {
+    if (sameTile(p.hand[i], tile)) {
+      p.hand.splice(i, 1);
+      i--;
+      removed++;
     }
-
-    p.melds.push({
-      type: "pon",
-      tiles: [tile, tile, tile]
-    });
-
-    p.isMenzen = false;
-    this.clearIppatsu();
-
-    this.turn = playerIndex;
-    this.state = "DISCARD";
-    this.updateUI();
   }
 
-  // -------------------------
-  // 暗槓
-  // -------------------------
-  onAnkan(playerIndex, tile) {
-    const p = this.players[playerIndex];
+  p.melds.push({
+    type: "pon",
+    tiles: [tile, tile, tile]
+  });
 
-    // 手牌から4枚抜く
-    let removed = 0;
-    for (let i = 0; i < p.hand.length && removed < 4; i++) {
-      if (sameTile(p.hand[i], tile)) {
-        p.hand.splice(i, 1);
-        i--;
-        removed++;
-      }
+  p.isMenzen = false;
+  this.canDoubleRiichi = false;
+  this.clearIppatsu();
+
+  this.turn = playerIndex;
+  this.state = "DISCARD";
+  this.updateUI();
+}
+
+// -------------------------
+// 暗槓
+// -------------------------
+onAnkan(playerIndex, tile) {
+  const p = this.players[playerIndex];
+
+  // 手牌から4枚抜く
+  let removed = 0;
+  for (let i = 0; i < p.hand.length && removed < 4; i++) {
+    if (sameTile(p.hand[i], tile)) {
+      p.hand.splice(i, 1);
+      i--;
+      removed++;
     }
-
-    p.melds.push({
-      type: "ankan",
-      tiles: [tile, tile, tile, tile]
-    });
-
-    p.kanCount++;
-    this.addKanDora();
-    this.clearIppatsu();
-
-    this.state = "DRAW";
-    this.updateUI();
   }
 
-  // -------------------------
-  // 大明槓
-  // -------------------------
-  onDaiminkan(playerIndex, tile) {
-    const p = this.players[playerIndex];
+  p.melds.push({
+    type: "ankan",
+    tiles: [tile, tile, tile, tile]
+  });
 
-    // 誰から鳴いたか
-    const fromPos = this.players[this.lastDiscarder].position;
-    let from = "top";
-    if (fromPos === "right") from = "right";
-    if (fromPos === "left")  from = "left";
-    if (fromPos === "top")  from = "top";
+  p.kanCount++;
+  this.addKanDora();
 
-    // 手牌から3枚抜く
-    let removed = 0;
-    for (let i = 0; i < p.hand.length && removed < 3; i++) {
-      if (sameTile(p.hand[i], tile)) {
-        p.hand.splice(i, 1);
-        i--;
-        removed++;
-      }
+  this.canDoubleRiichi = false;
+  this.clearIppatsu();
+
+  this.state = "DRAW";
+  this.updateUI();
+}
+
+// -------------------------
+// 大明槓
+// -------------------------
+onDaiminkan(playerIndex, tile) {
+  const p = this.players[playerIndex];
+
+  // 誰から鳴いたか
+  const fromPos = this.players[this.lastDiscarder].position;
+  let from = "top";
+  if (fromPos === "right") from = "right";
+  if (fromPos === "left")  from = "left";
+  if (fromPos === "top")  from = "top";
+
+  // 手牌から3枚抜く
+  let removed = 0;
+  for (let i = 0; i < p.hand.length && removed < 3; i++) {
+    if (sameTile(p.hand[i], tile)) {
+      p.hand.splice(i, 1);
+      i--;
+      removed++;
     }
-
-    p.melds.push({
-      type: "daiminkan",
-      tiles: [tile, tile, tile, tile]
-    });
-
-    p.isMenzen = false;
-    p.kanCount++;
-
-    this.addKanDora();
-    this.clearIppatsu();
-
-    this.turn = playerIndex;
-    this.state = "DRAW";
-    this.updateUI();
   }
+
+  p.melds.push({
+    type: "daiminkan",
+    tiles: [tile, tile, tile, tile]
+  });
+
+  p.isMenzen = false;
+  p.kanCount++;
+
+  this.addKanDora();
+
+  this.canDoubleRiichi = false;
+  this.clearIppatsu();
+
+  this.turn = playerIndex;
+  this.state = "DRAW";
+  this.updateUI();
+}
 
   // -------------------------
   // 加槓
@@ -552,6 +590,8 @@ updateTurnIndicator(currentPlayer) {
     p.kanCount++;
 
     this.addKanDora();
+
+    this.canDoubleRiichi = false;
     this.clearIppatsu();
 
     this.state = "DRAW";
@@ -574,7 +614,8 @@ updateTurnIndicator(currentPlayer) {
 
     this.doraIndicators.push(tile);
 
-    // 一発を消す
+
+    this.canDoubleRiichi = false;
     this.clearIppatsu();
 
     this.state = "DRAW";
@@ -621,13 +662,23 @@ updateNorthTiles() {
 }
 
 
-  // -------------------------
-  // フリテン
-  // -------------------------
-  checkDiscardFuriten(player) {
+// -------------------------
+// フリテン
+// -------------------------
+
+// 捨て牌によるフリテン
+checkDiscardFuriten(player) {
   const waits = player.tenpaiWaits;
   const discards = player.discards;
 
+  // テンパイしていないならフリテンなし
+  if (!player.isTenpai) {
+    player.isFuriten = false;
+    player.furitenType = "none";
+    return;
+  }
+
+  // 捨て牌に待ち牌が含まれているか
   for (const w of waits) {
     if (discards.includes(w)) {
       player.isFuriten = true;
@@ -636,85 +687,95 @@ updateNorthTiles() {
     }
   }
 
+  // フリテン解除
   player.isFuriten = false;
   player.furitenType = "none";
 }
 
 
-  // 同巡フリテン 
-  onRonOpportunity(player, tile) {
-  if (player.isRiichi && player.missedRon) {
-    player.isFuriten = true;
-    player.furitenType = "riichi";
-    return false;
-  }
 
-  if (player.discards.includes(tile)) {
+// 同巡フリテン 
+checkSameTurnFuriten(player, tile) {
+  // 自分の最後の捨て牌と一致したら同巡フリテン
+  const lastDiscard = player.discards[player.discards.length - 1];
+  if (lastDiscard && lastDiscard === tile) {
     player.isFuriten = true;
     player.furitenType = "sameTurn";
-    return false;
+    return true; // フリテン
   }
-
-  return true;
+  return false;
 }
 
 
 
-  
+// リーチ後見逃しフリテン
+checkRiichiMissFuriten(player) {
+  if (player.isRiichi && player.missedRon) {
+    player.isFuriten = true;
+    player.furitenType = "riichi";
+    return true;
+  }
+  return false;
+}
+
+
+
 
   
-  // ゲーム進行
-  // ===========================================================================
 
-  step() {
+  
+// ゲーム進行
+// ===========================================================================
 
-  // ★ デバッグログ（開発用）
-  const p = this.players[this.turn];
-  const windChar = {1:"東", 2:"南", 3:"西"};
-  console.log(
-    `%c[STEP] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
-    "color:#4CAF50; font-weight:bold;"
-  );
+step() {
+
+// ★ デバッグログ（開発用）
+const p = this.players[this.turn];
+const windChar = {1:"東", 2:"南", 3:"西"};
+console.log(
+  `%c[STEP] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
+  "color:#4CAF50; font-weight:bold;"
+);
 
   
     
-    switch (this.state) {
-      case "TURN_START":
-        this.onTurnStart();
+  switch (this.state) {
+    case "TURN_START":
+      this.onTurnStart();
+      break;
+
+    case "DRAW":
+      this.onDraw();
+      break;
+
+    case "CHECK_WIN":
+      this.onCheckWin();
+      break;
+
+    case "DISCARD":
+      const p = this.players[this.turn];
+
+      // プレイヤー → UI で待つ
+      if (!p.isCPU) {
         break;
+      }
 
-      case "DRAW":
-        this.onDraw();
-        break;
+      // CPU → 自動打牌
+      this.onCPUDiscard();
+      break;
 
-      case "CHECK_WIN":
-        this.onCheckWin();
-        break;
+    case "NEXT_TURN":
+      this.onNextTurn();
+      break;
 
-      case "DISCARD":
-        const p = this.players[this.turn];
+    case "END_ROUND":
+      alert("局終了（仮）");
+      break;
+   }
 
-        // プレイヤー → UI で待つ
-        if (!p.isCPU) {
-          break;
-        }
-
-        // CPU → 自動打牌
-        this.onCPUDiscard();
-        break;
-
-      case "NEXT_TURN":
-        this.onNextTurn();
-        break;
-
-      case "END_ROUND":
-        alert("局終了（仮）");
-        break;
-    }
-
-    this.updateUI();
-    this.autoContinue();
-  }
+  this.updateUI();
+  this.autoContinue();
+}
 
   // -------------------------
   // TURN_START
@@ -734,6 +795,8 @@ updateNorthTiles() {
     const p = this.players[this.turn];
     const tile = this.wall[this.wallIndex++];
     p.draw(tile);
+
+    this.turnCount++; // 巡目を進める
 
     this.state = "CHECK_WIN";
   }
@@ -940,9 +1003,18 @@ updateNorthTiles() {
 
     const p = this.players[0];
 
-     // 立直後はツモ切りのみ
+    // 立直後はツモ切りのみ
     if (p.isRiichi) {
       index = p.hand.length - 1;
+    }
+
+
+    // -------------------------
+    // ★ リーチ中の一発消し（和了しなかった場合）
+    // -------------------------
+    if (p.isRiichi && p.isIppatsu) {
+      // この打牌で和了していない → 一発終了
+      p.isIppatsu = false;
     }
     
     const discardTile = p.discard(index);
@@ -968,6 +1040,12 @@ updateNorthTiles() {
     // ロン判定
     if (this.onCheckRon(discardTile, this.turn)) return;
 
+
+  // 一発消し
+  if (p.isRiichi && p.isIppatsu) {
+    p.isIppatsu = false;
+  }
+
     if (this.autoSort) this.sortHand(this.turn);
 
     this.lastDiscarder = this.turn;
@@ -977,6 +1055,7 @@ updateNorthTiles() {
     const delay = this.getRandomDelay();
     setTimeout(() => this.step(), delay);
   }
+
 
 
   // -------------------------
