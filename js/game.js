@@ -33,9 +33,9 @@ export class Game {
     this.uraIndicators = [];
 
 
-    // this.scores = [35000, 40000, 30000]; //動作確認用
+    this.scores = [35000, 40000, 30000]; //動作確認用
 
-    this.scores = [35000, 35000, 35000]; // 点数 
+    //this.scores = [35000, 35000, 35000]; // 点数 
     this.showRelativeScores = false; // 相対点数表示（デフォルトはオフ）
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3
