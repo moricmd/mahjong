@@ -1451,22 +1451,29 @@ updateActionButtons() {
 }
 
 
-canTsumo(player) {
-  const lastTile = player.hand[player.hand.length - 1];
+canTsumo() {
+  const p = this.players[this.turn];  // ← これを追加
+  if (!p) return false;
+
+  const lastTile = p.hand[p.hand.length - 1];
+  if (!lastTile) return false;
+
   const result = judgeYaku(
-    player,
-    player.hand,
+    p,
+    p.hand,
     lastTile,
-    true,  // ツモ
-    false, // ロン
+    true,   // isTsumo
+    false,  // isRon
     this.playerWind,
     1,
     this.doraIndicators,
     this.uraIndicators,
     this.wallIndex >= this.wall.length
   );
+
   return result.han > 0;
 }
+
 
 
 canRon() {
