@@ -99,12 +99,12 @@ body {
   width: 32px;
   height: 48px;
   border-radius: 3px;
+  justify-content: center;
 }
 
 .dora-tile {
   width: 28px;   /* 元の大きさの9割 */
   height: 42px; 
-  margin-right: 0.5px;  /* はみ出し防止の余白 */
 }
 
 
