@@ -89,22 +89,25 @@ body {
   border-radius: 6px;
 }
 
-.dora-title {
-  font-size: 13px;
-  margin-bottom: 4px;
-  opacity: 0.8;
-}
-
-.dora-tiles {
+.dora-container {
   display: flex;
   gap: 4px;
 }
 
-.dora-tiles img {
+
+.dora-container img {
   width: 32px;
   height: 48px;
   border-radius: 3px;
 }
+
+.dora-tile {
+  width: 36px;   /* 元の大きさの9割 */
+  height: 54px; 
+  margin: 2px;  /* はみ出し防止の余白 */
+}
+
+
 
 /* 積み棒・供託 */
 .counter-area {
