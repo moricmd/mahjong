@@ -102,9 +102,9 @@ body {
 }
 
 .dora-tile {
-  width: 36px;   /* 元の大きさの9割 */
-  height: 54px; 
-  margin: 2px;  /* はみ出し防止の余白 */
+  width: 28px;   /* 元の大きさの9割 */
+  height: 42px; 
+  margin-right: 0.5px;  /* はみ出し防止の余白 */
 }
 
 
