@@ -1450,9 +1450,9 @@ canPon() {
   return this.state === "WAIT_PON_KAN" && this.ponCandidates?.length > 0;
 }
 
-canKan() {
+/* canKan() {
   return this.state === "WAIT_PON_KAN" && this.kanCandidates?.length > 0;
-}
+} */
 
 canKan() {
   const p = this.players[0];
@@ -1495,6 +1495,11 @@ canKan() {
 
   return false;
 }
+
+canAnkan(player) {
+  return false;
+}
+
 
 
 canNorth() {
