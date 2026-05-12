@@ -92,6 +92,7 @@ body {
 .dora-container {
   display: flex;
   gap: 4px;
+    justify-content: center;
 }
 
 
@@ -99,7 +100,7 @@ body {
   width: 32px;
   height: 48px;
   border-radius: 3px;
-  justify-content: center;
+
 }
 
 .dora-tile {
