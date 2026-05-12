@@ -1124,12 +1124,33 @@ console.log(
   // NEXT_TURN
   // -------------------------
   onNextTurn() {
-    this.turn = (this.turn + 1) % 3;
+    this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TURN_START";
 
     if (this.players[this.turn].isCPU) {
     }
   }
+
+
+  // 座席に基づいた次の手番を返す
+  getNextTurnIndex(currentIndex) {
+  const order = ["bottom", "right", "top", "left"]; // 反時計回り
+  const currentPos = this.players[currentIndex].position;
+
+  let i = order.indexOf(currentPos);
+
+  // 次の座席を探す（存在するプレイヤーだけ）
+  for (let step = 1; step <= 4; step++) {
+    const nextPos = order[(i + step) % 4];
+    const nextPlayer = this.players.findIndex(p => p.position === nextPos);
+    if (nextPlayer !== -1) {
+      return nextPlayer;
+    }
+  }
+
+  return currentIndex; // 念のため
+}
+
 
 
 
