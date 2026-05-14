@@ -1181,53 +1181,45 @@ nextRound(renchan, winnerIndex = null) {
   const parent = this.dealer;
   const someoneOver40k = this.hasPlayerOver40000();
 
-  // 今がオーラスかどうか（東3 / 南3 / 西3）
-  const isAllLast =
-    (this.round === 1 && this.kyoku === 3) ||
-    (this.round === 2 && this.kyoku === 3) ||
-    (this.round === 3 && this.kyoku === 3);
+  // --- 東3 / 南3 / 西3 の判定 ---
+  const isAllLast = (this.kyoku === 3);
 
-  // --- 1) 東3局終了時の処理 ---
+  // --- 東3局終了時 ---
   if (this.round === 1 && this.kyoku === 3) {
     if (someoneOver40k) {
-      // 誰かが40000点以上 → 即終了
       this.endGame();
       return;
     }
-    // 誰も40000に届いていない → 南1へ
+    // 南1へ
     this.round = 2;
     this.kyoku = 1;
-    this.dealer = 0;      // 東場の親をどうするかは好みだが、ここではプレイヤー0を親にしている
+    this.dealer = 0;
     this.startNewHand();
     return;
   }
 
-  // --- 2) 南場以降での40000点即終了ルール ---
+  // --- 南場以降の40000点即終了 ---
   if (this.round >= 2 && someoneOver40k) {
-    // 南1以降は、局数に関係なく誰かが40000点に到達した時点で終了
     this.endGame();
     return;
   }
 
-  // --- 3) オーラスの親あがり/テンパイやめ ---
+  // --- オーラスの親あがり/テンパイやめ ---
   if (isAllLast && someoneOver40k) {
     const parentCondition =
       (winnerIndex === parent) || this.isTenpai(parent);
 
     if (parentCondition) {
-      // 親が和了 or テンパイで40000到達 → 連荘せず終了
       this.endGame();
       return;
     }
   }
 
-  // --- 4) ここまで来たら通常の場進行 ---
+  // --- 通常進行 ---
 
   if (renchan) {
-    // 親連荘：親はそのまま、局だけ進める
+    // 親連荘
     this.kyoku++;
-    if (this.kyoku > 3) this.kyoku = 3;  // 三麻なので3まで
-    // 本当は本場カウントを増やすならここで this.honba++ など
     this.startNewHand();
     return;
   }
@@ -1242,15 +1234,15 @@ nextRound(renchan, winnerIndex = null) {
     this.round++;
   }
 
-  // 西3局を打ち終わったあと
+  // 西3局終了
   if (this.round === 4) {
-    // まだ誰も40000に届いていない → 強制終了（トップ勝ち）
     this.endGame();
     return;
   }
 
   this.startNewHand();
 }
+
 
   
   // ------------------------------
