@@ -92,7 +92,7 @@ body {
 .dora-container {
   display: flex;
   gap: 4px;
-    justify-content: center;
+  justify-content: center;
 }
 
 
