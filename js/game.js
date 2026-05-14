@@ -683,7 +683,7 @@ onDaiminkan(playerIndex, tile) {
     this.canDoubleRiichi = false;
     this.clearIppatsu();
 
-    this.state = "DRAW";
+    this.state = "CHECH_WIN";
     this.updateUI();
   }
 
