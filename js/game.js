@@ -36,7 +36,7 @@ export class Game {
     this.scores = [35000, 35000, 35000]; // 点数 
     this.showRelativeScores = false; // 相対点数表示（デフォルトはオフ）
     this.round = 1;   // 1=東, 2=南, 3=西
-    this.kyoku = 1;   // 1〜3
+    this.kyoku = 1;   // 1〜3局
     this.dealer = 0; 
     
     this.lastDiscarder = null;
@@ -1177,71 +1177,117 @@ endGame() {
 }
 
 // 場進行
-nextRound(renchan, winnerIndex = null) {
+nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
-  const someoneOver40k = this.hasPlayerOver40000();
+  const parentTenpai = this.isTenpai(parent);
 
-  // --- 東3 / 南3 / 西3 の判定 ---
-  const isAllLast = (this.kyoku === 3);
-
-  // --- 東3局終了時 ---
-  if (this.round === 1 && this.kyoku === 3) {
-    if (someoneOver40k) {
-      this.endGame();
-      return;
+  // --- 本場処理 ---
+  if (isDraw) {
+    // 流局
+    this.honba += 1;  // 親テンパイでもノーテンでも +1
+  } else {
+    // 和了
+    if (winnerIndex === parent) {
+      // 親和了 → 連荘
+      this.honba += 1;
+    } else {
+      // 子和了 → 本場リセット
+      this.honba = 0;
     }
-    // 南1へ
-    this.round = 2;
-    this.kyoku = 1;
-    this.dealer = 0;
+  }
+
+  // --- 連荘判定 ---
+  const isRenchan =
+    (winnerIndex === parent) ||        // 親和了
+    (isDraw && parentTenpai);          // 親テンパイ流局
+
+  if (isRenchan) {
+    // 連荘：局は進めない、親も風もそのまま
     this.startNewHand();
     return;
   }
 
-  // --- 南場以降の40000点即終了 ---
-  if (this.round >= 2 && someoneOver40k) {
-    this.endGame();
-    return;
-  }
-
-  // --- オーラスの親あがり/テンパイやめ ---
-  if (isAllLast && someoneOver40k) {
-    const parentCondition =
-      (winnerIndex === parent) || this.isTenpai(parent);
-
-    if (parentCondition) {
-      this.endGame();
-      return;
-    }
-  }
-
-  // --- 通常進行 ---
-
-  if (renchan) {
-    // 親連荘
-    this.kyoku++;
-    this.startNewHand();
-    return;
-  }
+  // --- 連荘しなかった場合：自風ローテーション ---
+  this.rotatePlayerWinds();  // 東→西、南→東、西→南
 
   // 親交代
   this.dealer = (this.dealer + 1) % 3;
 
-  // 局進行
+  // --- 局進行 ---
   this.kyoku++;
+
   if (this.kyoku > 3) {
+    // 東3→南1、南3→西1
     this.kyoku = 1;
     this.round++;
   }
 
-  // 西3局終了
-  if (this.round === 4) {
+  // --- 西3局終了 ---
+  if (this.round > 3) {
     this.endGame();
     return;
   }
 
   this.startNewHand();
 }
+
+
+
+
+// ローテーション
+rotatePlayerWinds() {
+  // 東(1) → 西(3)
+  // 南(2) → 東(1)
+  // 西(3) → 南(2)
+  const map = { 1: 3, 2: 1, 3: 2 };
+
+  for (const p of this.players) {
+    p.wind = map[p.wind];
+  }
+}
+
+
+
+
+// -------------------------
+// 次の局に移動
+// -------------------------
+startNewHand() {
+  // --- 山を作り直す ---
+  this.buildWall();
+
+  // --- 各種状態リセット ---
+  this.wallIndex = 0;
+  this.turnCount = 0;
+  this.canDoubleRiichi = true;
+  this.lastDiscarder = null;
+
+  // --- プレイヤー状態リセット ---
+  for (const p of this.players) {
+    p.hand = [];
+    p.discards = [];
+    p.melds = [];
+    p.isRiichi = false;
+    p.isDoubleRiichi = false;
+    p.isIppatsu = false;
+    p.isMenzen = true;
+    p.kanCount = 0;
+    p.northCount = 0;
+    p.missedRon = false;
+  }
+
+  // --- 配牌 ---
+  this.state = "DEAL";
+  this.deal();
+
+  // --- 親の手番から開始 ---
+  this.turn = this.dealer;
+
+  // UI更新
+  this.updateUI();
+}
+
+
 
 
   
