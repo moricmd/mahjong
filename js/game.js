@@ -945,6 +945,11 @@ onCheckWin() {
     this.uraIndicators = [this.wall[this.wallIndex++]];
   }
 
+
+  
+    const winnerIndex = this.turn;
+    const renchan = (winnerIndex === this.dealer);
+
   if (result.han > 0) {
     // ★ 点数計算（ここが本体）
     const score = calcScore(result.han, 30, this.turn === this.dealer, true);
@@ -979,8 +984,6 @@ onCheckWin() {
 
     alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
 
-    const winnerIndex = this.turn;
-    const renchan = (winnerIndex === this.dealer);
     this.nextRound(renchan, winnerIndex);
     return;
   }
