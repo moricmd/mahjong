@@ -921,111 +921,7 @@ onTurnStart() {
   // -------------------------
   // CHECK_WIN → 和了判定
   // -------------------------
-  onCheckWin() {
-    const p = this.players[this.turn];
-    const lastTile = p.hand[p.hand.length - 1];
-
-    const result = judgeYaku(
-      p,
-      p.hand,
-      lastTile,
-      true,   // isTsumo
-      false,  // isRon
-      this.playerWind,
-      1,
-      this.doraIndicators,
-      this.uraIndicators,
-      this.wallIndex >= this.wall.length
-    );
-
-    if (result.han > 0) {
-      const score = calcScore(result, 30, this.turn === 0, true);
-
-      alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
-      const winnerIndex = this.turn;
-      const renchan = (winnerIndex === this.dealer);
-
-      this.nextRound(renchan, winnerIndex);
-      return;
-    }
-
-
-    // 立直していた場合
-    if (p.isRiichi) {
-      result.han += 1; // 立直
-
-      if (p.isIppatsu) {
-        result.han += 1; // 一発
-      }
-
-      // 裏ドラ
-      this.uraIndicators = [this.wall[this.wallIndex++]];
-    }
-
-
-    // 点数計算
-
-    const score = calcScore(result.han, result.fu, this.turn === this.dealer, true);
-
-// 本場加算（300点 × honba）
-const honbaBonus = this.honba * 300;
-
-// 供託（リーチ棒）加算
-const kyotakuBonus = this.kyotaku * 1000;
-
-// 親ツモ
-if (this.turn === this.dealer) {
-  // 子2人が同額支払い
-  for (let i = 0; i < 3; i++) {
-    if (i !== this.turn) {
-      this.scores[i] -= (score.tsumo.child + honbaBonus);
-    }
-  }
-  // 親の総取り
-  this.scores[this.turn] += (score.tsumo.child * 2) + (honbaBonus * 2) + kyotakuBonus;
-
-// 子ツモ
-} else {
-  const parent = this.dealer;
-  const other = [0,1,2].find(i => i !== this.turn && i !== parent);
-
-  // 親の支払い
-  this.scores[parent] -= (score.tsumo.parent + honbaBonus);
-
-  // もう1人の子の支払い
-  this.scores[other] -= (score.tsumo.child + honbaBonus);
-
-  // 和了者の総取り
-  this.scores[this.turn] +=
-    score.tsumo.parent +
-    score.tsumo.child +
-    honbaBonus * 2 +
-    kyotakuBonus;
-}
-
-// 供託リセット
-this.kyotaku = 0;
-
-
-
-    // 和了でなければ捨て牌へ
-    if (p.isCPU) {
-      const idx = chooseDiscardIndex(p.hand);
-      const discardTile = p.discard(idx);
-
-      if (this.onCheckRon(discardTile, this.turn)) return;
-
-      if (this.autoSort) this.sortHand(this.turn);
-      this.state = "NEXT_TURN";
-    } else {
-      this.state = "DISCARD";
-    }
-  }
-
-
-  
-  // ツモ判定
-  onTsumo() {
+onCheckWin() {
   const p = this.players[this.turn];
   const lastTile = p.hand[p.hand.length - 1];
 
@@ -1042,7 +938,7 @@ this.kyotaku = 0;
     this.wallIndex >= this.wall.length
   );
 
-  // 立直していた場合の処理
+  // 立直していた場合の処理（先に飜を確定させる）
   if (p.isRiichi) {
     result.han += 1; // 立直
     if (p.isIppatsu) result.han += 1; // 一発
@@ -1050,20 +946,58 @@ this.kyotaku = 0;
   }
 
   if (result.han > 0) {
-    const score = calcScore(result, 30, this.turn === 0, true);
+    // ★ 点数計算（ここが本体）
+    const score = calcScore(result.han, 30, this.turn === this.dealer, true);
+
+    const honbaBonus = this.honba * 300;
+    const kyotakuBonus = this.kyotaku * 1000;
+
+    if (this.turn === this.dealer) {
+      // 親ツモ
+      for (let i = 0; i < 3; i++) {
+        if (i !== this.turn) {
+          this.scores[i] -= (score.tsumo.child + honbaBonus);
+        }
+      }
+      this.scores[this.turn] += (score.tsumo.child * 2) + (honbaBonus * 2) + kyotakuBonus;
+    } else {
+      // 子ツモ（三麻ツモ損）
+      const parent = this.dealer;
+      const other = [0,1,2].find(i => i !== this.turn && i !== parent);
+
+      this.scores[parent] -= (score.tsumo.parent + honbaBonus);
+      this.scores[other] -= (score.tsumo.child + honbaBonus);
+
+      this.scores[this.turn] +=
+        score.tsumo.parent +
+        score.tsumo.child +
+        honbaBonus * 2 +
+        kyotakuBonus;
+    }
+
+    this.kyotaku = 0;
 
     alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
 
     const winnerIndex = this.turn;
     const renchan = (winnerIndex === this.dealer);
-
     this.nextRound(renchan, winnerIndex);
     return;
   }
 
-  // 和了でなければ何もしない（ツモボタンは和了専用）
-}
+  // 和了でなければ捨て牌へ（ここはそのままでOK）
+  if (p.isCPU) {
+    const idx = chooseDiscardIndex(p.hand);
+    const discardTile = p.discard(idx);
 
+    if (this.onCheckRon(discardTile, this.turn)) return;
+
+    if (this.autoSort) this.sortHand(this.turn);
+    this.state = "NEXT_TURN";
+  } else {
+    this.state = "DISCARD";
+  }
+}
 
   
 
