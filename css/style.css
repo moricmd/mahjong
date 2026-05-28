@@ -350,19 +350,18 @@ body {
   position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
-  gap: 4px;
   width: 240px; /* 40px × 6枚 = 240px */
 }
 
 .discard-area .tile {
-  width: calc(40px * 0.8); /* 捨て牌は元のサイズの80% */
-  height: calc(60px * 0.8);
+  width: calc(40px * 0.85); /* 捨て牌は元のサイズの85% */
+  height: calc(60px * 0.85);
 }
 
 
 
 .discard-bottom {
-  transform: rotate(0deg);
+  transform: translate(0%, -20%) rotate(0deg);
 }
 
 
