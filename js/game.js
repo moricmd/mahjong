@@ -847,13 +847,22 @@ console.log(
   // -------------------------
   // TURN_START
   // -------------------------
-  onTurnStart() {
-    if (this.wallIndex >= this.wall.length) {
-      this.state = "END_ROUND";
-      return;
-    }
-    this.state = "DRAW";
+onTurnStart() {
+  if (this.wallIndex >= this.wall.length) {
+    // ★ 流局処理（END_ROUND にしない）
+    const parent = this.dealer;
+    const parentTenpai = this.isTenpai(parent);
+
+    const renchan = parentTenpai; // 親テンパイなら連荘
+    const isDraw = true;
+
+    this.nextRound(renchan, null, isDraw);
+    return;
   }
+
+  this.state = "DRAW";
+}
+
 
   // -------------------------
   // DRAW → ツモ
