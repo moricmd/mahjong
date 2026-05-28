@@ -1285,12 +1285,13 @@ startNewHand() {
     p.missedRon = false;
   }
 
+  // --- 親の手番から開始 ---
+  this.turn = this.dealer;
+
   // --- 配牌 ---
   this.state = "DEAL";
   this.deal();
 
-  // --- 親の手番から開始 ---
-  this.turn = this.dealer;
 
   // UI更新
   this.updateUI();
