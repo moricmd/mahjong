@@ -350,7 +350,7 @@ body {
   position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
-  width: 240px; /* 40px × 6枚 = 240px */
+  width: 205px; /* 40px × 6枚 = 240px */
 }
 
 .discard-area .tile {
@@ -361,24 +361,24 @@ body {
 
 
 .discard-bottom {
-  transform: translate(0%, -20%) rotate(0deg);
+  transform: translate(0%, -50%) rotate(0deg);
 }
 
 
 .discard-right {
   flex-direction: column;
-  transform: rotate(-90deg);
+  transform: translate(-50%, 0%) rotate(-90deg);
 }
 
 
 .discard-top {
-  transform: rotate(180deg);
+  transform: translate(0%, 50%) rotate(180deg);
 }
 
 
 .discard-left {
   flex-direction: column;
-  transform: rotate(90deg);
+  transform: translate(50%, 0%) rotate(90deg);
 }
   
 
