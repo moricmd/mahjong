@@ -963,6 +963,51 @@ onTurnStart() {
     }
 
 
+    // 点数計算
+
+    const score = calcScore(result.han, result.fu, this.turn === this.dealer, true);
+
+// 本場加算（300点 × honba）
+const honbaBonus = this.honba * 300;
+
+// 供託（リーチ棒）加算
+const kyotakuBonus = this.kyotaku * 1000;
+
+// 親ツモ
+if (this.turn === this.dealer) {
+  // 子2人が同額支払い
+  for (let i = 0; i < 3; i++) {
+    if (i !== this.turn) {
+      this.scores[i] -= (score.tsumo.child + honbaBonus);
+    }
+  }
+  // 親の総取り
+  this.scores[this.turn] += (score.tsumo.child * 2) + (honbaBonus * 2) + kyotakuBonus;
+
+// 子ツモ
+} else {
+  const parent = this.dealer;
+  const other = [0,1,2].find(i => i !== this.turn && i !== parent);
+
+  // 親の支払い
+  this.scores[parent] -= (score.tsumo.parent + honbaBonus);
+
+  // もう1人の子の支払い
+  this.scores[other] -= (score.tsumo.child + honbaBonus);
+
+  // 和了者の総取り
+  this.scores[this.turn] +=
+    score.tsumo.parent +
+    score.tsumo.child +
+    honbaBonus * 2 +
+    kyotakuBonus;
+}
+
+// 供託リセット
+this.kyotaku = 0;
+
+
+
     // 和了でなければ捨て牌へ
     if (p.isCPU) {
       const idx = chooseDiscardIndex(p.hand);
@@ -1057,6 +1102,21 @@ onTurnStart() {
        return true;
       }
     }
+
+    // 点数計算
+    const score = calcScore(result.han, result.fu, i === this.dealer, false);
+
+// 本場加算
+const honbaBonus = this.honba * 300;
+
+// ロン支払い
+this.scores[discarderIndex] -= (score.ron + honbaBonus);
+this.scores[winnerIndex] += (score.ron + honbaBonus);
+
+// 供託（リーチ棒）
+this.scores[winnerIndex] += this.kyotaku * 1000;
+this.kyotaku = 0;
+
 
     return false;
   }

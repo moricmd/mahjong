@@ -358,8 +358,8 @@ body {
 }
 
 .discard-area .tile {
-  width: calc(40px * 0.9); /* 捨て牌は元のサイズの90% */
-  height: calc(60px * 0.9);
+  width: calc(40px * 0.8); /* 捨て牌は元のサイズの80% */
+  height: calc(60px * 0.8);
 }
 
 
