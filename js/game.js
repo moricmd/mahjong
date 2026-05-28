@@ -1091,7 +1091,21 @@ this.kyotaku = 0;
       );
 
       if (result.han > 0) {
-        const score = calcScore(result, 30, i === 0, false);
+
+        
+        // 点数計算
+        const score = calcScore(result.han, result.fu, i === this.dealer, false);
+
+        // 本場加算
+        const honbaBonus = this.honba * 300;
+
+        // ロン支払い
+        this.scores[discarderIndex] -= (score.ron + honbaBonus);
+        this.scores[winnerIndex] += (score.ron + honbaBonus);
+
+        // 供託（リーチ棒）
+        this.scores[winnerIndex] += this.kyotaku * 1000;
+        this.kyotaku = 0;
 
         alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
 
@@ -1102,20 +1116,6 @@ this.kyotaku = 0;
        return true;
       }
     }
-
-    // 点数計算
-    const score = calcScore(result.han, result.fu, i === this.dealer, false);
-
-// 本場加算
-const honbaBonus = this.honba * 300;
-
-// ロン支払い
-this.scores[discarderIndex] -= (score.ron + honbaBonus);
-this.scores[winnerIndex] += (score.ron + honbaBonus);
-
-// 供託（リーチ棒）
-this.scores[winnerIndex] += this.kyotaku * 1000;
-this.kyotaku = 0;
 
 
     return false;
