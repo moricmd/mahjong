@@ -1496,7 +1496,7 @@ updateActionButtons() {
   // 仮
   checkTenpai(hand) {
   // TODO: 本物のテンパイ判定を実装する
-  return false;
+  return true;
 }
 
 
