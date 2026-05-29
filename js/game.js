@@ -947,11 +947,14 @@ onCheckWin() {
 
 
   
+
+
+  if (result.han > 0) {
+
     const winnerIndex = this.turn;
     const renchan = (winnerIndex === this.dealer);
 
-  if (result.han > 0) {
-    // ★ 点数計算（ここが本体）
+    // ★ 点数計算
     const score = calcScore(result.han, 30, this.turn === this.dealer, true);
 
     const honbaBonus = this.honba * 300;
