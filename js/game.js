@@ -462,6 +462,8 @@ sortHand(playerIndex) {
 onRiichi() {
   const p = this.players[0];
 
+  if (!this.isTenpai()) return;
+
   // すでにリーチしているなら無効
   if (p.isRiichi) return;
 
@@ -1067,6 +1069,7 @@ onCheckWin() {
   // -------------------------
   isTenpai(playerIndex) {
     const p = this.players[playerIndex];
+    if(!p) return false;
     return this.checkTenpai(p.hand);
   }
 
@@ -1539,7 +1542,7 @@ canRon() {
     this.turn === 0 &&
     p.isMenzen &&
     !p.isRiichi &&
-    this.isTenpai(0) &&
+    this.isTenpai() &&
     (this.wall.length - this.wallIndex) >= 4
   );
 }
