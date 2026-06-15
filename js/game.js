@@ -1143,7 +1143,15 @@ onCheckRon(discardTile, discarderIndex) {
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TURN_START";
 
-    if (this.players[this.turn].isCPU) {
+    const p = this.players[this.turn];
+
+    if (p.isCPU) {
+      // CPUなら自動で進行
+      const delay = this.getRandomDelay();
+      setTimeout(() => this.step(), delay);
+    } else {
+      // 自分の番ならUIだけ更新
+      this.updateUI();
     }
   }
 
