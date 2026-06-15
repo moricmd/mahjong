@@ -67,10 +67,6 @@ export function calcScore(han, fu = 30, isDealer = false, isTsumo = false) {
   }
 }
 
-function roundUp(x) {
-  return Math.ceil(x / 100) * 100;
-}
-
 
 // ------------------------------
 // 100点切り上げ
