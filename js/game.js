@@ -1235,13 +1235,30 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   // --- 局進行 ---
   this.kyoku++;
 
+  // 東3局終了時に40000点を超えるプレイヤーがいたら終了
+  if (this.round === 1 && this.kyoku === 3){
+    if (this.hasPlayerOver40000()){
+      this.endGame();
+      return;
+    }
+  }
+
+  // 南1局以降は40000点を超えるプレイヤーが現れた時点で終了
+  if (this.round >= 2){
+    if (this.hasPlayerOver40000()){
+      this.endGame();
+      return;
+    }
+  }
+
+  // 南入・西入
   if (this.kyoku > 3) {
     // 東3→南1、南3→西1
     this.kyoku = 1;
     this.round++;
   }
 
-  // --- 西3局終了 ---
+  // 西3局終了後は点数にかかわらず終了
   if (this.round > 3) {
     this.endGame();
     return;
