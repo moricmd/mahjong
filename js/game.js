@@ -1012,56 +1012,55 @@ onCheckWin() {
   // -------------------------
   // ロン判定
   // -------------------------
-  onCheckRon(discardTile, discarderIndex) {
-    for (let i = 0; i < 3; i++) {
-      if (i === discarderIndex) continue;
+onCheckRon(discardTile, discarderIndex) {
+  for (let i = 0; i < 3; i++) {
+    if (i === discarderIndex) continue;
 
-      const p = this.players[i];
-      const tempHand = [...p.hand, discardTile];
+    const p = this.players[i];
+    const tempHand = [...p.hand, discardTile];
 
-      const result = judgeYaku(
-        p,
-        tempHand,
-        discardTile,
-        false,  // isTsumo
-        true,   // isRon
-        this.playerWind,
-        1,
-        this.doraIndicators,
-        this.uraIndicators,
-        this.wallIndex >= this.wall.length
-      );
+    const result = judgeYaku(
+      p,
+      tempHand,
+      discardTile,
+      false,  // isTsumo
+      true,   // isRon
+      this.playerWind,
+      1,
+      this.doraIndicators,
+      this.uraIndicators,
+      this.wallIndex >= this.wall.length
+    );
 
-      if (result.han > 0) {
+    if (result.han > 0) {
 
-        
-        // 点数計算
-        const score = calcScore(result.han, result.fu, i === this.dealer, false);
+      // ★ 先に winnerIndex を宣言する（最重要）
+      const winnerIndex = i;
+      const renchan = (winnerIndex === this.dealer);
 
-        // 本場加算
-        const honbaBonus = this.honba * 300;
+      // ★ 点数計算
+      const score = calcScore(result.han, result.fu, winnerIndex === this.dealer, false);
 
-        // ロン支払い
-        this.scores[discarderIndex] -= (score.ron + honbaBonus);
-        this.scores[winnerIndex] += (score.ron + honbaBonus);
+      // 本場加算
+      const honbaBonus = this.honba * 300;
 
-        // 供託（リーチ棒）
-        this.scores[winnerIndex] += this.kyotaku * 1000;
-        this.kyotaku = 0;
+      // ロン支払い
+      this.scores[discarderIndex] -= (score.ron + honbaBonus);
+      this.scores[winnerIndex] += (score.ron + honbaBonus);
 
-        alert(`プレイヤー${i} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+      // 供託（リーチ棒）
+      this.scores[winnerIndex] += this.kyotaku * 1000;
+      this.kyotaku = 0;
 
-       const winnerIndex = i;
-       const renchan = (winnerIndex === this.dealer);
+      alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
 
-       this.nextRound(renchan, winnerIndex);
-       return true;
-      }
+      this.nextRound(renchan, winnerIndex);
+      return true;
     }
-
-
-    return false;
   }
+
+  return false;
+}
 
 
   // -------------------------
@@ -1538,6 +1537,7 @@ canRon() {
   
  canRiichi() {
   const p = this.players[0];
+
   return (
     this.turn === 0 &&
     p.isMenzen &&
