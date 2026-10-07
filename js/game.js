@@ -1329,70 +1329,107 @@ startNewHand() {
 // ------------------------------
   // 画面中央から均等に配置
   // ------------------------------
-
-  // 手牌
+// ------------------------------
+  // 手牌の位置を更新
+  // ------------------------------
   updateHandPositions() {
     const table = document.getElementById("table");
     const rect  = table.getBoundingClientRect();
-
-    const yama = document.getElementById("table-info");
+    const yama  = document.getElementById("table-info");
     const yamaRect = yama.getBoundingClientRect();
 
-    // 山の中心（table 内座標）
     const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-    // ★手牌の距離（大きすぎると画面外に出るので 0.9 〜 1.1 くらいに調整）
-    const offset = yamaRect.width * 1.5; 
+    // ★手牌用の独立したオフセット（ここで好みの距離に調整可能）
+    const offset = yamaRect.width * 1.3;
 
-    // 要素の中心を基準に配置するための helper
-    const set = (cls, x, y, rotateDeg = 0) => {
-      const el = document.querySelector(cls);
-      if (el) {
-        el.style.position = "absolute";
-        el.style.left = `${x}px`;
-        el.style.top  = `${y}px`;
-        // 要素自体の中心を基準(-50%, -50%)にしつつ、必要なら回転させる
-        el.style.transform = `translate(-50%, -50%) rotate(${rotateDeg}deg)`;
+    // 各プレイヤーの position に応じて座標と回転を決定
+    this.players.forEach((player, index) => {
+      // プレイヤー(0)なら #player-hand、CPUなら #cpu1-hand, #cpu2-hand
+      const selector = index === 0 ? "#player-hand" : `#cpu${index}-hand`;
+      const el = document.querySelector(selector);
+      if (!el) return;
+
+      let x = cx;
+      let y = cy;
+      let rotate = 0;
+
+      switch (player.position) {
+        case "bottom":
+          y = cy + offset;
+          rotate = 0;
+          break;
+        case "top":
+          y = cy - offset;
+          rotate = 180;
+          break;
+        case "right":
+          x = cx + offset;
+          rotate = -90;
+          break;
+        case "left":
+          x = cx - offset;
+          rotate = 90;
+          break;
       }
-    };
 
-    // 上下左右に綺麗に対称配置
-    set(".hand-bottom", cx,        cy + offset, 0);
-    set(".hand-top",    cx,        cy - offset, 180);
-    set(".hand-right",  cx + offset, cy,        -90);
-    set(".hand-left",   cx - offset, cy,        90);
+      el.style.position = "absolute";
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
+      el.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
+    });
   }
 
-  // 捨て牌
+  // ------------------------------
+  // 捨て牌の位置を更新
+  // ------------------------------
   updateDiscardPositions() {
     const table = document.getElementById("table");
     const rect  = table.getBoundingClientRect();
-
-    const yama = document.getElementById("table-info");
+    const yama  = document.getElementById("table-info");
     const yamaRect = yama.getBoundingClientRect();
 
-    // 山の中心（table 内座標）
     const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
-    // ★捨て牌は山より少し内側に置く（例: 0.45）
-    const offset = yamaRect.width * 0.65;
+    // ★捨て牌用の独立したオフセット（手牌とは完全に別個の距離にできる！）
+    const offset = yamaRect.width * 0.6;
 
-    const set = (cls, x, y, rotateDeg = 0) => {
-      const el = document.querySelector(cls);
-      if (el) {
-        el.style.position = "absolute";
-        el.style.left = `${x}px`;
-        el.style.top  = `${y}px`;
-        el.style.transform = `translate(-50%, -50%) rotate(${rotateDeg}deg)`;
+    this.players.forEach((player, index) => {
+      // 捨て牌は #discards-0, #discards-1, #discards-2
+      const selector = `#discards-${index}`;
+      const el = document.querySelector(selector);
+      if (!el) return;
+
+      let x = cx;
+      let y = cy;
+      let rotate = 0;
+
+      switch (player.position) {
+        case "bottom":
+          y = cy + offset;
+          rotate = 0;
+          break;
+        case "top":
+          y = cy - offset;
+          rotate = 180;
+          break;
+        case "right":
+          x = cx + offset;
+          rotate = -90;
+          break;
+        case "left":
+          x = cx - offset;
+          rotate = 90;
+          break;
       }
-    };
 
-    set(".discard-bottom", cx,        cy + offset, 0);
-    set(".discard-top",    cx,        cy - offset, 180);
-    set(".discard-right",  cx + offset, cy,        -90);
-    set(".discard-left",   cx - offset, cy,        90);
+      el.style.position = "absolute";
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
+      el.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
+    });
   }
 
   // 立直・副露ボタン
