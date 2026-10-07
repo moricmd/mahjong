@@ -1348,7 +1348,7 @@ const table = document.getElementById("table");
   const cx = yamaCenterX - rect.left;
   const cy = yamaCenterY - rect.top;
 
-  const offset = yamaRect.width * 1.3;
+  const offset = yamaRect.width * 0.8;
 
     
   const set = (cls, x, y) => {
