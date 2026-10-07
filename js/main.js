@@ -5,20 +5,6 @@ let game = null;
 
 window.addEventListener("load", () => {
 
-  console.log("loaded");
-  const startBtn = document.getElementById("start-btn");
-  console.log("start-btn: ", startBtn);
-
-
-  if(startBtn){
-    startBtn.onclick = () => {
-      console.log("pushed start-btn");
-      showScreen("menu-screen");
-    };
-  } else {
-    console.log("404");
-  }
-
   // game画面を呼ぶ
   function startCPUmode() {
     showScreen("game-screen");
@@ -55,7 +41,12 @@ window.addEventListener("load", () => {
 
 });
 
-
+window.addEventListener("resize", () => {
+  if(game){
+    game.updateHandPositions();
+    game.updateDiscardPositions();
+  }
+})
 
 
 function showScreen(id) {
