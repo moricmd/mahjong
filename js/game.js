@@ -1343,7 +1343,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★手牌の距離（大きすぎると画面外に出るので 0.9 〜 1.1 くらいに調整）
-    const offset = yamaRect.width * 1.1; 
+    const offset = yamaRect.width * 1.0; 
 
     // 要素の中心を基準に配置するための helper
     const set = (cls, x, y, rotateDeg = 0) => {
