@@ -1377,7 +1377,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★捨て牌は山より少し内側に置く（例: 0.45）
-    const offset = yamaRect.width * 0.8;
+    const offset = yamaRect.width * 0.6;
 
     const set = (cls, x, y, rotateDeg = 0) => {
       const el = document.querySelector(cls);
