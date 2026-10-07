@@ -957,7 +957,7 @@ onCheckWin() {
     const renchan = (winnerIndex === this.dealer);
 
     // ★ 点数計算
-    const score = calcScore(result.han, 30, this.turn === this.dealer, true);
+    const score = calcScore(this, this.turn, null, false, result.han, result.fu);
 
     const honbaBonus = this.honba * 300;
     const kyotakuBonus = this.kyotaku * 1000;
@@ -1039,7 +1039,7 @@ onCheckRon(discardTile, discarderIndex) {
       const renchan = (winnerIndex === this.dealer);
 
       // ★ 点数計算
-      const score = calcScore(result.han, result.fu, winnerIndex === this.dealer, false);
+      const score = calcScore(this, winnerIndex, discarderIndex, true, result.han, result.fu);
 
       // 本場加算
       const honbaBonus = this.honba * 300;
