@@ -158,8 +158,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 70vw;
-  height: 90vh;
+  width: min(800px, 70vw);
+  height: min(800px, 80vh);
   overflow: hidden;
 }
 
@@ -325,21 +325,33 @@ body {
 
 /* 下側 */
 .hand-bottom {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
   transform: translate(-50%, 0%) rotate(0deg);
 }
 
 /* 右側 */
 .hand-right {
+  position: absolute;
+  right: 2%;
+  top: 50%;
   transform: translate(50%, 0%) rotate(-90deg);
 }
 
 /* 上側 */
 .hand-top {
+  position: absolute;
+  top: 2%;
+  left: 50%;
   transform: translate(0%, -50%)rotate(180deg);
 }
 
 /* 左側 */
 .hand-left {
+  position: absolute;
+  left: 2%;
+  top: 50%;
   transform: translate(-50%, 0%) rotate(90deg);
 }
 
