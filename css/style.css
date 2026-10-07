@@ -326,7 +326,7 @@ body {
 /* 下側 */
 .hand-bottom {
   position: absolute;
-  bottom: 50px;
+  bottom: 20px;
   transform: translate(-50%, 0%) rotate(0deg);
 }
 
