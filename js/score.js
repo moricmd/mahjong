@@ -10,7 +10,7 @@ import { SCORE_TABLE } from './scoreTable.js';
  * @param {Number} han - 翻数
  * @param {Number} fu - 符数
  */
-export function calcAndApplyScore(game, winnerIndex, loserIndex, isRon, han, fu) {
+export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
   const winner = game.players[winnerIndex];
   const isChild = (winnerIndex !== game.dealer);
   const role = isChild ? 'child' : 'parent';
