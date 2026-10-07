@@ -1343,7 +1343,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★手牌の距離（大きすぎると画面外に出るので 0.9 〜 1.1 くらいに調整）
-    const offset = yamaRect.width * 1.3; 
+    const offset = yamaRect.width * 1.5; 
 
     // 要素の中心を基準に配置するための helper
     const set = (cls, x, y, rotateDeg = 0) => {
@@ -1377,7 +1377,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★捨て牌は山より少し内側に置く（例: 0.45）
-    const offset = yamaRect.width * 0.6;
+    const offset = yamaRect.width * 0.65;
 
     const set = (cls, x, y, rotateDeg = 0) => {
       const el = document.querySelector(cls);
