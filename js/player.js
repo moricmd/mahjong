@@ -12,6 +12,11 @@ export class Player {
     this.discards = [];
     this.melds = []; // { type: "pon" | "ankan" | "daiminkan" | "kakan", tiles: [...], from }
 
+    // ----------
+    // 持ち点
+    // ----------
+    this.score = 35000;
+
     // -------------------------
     // リーチ関連
     // -------------------------

@@ -33,7 +33,6 @@ export class Game {
     this.uraIndicators = [];
     this.openDoraCount = 0; // ドラ表示牌の公開枚数
 
-    this.scores = [35000, 35000, 35000]; // 点数 
     this.showRelativeScores = false; // 相対点数表示（デフォルトはオフ）
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3局
@@ -286,16 +285,16 @@ for (let i = 0; i < 3; i++) {
   const pos = this.players[i].position;
 
   if (pos === "bottom") {
-    document.getElementById("score-bottom").textContent = this.scores[i];
+    document.getElementById("score-bottom").textContent = this.players[i].score;
   }
   if (pos === "right") {
-    document.getElementById("score-right").textContent = this.scores[i];
+    document.getElementById("score-right").textContent = this.players[i].score;
   }
   if (pos === "top") {
-    document.getElementById("score-top").textContent = this.scores[i];
+    document.getElementById("score-top").textContent = this.players[i].score;
   }
   if (pos === "left") {
-    document.getElementById("score-left").textContent = this.scores[i];
+    document.getElementById("score-left").textContent = this.players[i].score;
   }
 }
 
@@ -314,15 +313,18 @@ onWallClick() {
 // 表示設定
 updateRelativeScores() {
   const selfIndex = 0; // 自分がプレイヤー0
-  const ids = ["score-bottom", "score-top", "score-right"];
+  const selfScore = this.players[selfIndex].score;
+
 
   for (let i = 0; i < this.players.length; i++) {
-    const elem = document.getElementById(ids[i]);
+
+    const p = this.players[i];
+    const elem = document.getElementById(`score-${p.position}`);
     if (!elem) continue;
 
     if (!this.showRelativeScores) {
       // 通常表示
-      elem.textContent = this.scores[i];
+      elem.textContent = p.score;
       elem.style.color = "black";
       continue;
     }
@@ -335,7 +337,7 @@ updateRelativeScores() {
       continue;
     }
 
-    const diff = this.scores[i] - this.scores[selfIndex];
+    const diff = p.score - selfScore;
 
     // diff = 0 のとき
     if (diff === 0) {
@@ -459,25 +461,23 @@ sortHand(playerIndex) {
 // ------------------------------
 // 立直
 // ------------------------------
-onRiichi() {
-  const p = this.players[0];
+onRiichi(playerIndex = 0) {
+  const p = this.players[playerIndex];
 
-  if (!this.isTenpai()) return;
+  // 聴牌していなければ無効
+  if (!this.isTenpai(playerIndex)) return;
 
   // すでにリーチしているなら無効
   if (p.isRiichi) return;
 
   // 門前でないとリーチ不可
   if (!p.isMenzen) return;
-
-  // テンパイしていなければ無効
-  if (!this.isTenpai(p)) return;
   
   // 点数不足
-  if (this.scores[0] < 1000) return;
+  if (p.score < 1000) return;
 
   // 1000点支払い
-  this.scores[0] -= 1000;
+  p.score -= 1000;
   this.kyotaku++;
 
   // リーチフラグ
@@ -947,10 +947,6 @@ onCheckWin() {
     this.uraIndicators = [this.wall[this.wallIndex++]];
   }
 
-
-  
-
-
   if (result.han > 0) {
 
     const winnerIndex = this.turn;
@@ -962,32 +958,41 @@ onCheckWin() {
     const honbaBonus = this.honba * 300;
     const kyotakuBonus = this.kyotaku * 1000;
 
+    let gainScore;
+    let payChild;
+    let payParent;
+
     if (this.turn === this.dealer) {
       // 親ツモ
+      payChild = score.tsumo.child + honbaBonus;
       for (let i = 0; i < 3; i++) {
         if (i !== this.turn) {
-          this.scores[i] -= (score.tsumo.child + honbaBonus);
+          this.players[i].score -= payChild;
         }
       }
-      this.scores[this.turn] += (score.tsumo.child * 2) + (honbaBonus * 2) + kyotakuBonus;
+      // 子2人から同じ額徴収 + 積み棒と供託
+      gainScore = payChild * 2 + kyotakuBonus;
+      this.players[this.turn].score += gainScore;
     } else {
+
       // 子ツモ（三麻ツモ損）
       const parent = this.dealer;
-      const other = [0,1,2].find(i => i !== this.turn && i !== parent);
+      const child = [0, 1, 2].find(i => i !== this.turn && i !== parent);
 
-      this.scores[parent] -= (score.tsumo.parent + honbaBonus);
-      this.scores[other] -= (score.tsumo.child + honbaBonus);
+      payChild = score.tsumo.child + honbaBonus;
+      payParent = score.tsumo.parent + honbaBonus;
 
-      this.scores[this.turn] +=
-        score.tsumo.parent +
-        score.tsumo.child +
-        honbaBonus * 2 +
-        kyotakuBonus;
+      this.players[parent].score -= payParent;
+      this.players[child].score -= payChild;
+
+      // 親と子から徴収 + 積み棒と供託
+      gainScore = payChild + payParent + kyotakuBonus;
+      this.players[this.turn].score += gainScore;
     }
 
     this.kyotaku = 0;
 
-    alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+    alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
 
     this.nextRound(renchan, winnerIndex);
     return;
@@ -1019,6 +1024,12 @@ onCheckRon(discardTile, discarderIndex) {
     const p = this.players[i];
     const tempHand = [...p.hand, discardTile];
 
+    const honbaBonus = this.honba * 300;
+    const kyotakuBonus = this.kyotaku * 1000;
+
+    let gainScore;
+    let payScore;
+
     const result = judgeYaku(
       p,
       tempHand,
@@ -1041,18 +1052,19 @@ onCheckRon(discardTile, discarderIndex) {
       // ★ 点数計算
       const score = calcScore(this, winnerIndex, discarderIndex, true, result.han, result.fu);
 
-      // 本場加算
-      const honbaBonus = this.honba * 300;
+      // 支払い点数と受け取り点数
+      payScore = score.ron + honbaBonus;
+      gainScore = payScore + kyotakuBonus;
+
 
       // ロン支払い
-      this.scores[discarderIndex] -= (score.ron + honbaBonus);
-      this.scores[winnerIndex] += (score.ron + honbaBonus);
+      this.players[discarderIndex].score -= payScore;
+      this.players[winnerIndex].score += gainScore;
 
-      // 供託（リーチ棒）
-      this.scores[winnerIndex] += this.kyotaku * 1000;
+      // 供託を0にする
       this.kyotaku = 0;
 
-      alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}`);
+      alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
 
       this.nextRound(renchan, winnerIndex);
       return true;
@@ -1183,13 +1195,13 @@ onCheckRon(discardTile, discarderIndex) {
   // -------------------------
   // 40000点以上のプレイヤーがいるか
 hasPlayerOver40000() {
-  return this.scores.some(s => s >= 40000);
+  return this.players.some(p => p.score >= 40000);
 }
 
 // 対局終了
 endGame() {
-  const maxScore = Math.max(...this.scores);
-  const winner = this.scores.indexOf(maxScore);
+  const maxScore = Math.max(...this.players.map(p => p.score));
+  const winner = this.players.findIndex(p => p.score === maxScore);
 
   alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
   this.state = "END_ROUND";
