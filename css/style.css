@@ -371,33 +371,6 @@ body {
 }
 
 
-
-.discard-bottom {
-  transform: translate(-50%, -70%) rotate(0deg);
-}
-
-
-.discard-right {
-  flex-direction: column;
-  transform: translate(-70%, -20%) rotate(-90deg);
-}
-
-
-.discard-top {
-  transform: translate(-20%, 70%) rotate(180deg);
-}
-
-
-.discard-left {
-  flex-direction: column;
-  transform: translate(70%, -20%) rotate(90deg);
-}
-  
-
-
-
-
-
  /* 河（捨て牌） */
 #player-discards {
   position: absolute;
