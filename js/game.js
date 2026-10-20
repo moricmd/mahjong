@@ -140,7 +140,7 @@ export class Game {
 
 
   // -------------------------
-  // 風の割り当て
+  // 風と優先順位の割り当て
   // -------------------------  
   assignSeatsByWind() {
   const bottomWind = this.playerWind; //自分は常に下
@@ -159,6 +159,10 @@ export class Game {
 
     this.players[1].wind = rightWind;
     this.players[2].wind = topWind;
+
+    this.players[0].priority = 0;
+    this.players[1].priority = 1;
+    this.players[2].priority = 2;
     
     } else if (bottomWind === 2) { // 自分が南
       leftWind = 1;              // 東
@@ -169,6 +173,10 @@ export class Game {
 
       this.players[1].wind = leftWind;
       this.players[2].wind = rightWind;
+
+      this.players[0].priority = 1;
+      this.players[1].priority = 0;
+      this.players[2].priority = 2;
     
     } else if (bottomWind === 3) { // 自分が西
       topWind = 1;               // 東
@@ -179,6 +187,11 @@ export class Game {
 
       this.players[1].wind = topWind;
       this.players[2].wind = leftWind;
+
+      this.players[0].priority = 2;
+      this.players[1].priority = 0;
+      this.players[2].priority = 1;
+
     }
 
   }
@@ -1200,10 +1213,26 @@ hasPlayerOver40000() {
 
 // 対局終了
 endGame() {
-  const maxScore = Math.max(...this.players.map(p => p.score));
-  const winner = this.players.findIndex(p => p.score === maxScore);
 
-  alert(`ゲーム終了！\n1位は プレイヤー${winner}（${maxScore}点）`);
+  const rankedPlayers = [...this.players].sort((a, b) => {
+
+    if (a.score !== b.score){
+      return b.score - a.score;
+    }
+    return a.priority - b.priority;
+  });
+
+  let resultMsg = "End Game\n"
+
+  rankedPlayers.forEach((p, rankIndex) => {
+    const playerIndex = this.players.indexOf(p);
+    const rank = rankIndex + 1;
+
+    resultMsg += `${rank}位: プレイヤー${playerIndex} (${p.score}点)\n`;
+  });
+
+  alert(resultMsg);
+
   this.state = "END_ROUND";
 }
 
