@@ -1241,6 +1241,13 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
   const parentTenpai = this.isTenpai(parent);
 
+  // デバッグ用
+  console.log("--- nextRound 呼び出し ---");
+  console.log("isDraw:", isDraw);
+  console.log("parent (親のindex):", parent);
+  console.log("parentTenpai (親のテン牌状態):", parentTenpai);
+  console.log("winnerIndex:", winnerIndex);
+
   // --- 本場処理 ---
   if (isDraw) {
     // 流局
