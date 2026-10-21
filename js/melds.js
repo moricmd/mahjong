@@ -73,16 +73,20 @@ function dfsDecompose(tiles) {
     }
   }
 
-  // 2. 順子（連続する3枚）を試す（数牌のみ）
-  if (first.suit === 'man' || first.suit === 'pin' || first.suit === 'sou') {
-    const t2 = tiles.find(t => t.suit === first.suit && t.value === first.value + 1);
-    const t3 = tiles.find(t => t.suit === first.suit && t.value === first.value + 2);
+  // 2. 順子（シュンツ）を試す（数牌のみ）
+  const t0 = tiles[0];
+  if (t0.suit === "man" || t0.suit === "pin" || t0.suit === "sou") {
+    const v1 = t0.value;
+    const idx2 = tiles.findIndex((t, i) => i > 0 && t.suit === t0.suit && t.value === v1 + 1);
+    const idx3 = tiles.findIndex((t, i) => i > 0 && t.suit === t0.suit && t.value === v1 + 2);
 
-    if (t2 && t3) {
-      const rest = removeSpecificTiles(tiles, [first, t2, t3]);
+    if (idx2 !== -1 && idx3 !== -1) {
+      // 安全に3枚の牌を除外する
+      const rest = tiles.filter((_, i) => i !== 0 && i !== idx2 && i !== idx3);
+
       const result = dfsDecompose(rest);
       if (result) {
-        return [{ type: 'shuntsu', suit: first.suit, values: [first.value, t2.value, t3.value] }, ...result];
+        return [{ type: "shuntsu", suit: t0.suit, values: [v1, v1+1, v1+2] }, ...result];
       }
     }
   }
