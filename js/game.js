@@ -1670,7 +1670,8 @@ canRon() {
   }
   return false;
 }
-  
+
+/*
 canRiichi(playerIndex = 0) {
   const p = this.players[playerIndex];
   if (!p) return false;
@@ -1696,6 +1697,59 @@ canRiichi(playerIndex = 0) {
 
   // 手牌が13枚の場合（通常時）
   return this.checkTenpai(p.hand);
+}
+*/
+
+canRiichi(playerIndex = 0) {
+  const p = this.players[playerIndex];
+  if (!p) {
+    console.log("[canRiichi] ❌ プレイヤーが見つかりません:", playerIndex);
+    return false;
+  }
+
+  if (this.turn !== playerIndex) {
+    console.log("[canRiichi] ❌ 自分のターンではありません (turn:", this.turn, ")");
+    return false;
+  }
+  if (!p.isMenzen) {
+    console.log("[canRiichi] ❌ 門前ではありません (isMenzen:", p.isMenzen, ")");
+    return false;
+  }
+  if (p.isRiichi) {
+    console.log("[canRiichi] ❌ すでにリーチしています");
+    return false;
+  }
+  if (p.score < 1000) {
+    console.log("[canRiichi] ❌ 点数が1000点未満です (score:", p.score, ")");
+    return false;
+  }
+  if ((this.wall.length - this.wallIndex) < 4) {
+    console.log("[canRiichi] ❌ 山の残りが4枚未満です (残り:", this.wall.length - this.wallIndex, ")");
+    return false;
+  }
+  if (p.hand.length % 3 !== 2) {
+    console.log("[canRiichi] ❌ 手牌の枚数が14枚ではありません (hand.length:", p.hand.length, ")");
+    return false;
+  }
+
+  // 14枚の手牌から1枚切ったときにテンパイできるかチェック
+  let hasTenpaiCandidate = false;
+  for (let i = 0; i < p.hand.length; i++) {
+    const tempHand = p.hand.filter((_, idx) => idx !== i);
+    if (this.checkTenpai(tempHand)) {
+      hasTenpaiCandidate = true;
+      console.log(`[canRiichi] ⭕ テンパイ形を発見 (インデックス ${i} の牌を切るとテンパイ)`);
+      break;
+    }
+  }
+
+  if (!hasTenpaiCandidate) {
+    console.log("[canRiichi] ❌ どの牌を切ってもテンパイになりません");
+    return false;
+  }
+
+  console.log("[canRiichi] ⭕ すべての条件を満たしています！");
+  return true;
 }
 
 canPon() {
