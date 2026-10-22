@@ -1671,19 +1671,31 @@ canRon() {
   return false;
 }
   
- canRiichi(playerIndex = 0) {
+canRiichi(playerIndex = 0) {
   const p = this.players[playerIndex];
+  if (!p) return false;
 
-  if(!p) return false;
+  // 基本条件のチェック
+  if (this.turn !== playerIndex) return false;
+  if (!p.isMenzen || p.isRiichi) return false;
+  if (p.score < 1000) return false;
+  if ((this.wall.length - this.wallIndex) < 4) return false;
 
-  return (
-    this.turn === playerIndex &&  // 自分のツモ番である
-    p.isMenzen &&
-    !p.isRiichi &&
-    p.score >= 1000 && 
-    this.isTenpai(playerIndex) &&
-    (this.wall.length - this.wallIndex) >= 4  // 次のツモ番がない場合は立直できない
-  );
+  // 手牌が14枚（ツモ直後）の場合：1枚切ってテンパイになるパターンがあるか調べる
+  if (p.hand.length % 3 === 2) { // 14枚のとき
+    for (let i = 0; i < p.hand.length; i++) {
+      // 1枚抜いた13枚の手牌を作成
+      const tempHand = p.hand.filter((_, idx) => idx !== i);
+      // 13枚の状態でテンパイ判定
+      if (this.checkTenpai(tempHand)) {
+        return true; // 1つでもテンパイになれる切り牌があればリーチ可能！
+      }
+    }
+    return false;
+  }
+
+  // 手牌が13枚の場合（通常時）
+  return this.checkTenpai(p.hand);
 }
 
 canPon() {
