@@ -36,12 +36,12 @@ export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
     totalWinScore = baseScore;
 
     // 点数移動
-    game.scores[loserIndex] -= (totalWinScore + honbaBonus);
-    game.scores[winnerIndex] += (totalWinScore + honbaBonus);
+    game.players[loserIndex].score -= (totalWinScore + honbaBonus);
+    game.players[winnerIndex].score += (totalWinScore + honbaBonus);
 
     // 供託（リーチ棒）の回収
     if (game.kyotaku > 0) {
-      game.scores[winnerIndex] += game.kyotaku * 1000;
+      game.players[winnerIndex].score += game.kyotaku * 1000;
       game.kyotaku = 0;
     }
 
@@ -67,33 +67,33 @@ export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
 
       for (let i = 0; i < 3; i++) {
         if (i === winnerIndex) continue;
-        game.scores[i] -= (payPerPerson + honbaBonus);
+        game.players[i].score -= (payPerPerson + honbaBonus);
       }
-      game.scores[winnerIndex] += totalWinScore + (honbaBonus * 2);
+      game.players[winnerIndex].score += totalWinScore + (honbaBonus * 2);
 
     } else {
       // ------------------------------------------
       // 子のツモ（3麻ツモ損：親と子で支払額が違う）
       // ------------------------------------------
       const parentIndex = game.dealer;
-      const otherChildIndex = [0, 1, 2].find(i => i !== winnerIndex && i !== parentIndex);
+      const childIndex = [0, 1, 2].find(i => i !== winnerIndex && i !== parentIndex);
 
       const parentPay = paymentDetails.parent;
       const childPay = paymentDetails.child;
       totalWinScore = parentPay + childPay;
 
       // 親からの支払い
-      game.scores[parentIndex] -= (parentPay + honbaBonus);
+      game.players[parentIndex].score -= (parentPay + honbaBonus);
       // もう1人の子からの支払い
-      game.scores[otherChildIndex] -= (childPay + honbaBonus);
+      game.players[childIndex].score -= (childPay + honbaBonus);
 
       // 勝者の獲得点数
-      game.scores[winnerIndex] += totalWinScore + (honbaBonus * 2);
+      game.players[winnerIndex].score += totalWinScore + (honbaBonus * 2);
     }
 
     // 供託（リーチ棒）の回収
     if (game.kyotaku > 0) {
-      game.scores[winnerIndex] += game.kyotaku * 1000;
+      game.players[winnerIndex].score += game.kyotaku * 1000;
       game.kyotaku = 0;
     }
   }
