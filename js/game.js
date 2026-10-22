@@ -1512,8 +1512,8 @@ updateActionButtons() {
 
   if (isMyTurn) {
     // 立直（門前時のみ）
-    if (p.isMenzen && this.canRiichi()) {
-      list.push({ name: "立直", handler: () => this.onRiichi() });
+    if (p.isMenzen && this.canRiichi(0)) {
+      list.push({ name: "立直", handler: () => this.onRiichi(0) });
     }
 
     // 和了（ツモ / ロン）
