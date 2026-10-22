@@ -5,6 +5,7 @@ import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, 
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
+import { decomposeHand } from "./melds.js";
 
 export class Game {
   constructor() {
