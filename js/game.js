@@ -1637,7 +1637,7 @@ updateActionButtons() {
 
 
 canTsumo() {
-  const p = this.players[this.turn];  // ← これを追加
+  const p = this.players[this.turn];
   if (!p) return false;
 
   const lastTile = p.hand[p.hand.length - 1];
@@ -1663,21 +1663,26 @@ canTsumo() {
 
 canRon() {
   if (this.state === "WAIT_RON") {
+    const player = this.players[0]
     if (!player.isFuriten) {
       return true;
     }
   }
+  return false;
 }
   
- canRiichi() {
-  const p = this.players[0];
+ canRiichi(playerIndex = 0) {
+  const p = this.players[playerIndex];
+
+  if(!p) return false;
 
   return (
-    this.turn === 0 &&
+    this.turn === playerIndex &&  // 自分のツモ番である
     p.isMenzen &&
     !p.isRiichi &&
-    this.isTenpai() &&
-    (this.wall.length - this.wallIndex) >= 4
+    p.score >= 1000 && 
+    this.isTenpai(playerIndex) &&
+    (this.wall.length - this.wallIndex) >= 4  // 次のツモ番がない場合は立直できない
   );
 }
 
