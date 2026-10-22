@@ -1604,11 +1604,35 @@ updateActionButtons() {
  // 副露可能か判断
  // ------------------------------
 
-  // 仮
   checkTenpai(hand) {
-  // TODO: 本物のテンパイ判定を実装する
-  return true;
-}
+    // テンパイ判定：手牌（13枚）に任意の1枚を足して、和了形になる組み合わせがあるかチェック
+    const allTileTypes = [];
+    
+    // 数の牌 (man, pin, sou) の1〜9を生成
+    for (const suit of ["man", "pin", "sou"]) {
+      for (let v = 1; v <= 9; v++) {
+        allTileTypes.push({ suit, value: v, red: false });
+      }
+    }
+    // 字牌 (wind: 1~4, dragon: 1~3) を生成
+    for (let v = 1; v <= 4; v++) {
+      allTileTypes.push({ suit: "wind", value: v, red: false });
+    }
+    for (let v = 1; v <= 3; v++) {
+      allTileTypes.push({ suit: "dragon", value: v, red: false });
+    }
+
+    // 各牌を1枚ずつ足してみて、decomposeHandが成功するか試す
+    for (const target of allTileTypes) {
+      const tempHand = [...hand, target];
+      const result = decomposeHand(tempHand);
+      if (result !== null) {
+        return true; // 1つでも和了形になればテンパイ！
+      }
+    }
+
+    return false; // どの牌を足しても和了形にならなければノーテン
+  }
 
 
 canTsumo() {
