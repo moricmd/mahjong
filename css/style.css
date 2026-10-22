@@ -59,6 +59,13 @@ body {
   cursor: default;
 }
 
+.tile.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+  filter: grayscale(80%);
+}
+
 
 #left-info {
   width: 220px;

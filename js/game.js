@@ -41,6 +41,8 @@ export class Game {
     
     this.lastDiscarder = null;
 
+    this.isWaitingRiichi = false;  // 立直ボタン押下時の待ちフラグ
+
 
     this.initGame();
   }
@@ -108,10 +110,19 @@ export class Game {
   updateUI() {
     renderState(this.state, this.turn);
 
+    const p = this.players[0];
+    const candidates = p.isWaitingRiichi ? this.getRiichiCandidates(0) : null;
+
     renderPlayerHand(
-      this.players[0],
-      index => this.onPlayerDiscard(index),
-      this.autoSort
+      p,
+      index => {
+        if(p.isWaitingRiichi && candidates && !candidates.includes(index)){
+          return;
+        }
+        this.onPlayerDiscard(index);
+      },
+      this.autoSort,
+      candidates
     );
 
     renderCPUHand(this.players[1]);
@@ -478,59 +489,19 @@ sortHand(playerIndex) {
 onRiichi(playerIndex = 0) {
   const p = this.players[playerIndex];
 
-  // 聴牌していなければ無効
-  if (!this.isTenpai(playerIndex)) return;
+  // 聴牌確認
+  if (!this.canRiichi(playerIndex)) return;
 
-  // すでにリーチしているなら無効
-  if (p.isRiichi) return;
+  // 未立直で門前、持ち点1000点以上であるか確認
+  if (p.isRiichi || !p.isMenzen || p.score < 1000) return;
 
-  // 門前でないとリーチ不可
-  if (!p.isMenzen) return;
-  
-  // 点数不足
-  if (p.score < 1000) return;
+  // 立直待ちのフラグ
+  p.isWaitingRiichi = true;
 
-  // 1000点支払い
-  p.score -= 1000;
-  this.kyotaku++;
-
-  // リーチフラグ
-  p.isRiichi = true;
-  p.riichiTurn = this.turnCount;
-  p.riichiTile = this.lastDrawnTile;
-  p.isIppatsu = true;
-
-  /* ダブル立直
-  
-   ・turnCount === 1（第一ツモ）
-   ・canDoubleRiichi が true（誰も鳴いていない） */
-  if (this.turnCount === 1 && this.canDoubleRiichi) {
-    p.isDoubleRiichi = true;
-  }
-
-  // UI更新（リーチボタン消すなど）
-  this.updateUI();
-
-  // -------------------------
-  // リーチ宣言牌をツモ切り
-  // -------------------------
-  const discardTile = p.discard(p.hand.length - 1);
-
-  // -------------------------
-  // リーチ後のフリテン判定
-  // -------------------------
-  // 自分の捨て牌に待ち牌が含まれていればフリテン
-  this.checkDiscardFuriten(p);
-
-  // -------------------------
-  // ロンチェック（他家がロンできるか）
-  // -------------------------
-  if (this.onCheckRon(discardTile, 0)) return;
 
   // 次のターンへ
   this.state = "NEXT_TURN";
   this.updateUI();
-  this.autoContinue();
 }
 
 
@@ -1112,6 +1083,8 @@ onCheckRon(discardTile, discarderIndex) {
       index = p.hand.length - 1;
     }
 
+    // 捨て牌
+    const discardTile = p.discard(index);
 
     // -------------------------
     // ★ リーチ中の一発消し（和了しなかった場合）
@@ -1121,7 +1094,29 @@ onCheckRon(discardTile, discarderIndex) {
       p.isIppatsu = false;
     }
     
-    const discardTile = p.discard(index);
+    // 立直待ちでの打牌（宣言牌）なら
+    if(p.isWaitingRiichi){
+      p.isWaitingRiichi = false;
+      p.isRiichi = true;          // 待ちを解除して立直に入る
+      p.riichiTurn = this.turnCount;
+      p.riichiTile = discardTile;
+
+      // 供託支払い
+      p.score -= 1000;
+      this.kyotaku++;
+      
+      // 一発フラグ
+      p.isIppatsu = true;
+
+      // 第一ツモで副露なし → ダブル立直フラグ
+      if(this.turnCount === 1 && this.canDoubleRiichi){
+        p.isDoubleRiichi = true;
+      }
+
+      // フリテンチェック
+      this.checkDiscardFuriten(p);
+
+    }
 
     if (this.onCheckRon(discardTile, 0)) return;
 
@@ -1587,11 +1582,6 @@ updateActionButtons() {
 }
 
 
-  
-
-
-
-
   createActionButton(label, handler) {
     const btn = document.createElement("button");
     btn.className = "action-btn";
@@ -1600,6 +1590,27 @@ updateActionButtons() {
     return btn;
 }
 
+// ----------
+// 宣言牌候補を取得
+// ----------
+
+getRiichiCandidates(playerIndex = 0){
+
+  const p = this.players[playerIndex];
+  const candidates = []
+
+  if(!p || p.hand.length % 3 !== 2) return candidates;
+
+  for(let i = 0; i < p.hand.length; i++){
+    const tempHand = p.hand.filter((_, idx) => idx !== i);
+    if(this.checkTenpai(tempHand)){
+      candidates.push(i)
+    }
+  }
+
+  return candidates;
+
+}
 
  // ------------------------------
  // 副露可能か判断
@@ -1671,7 +1682,6 @@ canRon() {
   return false;
 }
 
-/*
 canRiichi(playerIndex = 0) {
   const p = this.players[playerIndex];
   if (!p) return false;
@@ -1682,75 +1692,14 @@ canRiichi(playerIndex = 0) {
   if (p.score < 1000) return false;
   if ((this.wall.length - this.wallIndex) < 4) return false;
 
-  // 手牌が14枚（ツモ直後）の場合：1枚切ってテンパイになるパターンがあるか調べる
-  if (p.hand.length % 3 === 2) { // 14枚のとき
-    for (let i = 0; i < p.hand.length; i++) {
-      // 1枚抜いた13枚の手牌を作成
-      const tempHand = p.hand.filter((_, idx) => idx !== i);
-      // 13枚の状態でテンパイ判定
-      if (this.checkTenpai(tempHand)) {
-        return true; // 1つでもテンパイになれる切り牌があればリーチ可能！
-      }
-    }
-    return false;
-  }
+  // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
+  if (p.hand.length % 3 !== 2) return false;
 
-  // 手牌が13枚の場合（通常時）
-  return this.checkTenpai(p.hand);
+  const candidates = this.getRiichiCandidates(playerIndex);
+  return candidates.length > 0;
+
 }
-*/
 
-canRiichi(playerIndex = 0) {
-  const p = this.players[playerIndex];
-  if (!p) {
-    console.log("[canRiichi] ❌ プレイヤーが見つかりません:", playerIndex);
-    return false;
-  }
-
-  if (this.turn !== playerIndex) {
-    console.log("[canRiichi] ❌ 自分のターンではありません (turn:", this.turn, ")");
-    return false;
-  }
-  if (!p.isMenzen) {
-    console.log("[canRiichi] ❌ 門前ではありません (isMenzen:", p.isMenzen, ")");
-    return false;
-  }
-  if (p.isRiichi) {
-    console.log("[canRiichi] ❌ すでにリーチしています");
-    return false;
-  }
-  if (p.score < 1000) {
-    console.log("[canRiichi] ❌ 点数が1000点未満です (score:", p.score, ")");
-    return false;
-  }
-  if ((this.wall.length - this.wallIndex) < 4) {
-    console.log("[canRiichi] ❌ 山の残りが4枚未満です (残り:", this.wall.length - this.wallIndex, ")");
-    return false;
-  }
-  if (p.hand.length % 3 !== 2) {
-    console.log("[canRiichi] ❌ 手牌の枚数が14枚ではありません (hand.length:", p.hand.length, ")");
-    return false;
-  }
-
-  // 14枚の手牌から1枚切ったときにテンパイできるかチェック
-  let hasTenpaiCandidate = false;
-  for (let i = 0; i < p.hand.length; i++) {
-    const tempHand = p.hand.filter((_, idx) => idx !== i);
-    if (this.checkTenpai(tempHand)) {
-      hasTenpaiCandidate = true;
-      console.log(`[canRiichi] ⭕ テンパイ形を発見 (インデックス ${i} の牌を切るとテンパイ)`);
-      break;
-    }
-  }
-
-  if (!hasTenpaiCandidate) {
-    console.log("[canRiichi] ❌ どの牌を切ってもテンパイになりません");
-    return false;
-  }
-
-  console.log("[canRiichi] ⭕ すべての条件を満たしています！");
-  return true;
-}
 
 canPon() {
   return this.state === "WAIT_PON_KAN" && this.ponCandidates?.length > 0;

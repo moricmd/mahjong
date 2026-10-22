@@ -55,7 +55,7 @@ export function renderDoraIndicators(doraIndicators, openCount) {
 // -------------------------
 // 手牌表示（プレイヤー）
 // -------------------------
-export function renderPlayerHand(player, onClick, autoSort) {
+export function renderPlayerHand(player, onClick, autoSort, candidates = null) {
   const area = document.getElementById("player-hand");
 
   area.classList.remove("hand-top", "hand-right", "hand-bottom", "hand-left");
@@ -70,8 +70,17 @@ export function renderPlayerHand(player, onClick, autoSort) {
     img.src = tileToImage(tile);
     img.className = "tile";
 
+    // 立直待ちの時に打牌できない牌を暗くする
+    const isInvalid = player.isWaitingRiichi && candidates && !candidates.includes(index);
+    if(isInvalid){
+      img.classList.add("disabled");
+    }
+
     if (!player.isCPU) {
-      img.onclick = () => onClick(index);
+      img.onclick = () => {
+        if(isInvalid) return;
+        onClick(index);
+      };
     }
 
     area.appendChild(img);
