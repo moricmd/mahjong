@@ -490,6 +490,35 @@ body {
   cursor: pointer;
 }
 
+/* 各action-btnのスタイル */
+.action-btn.btn-riichi {
+  background-color: #e37739;
+}
+
+.action-btn.btn-cancel,
+.action-btn.btn-skip {
+  background-color: #aaa;
+}
+
+.action-btn.btn-tsumo {
+  background-color: #ec4b76;
+}
+
+.action-btn.btn-ron {
+  background-color: #db1c1c;
+}
+
+.action-btn.btn-pon {
+  background-color: #39a6ef;
+}
+
+.action-btn.btn-kan {
+  background-color: #dc43f0;
+}
+
+.action-btn.btn-north {
+  background-color: #f043aa;
+}
 
 /* 副露エリア */
 .meld-area {

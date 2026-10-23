@@ -498,9 +498,17 @@ onRiichi(playerIndex = 0) {
   // 立直待ちのフラグ
   p.isWaitingRiichi = true;
 
+  this.updateUI();
+}
 
-  // 次のターンへ
-  this.state = "NEXT_TURN";
+// 立直キャンセルボタン
+onCancelRiichi(playerIndex = 0){
+  const p = this.players[playerIndex];
+  if(!p || !p.isWaitingRiichi) return;
+
+  // 立直待ちを解除する（宣言牌選択から戻る）
+  p.isWaitingRiichi = false;
+
   this.updateUI();
 }
 
@@ -1511,6 +1519,10 @@ updateActionButtons() {
       list.push({ name: "立直", handler: () => this.onRiichi(0) });
     }
 
+    if(p.isWaitingRiichi){
+      list.push({ name: "キャンセル", handler: () => this.onCancelRiichi(0)})
+    }
+
     // 和了（ツモ / ロン）
     if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
     if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
@@ -1587,6 +1599,43 @@ updateActionButtons() {
     btn.className = "action-btn";
     btn.textContent = label;
     btn.onclick = handler;
+
+    switch(label){
+
+      case "立直":
+        btn.classList.add("btn-riichi");
+        break;
+
+      case "キャンセル":
+        btn.classList.add("btn-cancel");
+        break;
+
+      case "ツモ":
+        btn.classList.add("btn-tsumo");
+        break;
+
+      case "ロン":
+        btn.classList.add("btn-ron");
+        break;
+
+      case "ポン":
+        btn.classList.add("btn-pon");
+        break;
+
+      case "カン":
+        btn.classList.add("btn-kan");
+        break;
+
+      case "北抜き":
+        btn.classList.add("btn-north");
+        break;
+
+      case "スキップ":
+        btn.classList.add("btn-skip");
+        break;
+
+    }
+    
     return btn;
 }
 
