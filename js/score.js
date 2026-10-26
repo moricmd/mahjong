@@ -10,66 +10,64 @@ import { SCORE_TABLE } from './scoreTable.js';
  * @param {Number} han - 翻数
  * @param {Number} fu - 符数
  */
+
 export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
-  const winner = game.players[winnerIndex];
   const isChild = (winnerIndex !== game.dealer);
   const role = isChild ? 'child' : 'parent';
 
   // 符数をテーブルのキーに丸めるヘルパー
   const normalizedFu = normalizeFu(fu);
 
-  let totalWinScore = 0; // 本棒・供託を含まない純粋な和了点数（または支払い総額）
+  // 積み棒と供託
+  const honbaBonus = game.honba * 300;
+  const kyotakuBonus = game.kyotaku * 1000;
+
+  let gainScore = 0;
+  let baseScore = 0;
 
   if (isRon) {
     // ==========================================
     // ロン和了の場合
     // ==========================================
-    let baseScore = 0;
+
     if (han >= 5) {
       baseScore = SCORE_TABLE.ron[role][han];
     } else {
       baseScore = SCORE_TABLE.ron[role][han][normalizedFu] || SCORE_TABLE.ron[role][han][30];
     }
 
-    // 本場（積み棒）の加算（1本につき300点）
-    const honbaBonus = game.honba * 300;
-    totalWinScore = baseScore;
+    const payScore = baseScore + honbaBonus;
+    gainScore = payScore + kyotakuBonus;
 
     // 点数移動
-    game.players[loserIndex].score -= (totalWinScore + honbaBonus);
-    game.players[winnerIndex].score += (totalWinScore + honbaBonus);
-
-    // 供託（リーチ棒）の回収
-    if (game.kyotaku > 0) {
-      game.players[winnerIndex].score += game.kyotaku * 1000;
-      game.kyotaku = 0;
-    }
+    game.players[loserIndex].score -= payScore;
+    game.players[winnerIndex].score += gainScore;
 
   } else {
     // ==========================================
     // ツモ和了の場合（3麻ルール）
     // ==========================================
-    let paymentDetails;
     if (han >= 5) {
-      paymentDetails = SCORE_TABLE.tsumo[role][han];
+      baseScore = SCORE_TABLE.tsumo[role][han];
     } else {
-      paymentDetails = SCORE_TABLE.tsumo[role][han][normalizedFu] || SCORE_TABLE.tsumo[role][han][30];
+      baseScore = SCORE_TABLE.tsumo[role][han][normalizedFu] || SCORE_TABLE.tsumo[role][han][30];
     }
-
-    const honbaBonus = game.honba * 300; // 各自が支払う本場分
 
     if (!isChild) {
       // ------------------------------------------
       // 親のツモ（残りの子2人から同額をもらう）
       // ------------------------------------------
-      const payPerPerson = paymentDetails.child;
-      totalWinScore = payPerPerson * 2;
+      const payChild = baseScore.child + honbaBonus;
 
       for (let i = 0; i < 3; i++) {
-        if (i === winnerIndex) continue;
-        game.players[i].score -= (payPerPerson + honbaBonus);
+        if (i !== winnerIndex) {
+          game.players[i].score -= payChild;
+        }
       }
-      game.players[winnerIndex].score += totalWinScore + (honbaBonus * 2);
+
+      // 子2人分 + 積み棒(2人分) + 供託
+      gainScore = (payChild * 2) + kyotakuBonus;
+      game.players[winnerIndex].score += gainScore;
 
     } else {
       // ------------------------------------------
@@ -78,27 +76,22 @@ export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
       const parentIndex = game.dealer;
       const childIndex = [0, 1, 2].find(i => i !== winnerIndex && i !== parentIndex);
 
-      const parentPay = paymentDetails.parent;
-      const childPay = paymentDetails.child;
-      totalWinScore = parentPay + childPay;
+      const payParent = baseScore.parent + honbaBonus;
+      const payChild = baseScore.child + honbaBonus;
 
-      // 親からの支払い
-      game.players[parentIndex].score -= (parentPay + honbaBonus);
-      // もう1人の子からの支払い
-      game.players[childIndex].score -= (childPay + honbaBonus);
+      game.players[parentIndex].score -= payParent;
+      game.players[childIndex].score -= payChild;
 
-      // 勝者の獲得点数
-      game.players[winnerIndex].score += totalWinScore + (honbaBonus * 2);
-    }
-
-    // 供託（リーチ棒）の回収
-    if (game.kyotaku > 0) {
-      game.players[winnerIndex].score += game.kyotaku * 1000;
-      game.kyotaku = 0;
+      // 親と子からの徴収分 + 供託
+      gainScore = payParent + payChild + kyotakuBonus;
+      game.players[winnerIndex].score += gainScore;
     }
   }
 
-  return totalWinScore;
+  // 供託のリセット
+  game.kyotaku = 0;
+
+  return gainScore;
 }
 
 /**

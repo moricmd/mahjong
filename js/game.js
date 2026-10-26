@@ -946,49 +946,13 @@ onCheckWin() {
     const renchan = (winnerIndex === this.dealer);
 
     // ★ 点数計算
-    const score = calcScore(this, this.turn, null, false, result.han, result.fu);
-
-    const honbaBonus = this.honba * 300;
-    const kyotakuBonus = this.kyotaku * 1000;
-
-    let gainScore;
-    let payChild;
-    let payParent;
-
-    if (this.turn === this.dealer) {
-      // 親ツモ
-      payChild = score.tsumo.child + honbaBonus;
-      for (let i = 0; i < 3; i++) {
-        if (i !== this.turn) {
-          this.players[i].score -= payChild;
-        }
-      }
-      // 子2人から同じ額徴収 + 積み棒と供託
-      gainScore = payChild * 2 + kyotakuBonus;
-      this.players[this.turn].score += gainScore;
-    } else {
-
-      // 子ツモ（三麻ツモ損）
-      const parent = this.dealer;
-      const child = [0, 1, 2].find(i => i !== this.turn && i !== parent);
-
-      payChild = score.tsumo.child + honbaBonus;
-      payParent = score.tsumo.parent + honbaBonus;
-
-      this.players[parent].score -= payParent;
-      this.players[child].score -= payChild;
-
-      // 親と子から徴収 + 積み棒と供託
-      gainScore = payChild + payParent + kyotakuBonus;
-      this.players[this.turn].score += gainScore;
-    }
-
-    this.kyotaku = 0;
+    const gainScore = calcScore(this, this.turn, null, false, result.han, result.fu);
 
     alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
 
     this.nextRound(renchan, winnerIndex);
     return;
+
   }
 
   // 和了でなければ捨て牌へ（ここはそのままでOK）
@@ -1020,9 +984,6 @@ onCheckRon(discardTile, discarderIndex) {
     const honbaBonus = this.honba * 300;
     const kyotakuBonus = this.kyotaku * 1000;
 
-    let gainScore;
-    let payScore;
-
     const result = judgeYaku(
       p,
       tempHand,
@@ -1043,19 +1004,7 @@ onCheckRon(discardTile, discarderIndex) {
       const renchan = (winnerIndex === this.dealer);
 
       // ★ 点数計算
-      const score = calcScore(this, winnerIndex, discarderIndex, true, result.han, result.fu);
-
-      // 支払い点数と受け取り点数
-      payScore = score.ron + honbaBonus;
-      gainScore = payScore + kyotakuBonus;
-
-
-      // ロン支払い
-      this.players[discarderIndex].score -= payScore;
-      this.players[winnerIndex].score += gainScore;
-
-      // 供託を0にする
-      this.kyotaku = 0;
+      const gainScore = calcScore(this, winnerIndex, discarderIndex, true, result.han, result.fu);
 
       alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
 
@@ -1596,7 +1545,7 @@ updateActionButtons() {
 
   createActionButton(label, handler) {
     console.log("生成したラベル: ", label);
-    
+
     const btn = document.createElement("button");
     btn.className = "action-btn";
     btn.textContent = label;
