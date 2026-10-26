@@ -1595,6 +1595,8 @@ updateActionButtons() {
 
 
   createActionButton(label, handler) {
+    console.log("生成したラベル: ", label);
+    
     const btn = document.createElement("button");
     btn.className = "action-btn";
     btn.textContent = label;
