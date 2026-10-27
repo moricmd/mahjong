@@ -176,8 +176,8 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   transform: translate(-50%, -50%);
 
   background: rgba(0, 0, 0, 0.15);
@@ -369,19 +369,21 @@ body {
   position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
-  width: 205px; /* 40px × 6枚 = 240px */
+  width: 170px; /* 28px × 6枚 = 168px */
+  height: 130px; /* 42px × 3段 = 126px */
+  align-content: start;
+  grid-auto-rows: min-content;
 }
 
 .discard-area .tile {
-  width: calc(40px * 0.85); /* 捨て牌は元のサイズの85% */
-  height: calc(60px * 0.85);
+  width: calc(40px * 0.70); /* 捨て牌は元のサイズの70% */
+  height: calc(60px * 0.70);
 }
 
 
  /* 河（捨て牌） */
 #player-discards {
   position: absolute;
-  bottom: 120px;     
   left: 50%;
 
   width: 300px;
