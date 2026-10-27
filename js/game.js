@@ -1347,7 +1347,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★手牌用の独立したオフセット（ここで好みの距離に調整可能）
-    const offset = yamaRect.width * 1.1;
+    const offset = yamaRect.width * 1.4;
 
     // 各プレイヤーの position に応じて座標と回転を決定
     this.players.forEach((player, index) => {
@@ -1399,7 +1399,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★捨て牌用の独立したオフセット（手牌とは完全に別個の距離にできる！）
-    const offset = yamaRect.width * 0.7;
+    const offset = yamaRect.width * 0.8;
 
     this.players.forEach((player, index) => {
       // 捨て牌は #discards-0, #discards-1, #discards-2
