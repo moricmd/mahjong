@@ -1227,8 +1227,7 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
     return;
   }
 
-  // --- 連荘しなかった場合：自風ローテーション ---
-  this.rotatePlayerWinds();  // 東→西、南→東、西→南
+  //  連荘しなかった場合
 
   // 親交代
   this.dealer = (this.dealer + 1) % 3;
@@ -1273,13 +1272,15 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
 
 // ローテーション
 rotatePlayerWinds() {
-  // 東(1) → 西(3)
-  // 南(2) → 東(1)
-  // 西(3) → 南(2)
-  const map = { 1: 3, 2: 1, 3: 2 };
 
-  for (const p of this.players) {
-    p.wind = map[p.wind];
+  const windMap = { 0: 1,  // 東
+                1: 2,  // 南
+                2: 3   // 西
+              };
+
+  for (let i = 0; i < this.players.length; i++) {
+    const relativePos = (i - this.dealer + 3) % 3;
+    this.players[i].wind = windMap[relativePos];
   }
 }
 
@@ -1312,6 +1313,9 @@ startNewHand() {
     p.northCount = 0;
     p.missedRon = false;
   }
+
+  // ローテーション
+  this.rotatePlayerWinds();
 
   // --- 親の手番から開始 ---
   this.turn = this.dealer;
