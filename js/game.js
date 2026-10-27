@@ -1399,7 +1399,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★捨て牌用の独立したオフセット（手牌とは完全に別個の距離にできる！）
-    const offset = yamaRect.width * 0.6;
+    const offset = yamaRect.width * 0.7;
 
     this.players.forEach((player, index) => {
       // 捨て牌は #discards-0, #discards-1, #discards-2
