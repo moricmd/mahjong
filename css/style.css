@@ -343,41 +343,6 @@ body {
 }
 
 
-
-/* 下側 */
-.hand-bottom {
-  position: absolute;
-  bottom: 2%;
-  left: 50%;
-  transform: translate(-50%, 0%) rotate(0deg);
-}
-
-/* 右側 */
-.hand-right {
-  position: absolute;
-  right: 2%;
-  top: 50%;
-  transform: translate(50%, 0%) rotate(-90deg);
-}
-
-/* 上側 */
-.hand-top {
-  position: absolute;
-  top: 2%;
-  left: 50%;
-  transform: translate(0%, -50%)rotate(180deg);
-}
-
-/* 左側 */
-.hand-left {
-  position: absolute;
-  left: 2%;
-  top: 50%;
-  transform: translate(-50%, 0%) rotate(90deg);
-}
-
-
-
 /* 捨て牌の表示 */
 .discard-area {
   position: absolute;
