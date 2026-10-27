@@ -1351,8 +1351,8 @@ startNewHand() {
 
     // 各プレイヤーの position に応じて座標と回転を決定
     this.players.forEach((player, index) => {
-      // プレイヤー(0)なら #player-hand、CPUなら #cpu1-hand, #cpu2-hand
-      const selector = index === 0 ? "#player-hand" : `#cpu${index}-hand`;
+      // プレイヤー(0)なら #player-wrapper、CPUなら #cpu1-wrapper, #cpu2-wrapper
+      const selector = index === 0 ? "#player-wrapper" : `#cpu${index}-wrapper`;
       const el = document.querySelector(selector);
       if (!el) return;
 
@@ -1590,7 +1590,7 @@ updateActionButtons() {
         break;
 
     }
-    
+
     return btn;
 }
 

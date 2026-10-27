@@ -329,6 +329,19 @@ body {
   height: calc(60px * 0.7);
 }
 
+#player-wrapper {
+  position: absolute;
+  display: block;
+}
+
+#player-wrapper {
+  width: calc(40px * 14);
+}
+
+#cpu1-wrapper, #cpu2-wrapper {
+  width: calc((40px * 0.7) * 14);
+}
+
 
 
 /* 下側 */
@@ -370,8 +383,8 @@ body {
   position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
-  width: 170px; /* 28px × 6枚 = 168px */
-  height: 130px; /* 42px × 3段 = 126px */
+  width: calc((40px * 0.7) * 6);
+  height: calc((60px * 0.7) * 3);
   align-content: start;
   grid-auto-rows: min-content;
 }
@@ -463,7 +476,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: 360px; /* 120px × 3 */
-  height: 100px; /* 50px × 2 */
   display: grid;
   grid-template-columns: repeat(3, 120px);
   grid-auto-rows: 50px;
