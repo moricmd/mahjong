@@ -466,7 +466,7 @@ body {
   height: 100px; /* 50px × 2 */
   display: grid;
   grid-template-columns: repeat(3, 120px);
-  grid-template-rows: repeat(2, 50px);
+  grid-auto-rows: 50px;
   gap: 4px;
 }
 
