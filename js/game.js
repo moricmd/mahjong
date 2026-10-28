@@ -1475,15 +1475,16 @@ updateActionButtons() {
   // -------------------------
   let list = [];
 
-  if (isMyTurn) {
+  if(p.isWaitingRiichi){
+    // 立直待ち中はキャンセルボタンしか表示させない
+    list.push({"name": "キャンセル", handler: () => this.onCancelRiichi(0)});
+
+  } else if (isMyTurn) {
     // 立直（門前時のみ）
     if (p.isMenzen && this.canRiichi(0)) {
       list.push({ name: "立直", handler: () => this.onRiichi(0) });
     }
 
-    if(p.isWaitingRiichi){
-      list.push({ name: "キャンセル", handler: () => this.onCancelRiichi(0)})
-    }
 
     // 和了（ツモ / ロン）
     if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
@@ -1530,12 +1531,17 @@ updateActionButtons() {
   //  　  優先度の高いものほど左に並ぶ
   //
 
-  const allItems = [...list, skip];  // 各action-btnとスキップボタン
+  const allItems = p.isWaitingRiichi
+    ? [...list]         // 立直待ちならキャンセルのみ（listにキャンセルしか入っていない）
+    : [...list, skip];  // 各action-btnとスキップボタン
+
   const total = allItems.length;
 
   let orderIndex = [];
 
-  if(total === 2){
+  if(total == 1){
+    orderIndex = [3];
+  } else if(total === 2){
     orderIndex = [4, 5];
   } else if(total === 3){
     orderIndex = [3, 4, 5];
@@ -1552,9 +1558,9 @@ updateActionButtons() {
       slots[orderIndex[i]] = allItems[i];
       console.log(`${allItems[i].name}: ${orderIndex[i]}`);
     }
-    console.log("result: ", slots.map(s => s ? s.name : "empty"));
   }
   
+  console.log("result: ", slots.map(s => s ? s.name : "empty"));
     // -------------------------
   // ④ DOM に追加（null は描画しない）
   // -------------------------
