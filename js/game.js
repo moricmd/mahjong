@@ -1680,7 +1680,9 @@ getRiichiCandidates(playerIndex = 0){
 
   for(let i = 0; i < p.hand.length; i++){
     const tempHand = p.hand.filter((_, idx) => idx !== i);
-    if(this.checkTenpai(tempHand)){
+    const res = this.checkTenpai(tempHand);
+
+    if(res.isTenpai){
       candidates.push(i)
     }
   }
@@ -1778,8 +1780,7 @@ canRiichi(playerIndex = 0) {
 
   // 基本条件のチェック
   if (this.turn !== playerIndex) return false;
-  if (!p.isMenzen || p.isRiichi) return false;
-  if (p.score < 1000) return false;
+  if (!p.isMenzen || p.isRiichi || p.score < 1000) return false;
   if ((this.wall.length - this.wallIndex) < 4) return false;
 
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
