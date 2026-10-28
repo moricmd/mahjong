@@ -1189,6 +1189,7 @@ endGame() {
   this.state = "END_ROUND";
 }
 
+
 // 場進行
 nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
@@ -1200,6 +1201,22 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   console.log("parent (親のindex):", parent);
   console.log("parentTenpai (親のテン牌状態):", parentTenpai);
   console.log("winnerIndex:", winnerIndex);
+
+  // 飛び終了チェック: 持ち点が0未満のプレイヤーがいるなら強制終了
+  if(this.players.some(p => p.score < 0)){
+    console.log("飛び終了");
+    this.endGame();
+    return;
+  }
+
+      
+  // 南入後では40000点を超えるプレイヤーが現れた時点で終了
+  if (this.round >= 2){
+    if (this.hasPlayerOver40000()){
+      this.endGame();
+      return;
+    }
+  }
 
   // --- 本場処理 ---
   if (isDraw) {
@@ -1221,45 +1238,63 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
     (winnerIndex === parent) ||        // 親和了
     (isDraw && parentTenpai);          // 親テンパイ流局
 
+  const isEast3 = (this.round === 1 && this.kyoku === 3);
+
+
+
+
+  // 連荘時の処理
   if (isRenchan) {
-    // 連荘：局は進めない、親も風もそのまま
-    this.startNewHand();
+
+    // 東3局で連荘する場合
+    if(isEast3 && isRenchan){
+      // 40000点を超えていたなら終了
+      if(this.players[parent].score >= 40000){
+        console.log("親の40000点越え");
+        this.endGame()
+        return;
+      } else {
+        console.log("40000点に満たない（続行）");
+      }
+    }
+
+    console.log("通常連荘");
+    this.startNewHand();  // 局は進めない、親も風もそのまま
     return;
   }
 
+  // ------------------------------
   //  連荘しなかった場合
+  // ------------------------------
 
+  // 東3局終了時
+  if(isEast3){
+
+    // 40000点以上のプレイヤーが存在するなら終了
+    if(this.hasPlayerOver40000()){
+      console.log("40000点以上のプレイヤーが存在");
+      this.endGame();
+      return;
+    } else {
+      // 南入
+      this.round = 2;
+      this.kyoku = 1;
+      this.dealer = (this.dealer + 1) % 3;
+      this.startNewHand();
+      return;
+    }
+  }
+
+  // 通常の局終了時
   // 親交代
   this.dealer = (this.dealer + 1) % 3;
 
   // --- 局進行 ---
   this.kyoku++;
 
-  // 東3局終了時に40000点を超えるプレイヤーがいたら終了
-  if (this.round === 1 && this.kyoku === 3){
-    if (this.hasPlayerOver40000()){
-      this.endGame();
-      return;
-    }
-  }
-
-  // 南1局以降は40000点を超えるプレイヤーが現れた時点で終了
-  if (this.round >= 2){
-    if (this.hasPlayerOver40000()){
-      this.endGame();
-      return;
-    }
-  }
-
-  // 南入・西入
-  if (this.kyoku > 3) {
-    // 東3→南1、南3→西1
-    this.kyoku = 1;
-    this.round++;
-  }
-
-  // 西3局終了後は点数にかかわらず終了
-  if (this.round > 3) {
+  // 南3局までやったら終了
+  if(this.round === 2 && this.kyoku > 3){
+    console.log("南3局終了");
     this.endGame();
     return;
   }
@@ -1559,7 +1594,7 @@ updateActionButtons() {
       console.log(`${allItems[i].name}: ${orderIndex[i]}`);
     }
   }
-  
+
   console.log("result: ", slots.map(s => s ? s.name : "empty"));
     // -------------------------
   // ④ DOM に追加（null は描画しない）
