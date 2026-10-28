@@ -1371,12 +1371,21 @@ startNewHand() {
           break;
         case "right":
           x = cx + offset;
+          y = cy - 14;  // 牌0.5枚分
           rotate = -90;
           break;
         case "left":
           x = cx - offset;
+          y = cy + 14;
           rotate = 90;
           break;
+
+          //
+          // hand-areaが14枚分の箱を用意する都合上rightとleftでは牌1枚分の
+          // 高さのずれが起こるので、(40px * 0.7) = 28pxの半分だけそれぞれずらすことで
+          // 位置を合わせる
+          //
+
       }
 
       el.style.position = "absolute";
