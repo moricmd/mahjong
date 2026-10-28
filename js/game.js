@@ -1023,7 +1023,11 @@ onCheckRon(discardTile, discarderIndex) {
   isTenpai(playerIndex) {
     const p = this.players[playerIndex];
     if(!p) return false;
-    return this.checkTenpai(p.hand);
+
+    const res = this.checkTenpai(p.hand);
+    
+    p.waitingTiles = res.waitingTiles;
+    return res.isTenpai;
   }
 
 
@@ -1707,16 +1711,25 @@ getRiichiCandidates(playerIndex = 0){
       allTileTypes.push({ suit: "dragon", value: v, red: false });
     }
 
+    // 待ち牌の配列
+    const waitingTiles = []
+
     // 各牌を1枚ずつ足してみて、decomposeHandが成功するか試す
     for (const target of allTileTypes) {
       const tempHand = [...hand, target];
       const result = decomposeHand(tempHand);
       if (result !== null) {
-        return true; // 1つでも和了形になればテンパイ！
+        if(!waitingTiles.some(t => t.suit === target.suit && t.value === target.value)){
+          waitingTiles.push(target);
+        }
       }
     }
 
-    return false; // どの牌を足しても和了形にならなければノーテン
+    // 聴牌判定の結果と待ち牌のリストを返す
+    return {
+      isTenpai: waitingTiles.length > 0,
+      waitingTiles: waitingTiles
+    };
   }
 
 
