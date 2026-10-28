@@ -1541,7 +1541,7 @@ updateActionButtons() {
   for(let i = 0; i < allItems.length; i++){
     if(orderIndex[i] !== undefined){
       slots[orderIndex[i]] = allItems[i];
-      console.log(`${allItems[i].name}: ${orderindex[i]}`);
+      console.log(`${allItems[i].name}: ${orderIndex[i]}`);
     }
     console.log("result: ", slots.map(s => s ? s.name : "empty"));
   }
