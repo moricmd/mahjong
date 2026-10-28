@@ -1347,7 +1347,7 @@ startNewHand() {
     const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
 
     // ★手牌用の独立したオフセット
-    const offset = yamaRect.width * 1.25;
+    const offset = yamaRect.width * 1.4;
 
     // 各プレイヤーの position に応じて座標と回転を決定
     this.players.forEach((player, index) => {

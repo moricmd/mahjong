@@ -166,7 +166,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 90vw;
-  height: 90vh;
+  height: 95vh;
   overflow: hidden;
 }
 
@@ -440,10 +440,10 @@ body {
   bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
-  width: 360px; /* 120px × 3 */
+  width: 240px; /* 80px × 3 */
   display: grid;
-  grid-template-columns: repeat(3, 120px);
-  grid-auto-rows: 50px;
+  grid-template-columns: repeat(3, 80px);
+  grid-auto-rows: 40px;
   gap: 4px;
 }
 
