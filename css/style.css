@@ -329,7 +329,8 @@ body {
   height: calc(60px * 0.7);
 }
 
-#player-wrapper {
+/* 手牌の箱要素 */
+.hand-wrapper {
   position: absolute;
   display: block;
 }
@@ -348,15 +349,15 @@ body {
   position: absolute;
   display: grid;
   grid-template-columns: repeat(6, 1fr); /* 横6枚 */
-  width: calc((40px * 0.7) * 6);
-  height: calc((60px * 0.7) * 3);
+  width: calc((40px * 0.65) * 6);
+  height: calc((60px * 0.65) * 3);
   align-content: start;
   grid-auto-rows: min-content;
 }
 
 .discard-area .tile {
-  width: calc(40px * 0.70); /* 捨て牌は元のサイズの70% */
-  height: calc(60px * 0.70);
+  width: calc(40px * 0.65); /* 捨て牌は元のサイズの65% */
+  height: calc(60px * 0.65);
 }
 
 
@@ -440,9 +441,9 @@ body {
   bottom: 120px;
   left: 50%;
   transform: translateX(-50%);
-  width: 300px; /* 100px × 3 */
+  width: 360px; /* 120px × 3 */
   display: grid;
-  grid-template-columns: repeat(3, 100px);
+  grid-template-columns: repeat(3, 120px);
   grid-auto-rows: 40px;
   gap: 4px;
 }

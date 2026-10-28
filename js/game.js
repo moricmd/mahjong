@@ -1586,7 +1586,8 @@ updateActionButtons() {
   let orderIndex = [];
 
   if(total == 1){
-    orderIndex = [3];
+    // キャンセルボタン
+    orderIndex = [5];
   } else if(total === 2){
     orderIndex = [4, 5];
   } else if(total === 3){
