@@ -1531,11 +1531,11 @@ updateActionButtons() {
   } else if(total === 3){
     orderIndex = [3, 4, 5];
   } else if(total === 4){
-    orderIndex = [0, 3, 4, 5];
+    orderIndex = [3, 4, 0, 5];
   } else if(total === 5){
-    orderIndex = [0, 1, 3, 4, 5];
+    orderIndex = [3, 4, 0, 1, 5];
   } else {
-    orderIndex = [0, 1, 2, 3, 4, 5];
+    orderIndex = [3, 4, 0, 1, 2, 5];
   }
 
   for(let i = 0; i < allItems.length; i++){
@@ -1549,9 +1549,16 @@ updateActionButtons() {
     // -------------------------
   // ④ DOM に追加（null は描画しない）
   // -------------------------
-  slots.forEach(item => {
+  slots.forEach((item, index) => {
     if (!item) return;
     const btn = this.createActionButton(item.name, item.handler);
+
+    const row = Math.floor(index / 3) + 1;
+    const col = (index % 3) + 1;
+    
+    btn.style.gridRow = row;
+    btn.style.gridColumn = col;
+
     container.appendChild(btn);
   });
 }
