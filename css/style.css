@@ -447,8 +447,9 @@ body {
   gap: 4px;
 }
 
+
 .action-btn {
-  background: white;
+  padding: 8px 14px;
   border: 1px solid #333;
   border-radius: 6px;
   font-size: 16px;
@@ -461,13 +462,6 @@ body {
 }
 
 
-.action-btn {
-  padding: 8px 14px;
-  border: 1px solid #333;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-}
 
 /* 各action-btnのスタイル */
 .action-btn.btn-riichi {

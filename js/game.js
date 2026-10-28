@@ -1501,43 +1501,27 @@ updateActionButtons() {
   }
 
   // -------------------------
-  // ③ スキップ追加（必ず最後）
+  // ③ レイアウト
   // -------------------------
   if (list.length === 0) return;
 
-  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } };
-  const total = list.length + 1;
-
   const slots = new Array(6).fill(null);
+  
+  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } }
 
-  // -------------------------
-  // ④ レイアウト
-  // -------------------------
-  if (total <= 3) {
-    // 3個以下 → 3,4,5 を使用
-    let pos = 3;
-    for (let i = 0; i < list.length; i++) {
-      slots[pos++] = list[i];
-    }
-    slots[pos] = skip;
+  const allItems = [...list, skip];
+  const total = allItems.length;
 
-  } else {
-    // 4個以上 → スキップは5固定
-    slots[5] = skip;
+  let startIndex = 6 - total;
 
-    // 下段 3,4 に優先順 1,2
-    slots[3] = list[0];
-    slots[4] = list[1];
+  if(startIndex < 0) startIndex = 0;
 
-    // 上段は右から左へ（2→1→0）
-    let pos = 2;
-    for (let i = 2; i < list.length; i++) {
-      slots[pos--] = list[i];
-    }
+  for(let i = 0; i < total; i++){
+    slots[startIndex + i] = allItems[i];
   }
-
-  // -------------------------
-  // ⑤ DOM に追加（null は描画しない）
+  
+    // -------------------------
+  // ④ DOM に追加（null は描画しない）
   // -------------------------
   slots.forEach(item => {
     if (!item) return;
@@ -1545,6 +1529,7 @@ updateActionButtons() {
     container.appendChild(btn);
   });
 }
+
 
 
   createActionButton(label, handler) {
