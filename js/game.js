@@ -1737,8 +1737,12 @@ canTsumo() {
   const p = this.players[this.turn];
   if (!p) return false;
 
-  const lastTile = p.hand[p.hand.length - 1];
+  const lastTile = p.hand[p.hand.length - 1];  // 手牌の末尾（ツモ牌）
   if (!lastTile) return false;
+
+  if (!p.waitingTiles || !p.waitingTiles.some(t => t.suit === lastTile.suit && t.value === lastTile.value)){
+    return false;
+  }
 
   const result = judgeYaku(
     p,
