@@ -176,8 +176,8 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 180px;
-  height: 180px;
+  width: 200px;
+  height: 200px;
   transform: translate(-50%, -50%);
 
   background: rgba(0, 0, 0, 0.15);
@@ -258,7 +258,7 @@ body {
 .score-box {
   font-size: 20px;
   color: #000;
-  min-width: 90px;
+  min-width: 68px;
   text-align: center;
 }
 
