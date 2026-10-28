@@ -1508,16 +1508,40 @@ updateActionButtons() {
   const slots = new Array(6).fill(null);
   
   const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } }
+  //
+  //  slots = [0] [1] [2]
+  //          [3] [4] [5]
+  //
+  //  ・スキップボタンは必ず5に置く
+  //
+  //  ・下段から使い、優先度の高いボタンから詰めていく:
+  //
+  //  　  立直 → ツモ / ロン → ポン → カン → 北抜き　の順
+  //
+  //  　  優先度の高いものほど左に並ぶ
+  //
 
-  const allItems = [...list, skip];
+  const allItems = [...list, skip];  // 各action-btnとスキップボタン
   const total = allItems.length;
 
-  let startIndex = 6 - total;
+  let orderIndex = [];
 
-  if(startIndex < 0) startIndex = 0;
+  if(total === 2){
+    orderIndex = [4, 5];
+  } else if(total === 3){
+    orderIndex = [3, 4, 5];
+  } else if(total === 4){
+    orderIndex = [0, 3, 4, 5];
+  } else if(total === 5){
+    orderIndex = [0, 1, 3, 4, 5];
+  } else {
+    orderIndex = [0, 1, 2, 3, 4, 5];
+  }
 
-  for(let i = 0; i < total; i++){
-    slots[startIndex + i] = allItems[i];
+  for(let i = 0; i < allItems.length; i++){
+    if(orderIndex[i] !== undefined){
+      slots[orderIndex[i]] = allItems[i];
+    }
   }
   
     // -------------------------
