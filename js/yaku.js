@@ -216,18 +216,37 @@ function addCommonYaku(player, isTsumo, isRon, isLastTile, yakuList) {
 
 function addDoraYaku(tiles, player, doraIndicators, uraIndicators, yakuList) {
   let han = 0;
+
+  // 表ドラ
   const doraCount = countDora(tiles, doraIndicators);
   if (doraCount > 0) {
     yakuList.push(`ドラ${doraCount}`);
     han += doraCount;
   }
-  if (player.isRiichi) {
+
+  // 赤ドラ
+  const redCount = tiles.filter(t => t.red).length;
+  if(redCount > 0){
+    yakuList.push(`赤ドラ${redCount}`);
+    han += redCount;
+  }
+
+  // 裏ドラ
+  if (player.isRiichi && uraIndicators && uraIndicators.length > 0) {
     const uraCount = countDora(tiles, uraIndicators);
     if (uraCount > 0) {
       yakuList.push(`裏ドラ${uraCount}`);
       han += uraCount;
     }
   }
+
+  // 抜きドラ
+  const northCount = player.northCount || 0;
+  if(northCount > 0){
+    yakuList.push(`抜きドラ${northCount}`);
+    han += northCount;
+  }
+
   return han;
 }
 
@@ -313,8 +332,12 @@ function checkPinfu(decomposition, playerWind, roundWind, winTile) {
 
 // ドラ計算
 function countDora(tiles, indicators) {
+
+  if(!indicators || !Array.isArray(indicators)) return 0;
+
   let count = 0;
   for (const ind of indicators) {
+    if(!ind || !ind.suit) continue;
     const next = nextDoraTile(ind);
     for (const t of tiles) {
       if (t.suit === next.suit && t.value === next.value) count++;

@@ -920,6 +920,10 @@ onCheckWin() {
   const p = this.players[this.turn];
   const lastTile = p.hand[p.hand.length - 1];
 
+  // ドラ表示牌の部分を取り出す
+  const openDora = this.doraIndicators.slice(0, this.openDoraCount);
+  const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
+
   const result = judgeYaku(
     p,
     p.hand,
@@ -928,8 +932,8 @@ onCheckWin() {
     false,  // isRon
     this.playerWind,
     1,
-    this.doraIndicators,
-    this.uraIndicators,
+    openDora,
+    uraDora,
     this.wallIndex >= this.wall.length
   );
 
@@ -981,6 +985,9 @@ onCheckRon(discardTile, discarderIndex) {
     const p = this.players[i];
     const tempHand = [...p.hand, discardTile];
 
+    const openDora = this.doraIndicators.slice(0, this.openDoraCount);
+    const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
+
     const honbaBonus = this.honba * 300;
     const kyotakuBonus = this.kyotaku * 1000;
 
@@ -992,8 +999,8 @@ onCheckRon(discardTile, discarderIndex) {
       true,   // isRon
       this.playerWind,
       1,
-      this.doraIndicators,
-      this.uraIndicators,
+      openDora,
+      uraDora,
       this.wallIndex >= this.wall.length
     );
 
@@ -1746,6 +1753,9 @@ canTsumo() {
     return false;
   }
 
+  const openDora = this.doraIndicators.slice(0, this.openDoraCount);
+  const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
+
   const result = judgeYaku(
     p,
     p.hand,
@@ -1754,8 +1764,8 @@ canTsumo() {
     false,  // isRon
     this.playerWind,
     1,
-    this.doraIndicators,
-    this.uraIndicators,
+    openDora,
+    uraDora,
     this.wallIndex >= this.wall.length
   );
 
