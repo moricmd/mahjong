@@ -1541,7 +1541,9 @@ updateActionButtons() {
   for(let i = 0; i < allItems.length; i++){
     if(orderIndex[i] !== undefined){
       slots[orderIndex[i]] = allItems[i];
+      console.log(`${allItems[i].name}: ${orderindex[i]}`);
     }
+    console.log("result: ", slots.map(s => s ? s.name : "empty"));
   }
   
     // -------------------------
@@ -1558,6 +1560,7 @@ updateActionButtons() {
 
   createActionButton(label, handler) {
     console.log("生成したラベル: ", label);
+    
 
     const btn = document.createElement("button");
     btn.className = "action-btn";
