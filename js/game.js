@@ -1759,6 +1759,14 @@ canTsumo() {
   console.log("ツモ牌:", JSON.stringify(lastTile));
   console.log("待ち牌:", JSON, stringify(p.waitingTiles));
 
+  if (!p.waitingTiles){
+    console.log("聴牌してない");
+    return false;
+  }
+
+  const isMatch = p.waitingTiles.some(t => t.suit === lastTile.suit && t.value === lastTile.value);
+  console.log("ツモ牌が待ち牌にあるか", isMatch);
+
   const openDora = this.doraIndicators.slice(0, this.openDoraCount);
   const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
 
@@ -1775,6 +1783,7 @@ canTsumo() {
     this.wallIndex >= this.wall.length
   );
 
+  console.log("約判定結果", result);
   return result.han > 0;
 }
 
