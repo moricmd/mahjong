@@ -1754,6 +1754,11 @@ canTsumo() {
     return false;
   }
 
+  console.log("==ツモ時の手牌==");
+  console.log("手牌:", JSON.stringify(p.hand));
+  console.log("ツモ牌:", JSON.stringify(lastTile));
+  console.log("待ち牌:", JSON, stringify(p.waitingTiles));
+
   const openDora = this.doraIndicators.slice(0, this.openDoraCount);
   const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
 
