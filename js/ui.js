@@ -268,7 +268,6 @@ export function updateMelds() {
 }
 
 
-
 // -------------------------
 // 状態表示
 // -------------------------
@@ -277,3 +276,265 @@ export function renderState(state, turn) {
 }
 
 
+
+// ------------------------------ 
+// 相対点数表示
+// ------------------------------ 
+// 表示設定
+export function updateRelativeScores(players, showRelativeScores) {
+  const selfIndex = 0; // 自分がプレイヤー0
+  const selfScore = players[selfIndex].score;
+
+
+  for (let i = 0; i < players.length; i++) {
+
+    const p = players[i];
+    const elem = document.getElementById(`score-${p.position}`);
+    if (!elem) continue;
+
+    if (showRelativeScores) {
+      // 通常表示
+      elem.textContent = p.score;
+      elem.style.color = "black";
+      continue;
+    }
+
+    // 相対点数表示
+    if (i === selfIndex) {
+      // 自分は常に +0（グレー）
+      elem.textContent = "+0";
+      elem.style.color = "#888";
+      continue;
+    }
+
+    const diff = p.score - selfScore;
+
+    // diff = 0 のとき
+    if (diff === 0) {
+      elem.textContent = "+0";
+      elem.style.color = "#888"; // グレー
+      continue;
+    }
+
+    // diff > 0（相手のほうが点数が高い）
+    if (diff > 0) {
+      elem.textContent = `+${diff}`;
+      elem.style.color = "blue";
+      continue;
+    }
+
+    // diff < 0（自分のほうが点数が高い）
+    elem.textContent = `${diff}`; // diff は負なのでそのまま "-◯"
+    elem.style.color = "red";
+  }
+}
+
+
+
+// ------------------------------ 
+// ターンインジケーター
+// ------------------------------
+export function updateTurnIndicator(currentPlayer, players) {
+  // まず全部リセット
+  ["bottom", "right", "top", "left"].forEach(pos => {
+    const w = document.getElementById(`wind-${pos}`);
+    const s = document.getElementById(`score-${pos}`);
+    if (w) w.classList.remove("turn-highlight");
+    if (s) s.classList.remove("turn-highlight");
+  });
+
+  ["wall-top", "wall-right", "wall-bottom", "wall-left"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = "none";
+  });
+
+  // 今の手番プレイヤーの座席を取得
+  const pos = players[currentPlayer].position; // ← ここがポイント
+
+  // スコア枠を光らせる
+  const w = document.getElementById(`wind-${pos}`);
+  const s = document.getElementById(`score-${pos}`);
+  if (w) w.classList.add("turn-highlight");
+  if (s) s.classList.add("turn-highlight");
+
+  // 山の縁を方向に応じて点滅
+  if (pos === "bottom") document.getElementById("wall-bottom").style.display = "block";
+  if (pos === "right")  document.getElementById("wall-right").style.display  = "block";
+  if (pos === "top")    document.getElementById("wall-top").style.display    = "block";
+  if (pos === "left")   document.getElementById("wall-left").style.display   = "block";
+}
+
+
+
+  // -------------------------
+  // 風と優先順位の割り当て
+  // -------------------------  
+export function assignSeatsByWind(players, playerWind) {
+  const bottomWind = playerWind; //自分は常に下
+
+  let rightWind, topWind, leftWind;
+
+    players[0].position = "bottom";
+    players[0].wind = bottomWind;
+
+  if (bottomWind === 1) {      // 自分が東
+    rightWind = 2;             // 南
+    topWind = 3;               // 西
+
+    players[1].position = "right";
+    players[2].position = "top";
+
+    players[1].wind = rightWind;
+    players[2].wind = topWind;
+
+    players[0].priority = 0;
+    players[1].priority = 1;
+    players[2].priority = 2;
+    
+    } else if (bottomWind === 2) { // 自分が南
+      leftWind = 1;              // 東
+      rightWind = 3;             // 西
+
+      players[1].position = "left";
+      players[2].position = "right";
+
+      players[1].wind = leftWind;
+      players[2].wind = rightWind;
+
+      players[0].priority = 1;
+      players[1].priority = 0;
+      players[2].priority = 2;
+    
+    } else if (bottomWind === 3) { // 自分が西
+      topWind = 1;               // 東
+      leftWind = 2;              // 南
+
+      players[1].position = "top";
+      players[2].position = "left";
+
+      players[1].wind = topWind;
+      players[2].wind = leftWind;
+
+      players[0].priority = 2;
+      players[1].priority = 0;
+      players[2].priority = 1;
+
+    }
+
+  }
+
+  // -------------------------
+  // CPUの手牌のクラスを指定
+  // -------------------------
+export function updateCPUHandPosition(players) {
+
+  const cpu1 = players[1];
+  const cpu2 = players[2];
+
+  const area1 = document.getElementById("cpu1-hand");
+  const area2 = document.getElementById("cpu2-hand");
+
+  if(!area1 || !area2) return;
+
+  // 既存クラスをリセット
+  area1.className = "hand-area opponent";
+  area2.className = "hand-area opponent";
+
+  // CPU1
+  area1.classList.add(`hand-${cpu1.position}`);
+
+  // CPU2
+  area2.classList.add(`hand-${cpu2.position}`);
+}
+
+
+  // -------------------------
+  // 山の表示
+  // -------------------------
+export function updateTableInfo(round, kyoku, wall, wallIndex, players) {
+  const roundNames = ["", "東", "南", "西"];
+  document.getElementById("round-display").textContent =
+    `${roundNames[round]}${kyoku}局`;
+
+  const remain = wall.length - wallIndex;
+  document.getElementById("wall-count").textContent = `${remain}`;
+
+  const windChar = {1:"東", 2:"南", 3:"西"};
+
+  // ★ assignSeatsByWind() が wind をセット済み
+  const bottomWind = players[0].wind;
+
+  // ★ 右・上・左のプレイヤーを position から判定
+  let rightWind = null;
+  let topWind   = null;
+  let leftWind  = null;
+
+  for (const p of players) {
+    if (p.position === "right") rightWind = p.wind;
+    if (p.position === "top")   topWind   = p.wind;
+    if (p.position === "left")  leftWind  = p.wind;
+  }
+
+  // ★ まず全枠を非表示にする
+  document.getElementById("wind-right").style.display = "none";
+  document.getElementById("wind-top").style.display   = "none";
+  document.getElementById("wind-left").style.display  = "none";
+
+  document.getElementById("score-right").style.display = "none";
+  document.getElementById("score-top").style.display   = "none";
+  document.getElementById("score-left").style.display  = "none";
+
+  // ★ bottom は必ず表示
+  document.getElementById("wind-bottom").style.display = "flex";
+  document.getElementById("score-bottom").style.display = "block";
+
+  // ★ 存在する座席だけ表示
+  if (rightWind !== null) {
+    document.getElementById("wind-right").style.display = "flex";
+    document.getElementById("score-right").style.display = "block";
+  }
+  if (topWind !== null) {
+    document.getElementById("wind-top").style.display = "flex";
+    document.getElementById("score-top").style.display = "block";
+  }
+  if (leftWind !== null) {
+    document.getElementById("wind-left").style.display = "flex";
+    document.getElementById("score-left").style.display = "block";
+  }
+
+  // ★ 風文字を反映
+  document.getElementById("wind-bottom").textContent = windChar[bottomWind];
+  document.getElementById("wind-right").textContent  = rightWind ? windChar[rightWind] : "";
+  document.getElementById("wind-top").textContent    = topWind ? windChar[topWind] : "";
+  document.getElementById("wind-left").textContent   = leftWind ? windChar[leftWind] : "";
+
+  // ★ 赤背景リセット
+  ["wind-bottom", "wind-right", "wind-top", "wind-left"].forEach(id=>{
+    document.getElementById(id).classList.remove("east-wind");
+  });
+
+  // ★ 東のプレイヤーだけ赤背景
+  if (bottomWind === 1) document.getElementById("wind-bottom").classList.add("east-wind");
+  if (rightWind  === 1) document.getElementById("wind-right").classList.add("east-wind");
+  if (topWind    === 1) document.getElementById("wind-top").classList.add("east-wind");
+  if (leftWind   === 1) document.getElementById("wind-left").classList.add("east-wind");
+
+// ★ 点数表示（座席順に合わせる）
+for (let i = 0; i < 3; i++) {
+  const pos = players[i].position;
+
+  if (pos === "bottom") {
+    document.getElementById("score-bottom").textContent = players[i].score;
+  }
+  if (pos === "right") {
+    document.getElementById("score-right").textContent = players[i].score;
+  }
+  if (pos === "top") {
+    document.getElementById("score-top").textContent = players[i].score;
+  }
+  if (pos === "left") {
+    document.getElementById("score-left").textContent = players[i].score;
+  }
+}
+
+}
