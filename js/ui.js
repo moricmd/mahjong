@@ -233,11 +233,11 @@ export function createTileElement(tile) {
 }
 
 // 描画
-export function updateMelds() {
+export function updateMelds(game) {
   const area = document.getElementById("player-melds");
   area.innerHTML = "";
 
-  const p = this.players[0];
+  const p = game.players[0];
 
   p.melds.forEach(meld => {
     const renderTiles = getMeldTilesForRender(meld);

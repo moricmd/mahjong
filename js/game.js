@@ -4,6 +4,7 @@ import { Player } from "./player.js";
 import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
          createTileElement,
          assignSeatsByWind,
+         updateMelds,
          updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo
         } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
@@ -72,7 +73,7 @@ export class Game {
 
     this.players[0].position = "bottom";
 
-    assignSeatsByWind();
+    assignSeatsByWind(this.players, this.playerWind);
 
     this.dealer = this.players.findIndex(p => p.wind === 1);
     this.turn = this.dealer;
@@ -156,7 +157,7 @@ export class Game {
     this.updateDiscardPositions();
 
     this.updateActionButtons();
-    this.updateMelds(this.players[0]);
+    this.updateMelds(this.players);
     this.updateNorthTiles();
 
   }
@@ -641,7 +642,7 @@ endGame() {
 // 場進行
 nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
-  const parentTenpai = this.isTenpai(parent);
+  const parentTenpai = this.isTenpai(this, parent);
 
   // デバッグ用
   console.log("--- nextRound 呼び出し ---");

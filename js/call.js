@@ -1,5 +1,5 @@
 import { judgeYaku } from "./yaku.js";
-import { sameTile } from "./rules.js";
+import { sameTile, getRiichiCandidates } from "./rules.js";
 
 
 // ----------
@@ -242,7 +242,7 @@ export function canRiichi(game, playerIndex = 0) {
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
   if (p.hand.length % 3 !== 2) return false;
 
-  const candidates = game.getRiichiCandidates(game, playerIndex);
+  const candidates = getRiichiCandidates(game, playerIndex);
   return candidates.length > 0;
 
 }
