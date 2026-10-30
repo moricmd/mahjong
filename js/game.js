@@ -157,7 +157,7 @@ export class Game {
     this.updateDiscardPositions();
 
     this.updateActionButtons();
-    this.updateMelds(this.players);
+    updateMelds(this.players);
     this.updateNorthTiles();
 
   }
