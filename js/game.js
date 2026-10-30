@@ -3,6 +3,7 @@ import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
 import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
          createTileElement,
+         assignSeatsByWind,
          updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo
         } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
@@ -71,7 +72,7 @@ export class Game {
 
     this.players[0].position = "bottom";
 
-    this.assignSeatsByWind();
+    assignSeatsByWind();
 
     this.dealer = this.players.findIndex(p => p.wind === 1);
     this.turn = this.dealer;
