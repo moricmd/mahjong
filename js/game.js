@@ -13,7 +13,7 @@ import { chooseDiscardIndex } from "./CPU.js";
 import { decomposeHand } from "./melds.js";
 import { onRiichi, onCancelRiichi, onTsumo, onPon, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
-         canRiichi, canTsumo, canPon, canKan, canAnkan, canNorth
+         canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canNorth
         } from "./call.js";
 import { checkTenpai, isTenpai, getRiichiCandidates,
          checkDiscardFuriten, checkSameTurnFuriten, checkRiichiMissFuriten
