@@ -321,6 +321,8 @@ export function canPon(game) {
 
 // カン
 export function canKan(game) {
+
+  if(!game || !game.players || !game.players[0]) return false;
   const p = game.players[0];
 
   // -------------------------

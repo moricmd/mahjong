@@ -284,11 +284,11 @@ export function updateCalledMelds(players) {
 
 
 /* 北抜き後の牌描画*/
-export function updateNorthTiles(players) {
+export function updateNorthTiles(game) {
   const area = document.getElementById("player-north");
   area.innerHTML = "";
 
-  const p = players[0];
+  const p = game.players[0];
 
   for (let i = 0; i < p.northCount; i++) {
     const img = createTileElement({ suit:"wind", value:4 });

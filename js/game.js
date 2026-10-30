@@ -4,7 +4,7 @@ import { Player } from "./player.js";
 import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
          createTileElement,
          assignSeatsByWind,
-         updateMelds,
+         updateMelds, updateNorthTiles,
          updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo
         } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
@@ -157,8 +157,8 @@ export class Game {
     this.updateDiscardPositions();
 
     this.updateActionButtons();
-    updateMelds(this.players);
-    this.updateNorthTiles();
+    updateMelds(this);
+    updateNorthTiles(this);
 
   }
 
