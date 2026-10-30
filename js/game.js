@@ -1,21 +1,21 @@
 // game.js
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
-import { renderDoraIndicators,
-         renderPlayerHand,
-         renderCPUHand,
-         renderDiscards,
-         renderState,
+import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
          createTileElement,
-         updateRelativeScores,
-         updateTurnIndicator,
-         updateCPUHandPosition,
-         updateTableInfo
+         updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo
         } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
 import { decomposeHand } from "./melds.js";
+import { onRiichi, onCancelRiichi, onTsumo, onPon, onAnkan, onDaiminkan, onKakan, onNorth,
+         addKanDora,
+         canRiichi, canTsumo, canPon, canKan, canAnkan, canNorth
+        } from "./call.js";
+import { checkTenpai, isTenpai, getRiichiCandidates,
+         checkDiscardFuriten, checkSameTurnFuriten, checkRiichiMissFuriten
+        } from "./rules.js"; 
 
 export class Game {
   constructor() {
@@ -121,7 +121,7 @@ export class Game {
     renderState(this.state, this.turn);
 
     const p = this.players[0];
-    const candidates = p.isWaitingRiichi ? this.getRiichiCandidates(0) : null;
+    const candidates = p.isWaitingRiichi ? getRiichiCandidates(0) : null;
 
     renderPlayerHand(
       p,
@@ -225,61 +225,7 @@ sortHand(playerIndex) {
   
 
 
-// -------------------------
-// フリテン
-// -------------------------
 
-// 捨て牌によるフリテン
-checkDiscardFuriten(player) {
-  const waits = player.tenpaiWaits;
-  const discards = player.discards;
-
-  // テンパイしていないならフリテンなし
-  if (!player.isTenpai) {
-    player.isFuriten = false;
-    player.furitenType = "none";
-    return;
-  }
-
-  // 捨て牌に待ち牌が含まれているか
-  for (const w of waits) {
-    if (discards.includes(w)) {
-      player.isFuriten = true;
-      player.furitenType = "discard";
-      return;
-    }
-  }
-
-  // フリテン解除
-  player.isFuriten = false;
-  player.furitenType = "none";
-}
-
-
-
-// 同巡フリテン 
-checkSameTurnFuriten(player, tile) {
-  // 自分の最後の捨て牌と一致したら同巡フリテン
-  const lastDiscard = player.discards[player.discards.length - 1];
-  if (lastDiscard && lastDiscard === tile) {
-    player.isFuriten = true;
-    player.furitenType = "sameTurn";
-    return true; // フリテン
-  }
-  return false;
-}
-
-
-
-// リーチ後見逃しフリテン
-checkRiichiMissFuriten(player) {
-  if (player.isRiichi && player.missedRon) {
-    player.isFuriten = true;
-    player.furitenType = "riichi";
-    return true;
-  }
-  return false;
-}
 
 
 
@@ -347,7 +293,7 @@ onTurnStart() {
   if (this.wallIndex >= this.wall.length) {
     // ★ 流局処理（END_ROUND にしない）
     const parent = this.dealer;
-    const parentTenpai = this.isTenpai(parent);
+    const parentTenpai = isTenpai(this, parent);
 
     const renchan = parentTenpai; // 親テンパイなら連荘
     const isDraw = true;
@@ -525,18 +471,7 @@ onCheckRon(discardTile, discarderIndex) {
 }
 
 
-  // -------------------------
-  // 聴牌判定
-  // -------------------------
-  isTenpai(playerIndex) {
-    const p = this.players[playerIndex];
-    if(!p) return false;
 
-    const res = this.checkTenpai(p.hand);
-    
-    p.waitingTiles = res.waitingTiles;
-    return res.isTenpai;
-  }
 
 
   // -------------------------
@@ -583,7 +518,7 @@ onCheckRon(discardTile, discarderIndex) {
       }
 
       // フリテンチェック
-      this.checkDiscardFuriten(p);
+      checkDiscardFuriten(p);
 
     }
 
@@ -1024,36 +959,36 @@ updateActionButtons() {
 
   if(p.isWaitingRiichi){
     // 立直待ち中はキャンセルボタンしか表示させない
-    list.push({"name": "キャンセル", handler: () => this.onCancelRiichi(0)});
+    list.push({"name": "キャンセル", handler: () => onCancelRiichi(this, 0)});
 
   } else if (isMyTurn) {
     // 立直（門前時のみ）
-    if (p.isMenzen && this.canRiichi(0)) {
-      list.push({ name: "立直", handler: () => this.onRiichi(0) });
+    if (p.isMenzen && canRiichi(this, 0)) {
+      list.push({ name: "立直", handler: () => onRiichi(this, 0) });
     }
 
 
     // 和了（ツモ / ロン）
-    if (this.canTsumo()) list.push({ name: "ツモ", handler: () => this.onTsumo() });
-    if (this.canRon())   list.push({ name: "ロン", handler: () => this.onRon() });
+    if (canTsumo(this, 0)) list.push({ name: "ツモ", handler: () => onTsumo(this) });
+    if (canRon(this))   list.push({ name: "ロン", handler: () => onRon() });
 
     // 暗槓（自分のツモ番のみ）
-    if (this.canAnkan()) {
-      list.push({ name: "カン", handler: () => this.onKanSelect() });
+    if (canAnkan(0)) {
+      list.push({ name: "カン", handler: () => onKanSelect() });
     }
 
     // 北抜き
-    if (this.canNorth()) {
-      list.push({ name: "北抜き", handler: () => this.onNorth(0) });
+    if (canNorth(this)) {
+      list.push({ name: "北抜き", handler: () => onNorth(this, 0) });
     }
 
   } else if (isCallTurn) {
     // 他家の捨て牌 → ポン / 大明槓 のみ
-    if (this.canPon()) {
-      list.push({ name: "ポン", handler: () => this.onPonSelect() });
+    if (canPon(this)) {
+      list.push({ name: "ポン", handler: () => onPon(this, 0, ) });
     }
-    if (this.canDaiminkan()) {
-      list.push({ name: "カン", handler: () => this.onKanSelect() });
+    if (canDaiminkan()) {
+      list.push({ name: "カン", handler: () => onKan() });
     }
   }
 
@@ -1176,72 +1111,8 @@ updateActionButtons() {
     return btn;
 }
 
-// ----------
-// 宣言牌候補を取得
-// ----------
 
-getRiichiCandidates(playerIndex = 0){
 
-  const p = this.players[playerIndex];
-  const candidates = []
-
-  if(!p || p.hand.length % 3 !== 2) return candidates;
-
-  for(let i = 0; i < p.hand.length; i++){
-    const tempHand = p.hand.filter((_, idx) => idx !== i);
-    const res = this.checkTenpai(tempHand);
-
-    if(res.isTenpai){
-      candidates.push(i)
-    }
-  }
-
-  return candidates;
-
-}
-
- // ------------------------------
- // 副露可能か判断
- // ------------------------------
-
-  checkTenpai(hand) {
-    // テンパイ判定：手牌（13枚）に任意の1枚を足して、和了形になる組み合わせがあるかチェック
-    const allTileTypes = [];
-    
-    // 数の牌 (man, pin, sou) の1〜9を生成
-    for (const suit of ["man", "pin", "sou"]) {
-      for (let v = 1; v <= 9; v++) {
-        allTileTypes.push({ suit, value: v, red: false });
-      }
-    }
-    // 字牌 (wind: 1~4, dragon: 1~3) を生成
-    for (let v = 1; v <= 4; v++) {
-      allTileTypes.push({ suit: "wind", value: v, red: false });
-    }
-    for (let v = 1; v <= 3; v++) {
-      allTileTypes.push({ suit: "dragon", value: v, red: false });
-    }
-
-    // 待ち牌の配列
-    const waitingTiles = []
-
-    // 各牌を1枚ずつ足してみて、decomposeHandが成功するか試す
-    for (const target of allTileTypes) {
-      const tempHand = [...hand, target];
-      const result = decomposeHand(tempHand);
-      if (result !== null) {
-        if(!waitingTiles.some(t => t.suit === target.suit && t.value === target.value)){
-          waitingTiles.push(target);
-        }
-      }
-    }
-
-    // 聴牌判定の結果と待ち牌のリストを返す
-    return {
-      isTenpai: waitingTiles.length > 0,
-      waitingTiles: waitingTiles
-    };
-  }
 
 
 }

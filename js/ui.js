@@ -267,6 +267,35 @@ export function updateMelds() {
   });
 }
 
+/* 副露後の牌描画*/
+export function updateCalledMelds(players) {
+  const area = document.getElementById("player-melds");
+  area.innerHTML = "";
+
+  const p = players[0];
+
+  p.melds.forEach(m => {
+    m.tiles.forEach(tile => {
+      const img = createTileElement(tile);
+      area.appendChild(img);
+    });
+  });
+}
+
+
+/* 北抜き後の牌描画*/
+export function updateNorthTiles(players) {
+  const area = document.getElementById("player-north");
+  area.innerHTML = "";
+
+  const p = players[0];
+
+  for (let i = 0; i < p.northCount; i++) {
+    const img = createTileElement({ suit:"wind", value:4 });
+    area.appendChild(img);
+  }
+}
+
 
 // -------------------------
 // 状態表示

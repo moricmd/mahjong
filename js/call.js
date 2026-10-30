@@ -1,3 +1,7 @@
+import { judgeYaku } from "./yaku.js";
+import { sameTile } from "./rules.js";
+
+
 // ----------
 // 副露ボタンを押した際の処理（onXX）
 // ----------
@@ -9,7 +13,7 @@ export function onRiichi(game, playerIndex = 0) {
   const p = game.players[playerIndex];
 
   // 聴牌確認
-  if (!canRiichi(playerIndex)) return;
+  if (!canRiichi(game, playerIndex)) return;
 
   // 未立直で門前、持ち点1000点以上であるか確認
   if (p.isRiichi || !p.isMenzen || p.score < 1000) return;
@@ -32,7 +36,7 @@ export function onCancelRiichi(game, playerIndex = 0){
 }
 
 
-export function onTsumo(){
+export function onTsumo(game){
   game.onCheckWin();
 }
 
@@ -41,12 +45,12 @@ export function onTsumo(){
 // -------------------------
 // ポン
 // -------------------------
-export function onPon(game, tile) {
-  const p = game.players[game.playerIndex];
+export function onPon(game, playerIndex, tile) {
+  const p = game.players[playerIndex];
 
 
   // どの相手から鳴いたか
-  const fromPos = players[game.lastDiscarder].position;
+  const fromPos = game.players[game.lastDiscarder].position;
   let from = "top";
   if (fromPos === "right") from = "right";
   if (fromPos === "left")  from = "left";
@@ -79,8 +83,8 @@ export function onPon(game, tile) {
 // -------------------------
 // 暗槓
 // -------------------------
-export function onAnkan(game, tile) {
-  const p = game.players[game.playerIndex];
+export function onAnkan(game, playerIndex, tile) {
+  const p = game.players[playerIndex];
 
   // 手牌から4枚抜く
   let removed = 0;
@@ -98,7 +102,7 @@ export function onAnkan(game, tile) {
   });
 
   p.kanCount++;
-  game.addKanDora();
+  addKanDora(game);
 
   game.canDoubleRiichi = false;
   game.clearIppatsu();
@@ -110,11 +114,11 @@ export function onAnkan(game, tile) {
 // -------------------------
 // 大明槓
 // -------------------------
-export function onDaiminkan(game, players, tile) {
-  const p = players[game.playerIndex];
+export function onDaiminkan(game, playerIndex, tile) {
+  const p = game.players[playerIndex];
 
   // 誰から鳴いたか
-  const fromPos = players[game.lastDiscarder].position;
+  const fromPos = game.players[game.lastDiscarder].position;
   let from = "top";
   if (fromPos === "right") from = "right";
   if (fromPos === "left")  from = "left";
@@ -138,7 +142,7 @@ export function onDaiminkan(game, players, tile) {
   p.isMenzen = false;
   p.kanCount++;
 
-  game.addKanDora();
+  addKanDora(game);
 
   game.canDoubleRiichi = false;
   game.clearIppatsu();
@@ -151,8 +155,8 @@ export function onDaiminkan(game, players, tile) {
   // -------------------------
   // 加槓
   // -------------------------
-export function onKakan(game, tile) {
-    const p = game.players[game.playerIndex];
+export function onKakan(game, playerIndex, tile) {
+    const p = game.players[playerIndex];
 
     // 既存のポン面子を探す
     const meld = p.melds.find(m => m.type === "pon" && sameTile(m.tiles[0], tile));
@@ -170,7 +174,7 @@ export function onKakan(game, tile) {
 
     p.kanCount++;
 
-    game.addKanDora();
+    addKanDora(game);
 
     game.canDoubleRiichi = false;
     game.clearIppatsu();
@@ -182,8 +186,8 @@ export function onKakan(game, tile) {
   // -------------------------
   // 北抜き
   // -------------------------
-export function onNorth(game, rinshan) {
-    const p = game.players[game.playerIndex];
+export function onNorth(game, playerIndex = 0) {
+    const p = game.players[playerIndex];
 
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
     if (idx < 0) return;
@@ -193,8 +197,8 @@ export function onNorth(game, rinshan) {
     p.northCount++;
 
     // 嶺上牌から1枚ツモる
-  if (rinshan.length > 0) {
-    const rinshanTile = rinshan.pop();
+  if (game.rinshan.length > 0) {
+    const rinshanTile = game.rinshan.pop();
     p.draw(rinshanTile);
   }
 
@@ -210,42 +214,14 @@ export function onNorth(game, rinshan) {
   // -------------------------
   // カンドラ追加（仮実装）
   // -------------------------
-export function addKanDora(game, openDoraCount) {
-  if (openDoraCount < game.doraIndicators.length) {
-    openDoraCount++;  // 左から順に公開枚数を増やすだけ
+export function addKanDora(game) {
+  if (game.openDoraCount < game.doraIndicators.length) {
+    game.openDoraCount++;  // 左から順に公開枚数を増やすだけ
   }
 }
 
 
 
-  /* 副露後の牌描画*/
-export function updateMelds(players) {
-  const area = document.getElementById("player-melds");
-  area.innerHTML = "";
-
-  const p = players[0];
-
-  p.melds.forEach(m => {
-    m.tiles.forEach(tile => {
-      const img = createTileElement(tile);
-      area.appendChild(img);
-    });
-  });
-}
-
-
-/* 北抜き後の牌描画*/
-export function updateNorthTiles(players) {
-  const area = document.getElementById("player-north");
-  area.innerHTML = "";
-
-  const p = players[0];
-
-  for (let i = 0; i < p.northCount; i++) {
-    const img = createTileElement({ suit:"wind", value:4 });
-    area.appendChild(img);
-  }
-}
 
 
 
@@ -266,14 +242,19 @@ export function canRiichi(game, playerIndex = 0) {
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
   if (p.hand.length % 3 !== 2) return false;
 
-  const candidates = game.getRiichiCandidates(playerIndex);
+  const candidates = game.getRiichiCandidates(game, playerIndex);
   return candidates.length > 0;
 
 }
 
 // ツモ
-export function canTsumo(game, doraIndicators, uraIndicators, openDoraCount) {
-  const p = game.players[game.turn];
+export function canTsumo(game, playerIndex = 0) {
+  const p = game.players[playerIndex];
+
+  const doraIndicators = game.doraIndicators;
+  const uraIndicators = game.uraIndicators;
+  const openDoraCount = game.openDoraCount;
+
   if (!p) return false;
 
   const lastTile = p.hand[p.hand.length - 1];  // 手牌の末尾（ツモ牌）
