@@ -321,7 +321,7 @@ export function updateRelativeScores(players, showRelativeScores) {
     const elem = document.getElementById(`score-${p.position}`);
     if (!elem) continue;
 
-    if (showRelativeScores) {
+    if (!showRelativeScores) {
       // 通常表示
       elem.textContent = p.score;
       elem.style.color = "black";
