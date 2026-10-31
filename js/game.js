@@ -371,9 +371,27 @@ onCheckWin() {
 
   const p = this.players[this.turn];
 
-  // 聴牌していなければ以降の処理を行わない
   isTenpaiNow(this, this.turn);
-  if(!p.isTenpai) return;
+
+  // 聴牌していなければ打牌へ
+  if(!p.isTenpai){
+
+    // CPUの場合
+    if (p.isCPU) {
+      const idx = chooseDiscardIndex(p.hand);
+      const discardTile = p.discard(idx);
+
+      if (this.onCheckRon(discardTile, this.turn)) return;
+      if (this.autoSort) this.sortHand(this.turn);
+
+      this.state = "NEXT_TURN";
+    
+    // プレイヤーの場合
+    } else {
+      this.state = "DISCARD";
+    }
+    return;
+  }
 
   // ツモ牌を取り出す
   const lastTile = p.hand[p.hand.length - 1];
@@ -433,18 +451,6 @@ onCheckWin() {
 
   }
 
-  // 和了でなければ捨て牌へ（ここはそのままでOK）
-  if (p.isCPU) {
-    const idx = chooseDiscardIndex(p.hand);
-    const discardTile = p.discard(idx);
-
-    if (this.onCheckRon(discardTile, this.turn)) return;
-
-    if (this.autoSort) this.sortHand(this.turn);
-    this.state = "NEXT_TURN";
-  } else {
-    this.state = "DISCARD";
-  }
 }
 
   
