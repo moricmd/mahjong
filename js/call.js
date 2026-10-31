@@ -245,17 +245,29 @@ export function addKanDora(game) {
 
 // 立直
 export function canRiichi(game, playerIndex = 0) {
+  console.log("canRiichiが呼ばれた");
   const p = game.players[playerIndex];
   if (!p) return false;
 
   // 基本条件のチェック
-  if (game.turn !== playerIndex) return false;
-  if (!p.isTenpai) return false;
-  if (!p.isMenzen || p.isRiichi || p.score < 1000) return false;
-  if ((game.wall.length - game.wallIndex) < 4) return false;
+  if (game.turn !== playerIndex){
+    console.log("自分の手番でない");
+    return false;
+  }
 
+  if (!p.isMenzen || p.isRiichi || p.score < 1000){
+    console.log("門前でない or すでに立直している or 1000点未満");
+    return false;
+  }
+  if ((game.wall.length - game.wallIndex) < 4){
+    console.log("次のツモ番がない");
+    return false;
+  }
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
-  if (p.hand.length % 3 !== 2) return false;
+  if (p.hand.length % 3 !== 2){
+    console.log("手牌が揃っていない: 現在の手牌は", p.hand.length);
+    return false;
+  }
 
   const candidates = getRiichiCandidates(game, playerIndex);
   return candidates.length > 0;
