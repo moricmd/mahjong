@@ -45,10 +45,10 @@ export class Player {
     this.missedRon = false;     // リーチ後にロン見逃ししたか
 
     // -------------------------
-    // テンパイ・待ち牌
+    // 聴牌・待ち牌
     // -------------------------
-    this.isTenpai = false;      // テンパイしているか
-    this.waits = [];            // 待ち牌リスト（例: ["5m", "8p"]）
+    this.isTenpai = false;      // 聴牌しているか
+    this.waitingTiles = [];     // 待ち牌リスト
 
     // -------------------------
     // カン・北抜き

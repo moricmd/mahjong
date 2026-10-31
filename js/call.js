@@ -250,6 +250,7 @@ export function canRiichi(game, playerIndex = 0) {
 
   // 基本条件のチェック
   if (game.turn !== playerIndex) return false;
+  if (!p.isTenpai) return false;
   if (!p.isMenzen || p.isRiichi || p.score < 1000) return false;
   if ((game.wall.length - game.wallIndex) < 4) return false;
 
@@ -307,7 +308,7 @@ export function canTsumo(game, playerIndex = 0) {
     game.wallIndex >= game.wall.length
   );
 
-  console.log("約判定結果", result);
+  console.log("役判定結果", result);
   return result.han > 0;
 }
 

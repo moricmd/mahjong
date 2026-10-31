@@ -368,9 +368,14 @@ onTurnStart() {
   // -------------------------
 onCheckWin() {
   console.log("onCheckWinが呼ばれた");
-  
+
   const p = this.players[this.turn];
   const lastTile = p.hand[p.hand.length - 1];
+
+  // ツモ牌が待ち牌に含まれているか（和了したか）を判定
+  const isWaitingTile = p.some(
+    w => w.suit === lastTile.suit && w.value === lastTile.value
+  );
 
   console.log("==ツモチェック==");
   console.log("プレイヤー:", this.turn);
@@ -659,7 +664,7 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   console.log("--- nextRound 呼び出し ---");
   console.log("isDraw:", isDraw);
   console.log("parent (親のindex):", parent);
-  console.log("parentTenpai (親のテン牌状態):", parentTenpai);
+  console.log("parentTenpai (親の聴牌状態):", parentTenpai);
   console.log("winnerIndex:", winnerIndex);
 
   // 飛び終了チェック: 持ち点が0未満のプレイヤーがいるなら強制終了
@@ -976,7 +981,7 @@ updateActionButtons() {
 
   } else if (isMyTurn) {
     // 立直（門前時のみ）
-    if (p.isMenzen && canRiichi(this, 0)) {
+    if (p.isMenzen && p.isTenpai && canRiichi(this, 0)) {
       list.push({ name: "立直", handler: () => onRiichi(this, 0) });
     }
 

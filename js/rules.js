@@ -52,8 +52,10 @@ export function isTenpaiNow(game, playerIndex) {
 
   const res = checkTenpai(p.hand);
   
+  p.isTenpai = res.isTenpai;  // watingTilesがあるなら聴牌している
   p.waitingTiles = res.waitingTiles;
-  return res.isTenpai;
+
+  return p.isTenpai;
   }
 
 
