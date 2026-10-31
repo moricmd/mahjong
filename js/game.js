@@ -370,12 +370,21 @@ onCheckWin() {
   console.log("onCheckWinが呼ばれた");
 
   const p = this.players[this.turn];
+
+  // 聴牌していなければ以降の処理を行わない
+  isTenpaiNow(this, this.turn);
+  if(!p.isTenpai) return;
+
+  // ツモ牌を取り出す
   const lastTile = p.hand[p.hand.length - 1];
 
   // ツモ牌が待ち牌に含まれているか（和了したか）を判定
-  const isWaitingTile = p.some(
+  const isWaitingTile = p.waitingTiles.some(
     w => w.suit === lastTile.suit && w.value === lastTile.value
   );
+
+  // 待ち牌でない場合はreturn
+  if(!isWaitingTile) return;
 
   console.log("==ツモチェック==");
   console.log("プレイヤー:", this.turn);
