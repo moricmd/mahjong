@@ -1,4 +1,5 @@
 // game.js
+
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
 import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
@@ -11,9 +12,9 @@ import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
 import { decomposeHand } from "./melds.js";
-import { onRiichi, onCancelRiichi, onTsumo, onPon, onAnkan, onDaiminkan, onKakan, onNorth,
+import { onRiichi, onCancelRiichi, onTsumo, onRon, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
-         canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canNorth
+         canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
         } from "./call.js";
 import { checkTenpai, isTenpai, getRiichiCandidates,
          checkDiscardFuriten, checkSameTurnFuriten, checkRiichiMissFuriten
@@ -123,7 +124,7 @@ export class Game {
     renderState(this.state, this.turn);
 
     const p = this.players[0];
-    const candidates = p.isWaitingRiichi ? getRiichiCandidates(0) : null;
+    const candidates = p.isWaitingRiichi ? getRiichiCandidates(this, 0) : null;
 
     renderPlayerHand(
       p,
@@ -642,7 +643,7 @@ endGame() {
 // 場進行
 nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
-  const parentTenpai = this.isTenpai(this, parent);
+  const parentTenpai = isTenpai(this, parent);
 
   // デバッグ用
   console.log("--- nextRound 呼び出し ---");
@@ -975,8 +976,8 @@ updateActionButtons() {
     if (canRon(this))   list.push({ name: "ロン", handler: () => onRon() });
 
     // 暗槓（自分のツモ番のみ）
-    if (canAnkan(0)) {
-      list.push({ name: "カン", handler: () => onKanSelect() });
+    if (canAnkan(this)) {
+      list.push({ name: "カン", handler: () => onAnkan(this) });
     }
 
     // 北抜き
@@ -987,10 +988,10 @@ updateActionButtons() {
   } else if (isCallTurn) {
     // 他家の捨て牌 → ポン / 大明槓 のみ
     if (canPon(this)) {
-      list.push({ name: "ポン", handler: () => onPon(this, 0, ) });
+      list.push({ name: "ポン", handler: () => onPon(this, 0) });
     }
-    if (canDaiminkan()) {
-      list.push({ name: "カン", handler: () => onKan() });
+    if (canDaiminkan(this)) {
+      list.push({ name: "カン", handler: () => onKan(this) });
     }
   }
 

@@ -1,3 +1,5 @@
+// call.js
+
 import { judgeYaku } from "./yaku.js";
 import { sameTile, getRiichiCandidates } from "./rules.js";
 
@@ -40,6 +42,10 @@ export function onTsumo(game){
   game.onCheckWin();
 }
 
+// 保留
+export function onRon(game){
+  return false;
+}
 
 
 // -------------------------
@@ -78,6 +84,14 @@ export function onPon(game, playerIndex, tile) {
   game.turn = playerIndex;
   game.state = "DISCARD";
   game.updateUI();
+}
+
+// ----------
+// カン
+// ----------
+// 保留
+export function onKan(game){
+  return false;
 }
 
 // -------------------------
@@ -364,7 +378,16 @@ export function canKan(game) {
   return false;
 }
 
-export function canAnkan(player) {
+// 保留: カン系
+export function canAnkan(game) {
+  return false;
+}
+
+export function canDaiminkan(game){
+  return false;
+}
+
+export function canKakan(game){
   return false;
 }
 

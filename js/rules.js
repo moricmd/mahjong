@@ -1,3 +1,5 @@
+// rules.js
+
 import { decomposeHand } from "./melds.js";
 
 
