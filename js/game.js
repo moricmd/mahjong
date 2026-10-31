@@ -370,6 +370,14 @@ onCheckWin() {
   const p = this.players[this.turn];
   const lastTile = p.hand[p.hand.length - 1];
 
+  console.log("==ツモチェック==");
+  console.log("プレイヤー:", this.turn);
+  console.log("isRiichi:", p.isRiichi);
+  console.log("手牌枚数:", p.hand.length);
+  console.log("手牌:", JSON.stringify(p.hand));
+  console.log("ツモ牌:", JSON.stringify(lastTile));
+
+
   // ドラ表示牌の部分を取り出す
   const openDora = this.doraIndicators.slice(0, this.openDoraCount);
   const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
