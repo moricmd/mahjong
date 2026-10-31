@@ -46,7 +46,7 @@ export function checkTenpai(hand) {
 }
 
 
-export function isTenpai(game, playerIndex) {
+export function isTenpaiNow(game, playerIndex) {
   const p = game.players[playerIndex];
   if(!p) return false;
 

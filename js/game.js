@@ -16,7 +16,7 @@ import { onRiichi, onCancelRiichi, onTsumo, onRon, onPon, onKan, onAnkan, onDaim
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
         } from "./call.js";
-import { checkTenpai, isTenpai, getRiichiCandidates,
+import { checkTenpai, isTenpaiNow, getRiichiCandidates,
          checkDiscardFuriten, checkSameTurnFuriten, checkRiichiMissFuriten
         } from "./rules.js"; 
 
@@ -296,7 +296,7 @@ onTurnStart() {
   if (this.wallIndex >= this.wall.length) {
     // ★ 流局処理（END_ROUND にしない）
     const parent = this.dealer;
-    const parentTenpai = isTenpai(this, parent);
+    const parentTenpai = isTenpaiNow(this, parent);
 
     const renchan = parentTenpai; // 親テンパイなら連荘
     const isDraw = true;
@@ -521,7 +521,7 @@ onCheckRon(discardTile, discarderIndex) {
       }
 
       // フリテンチェック
-      checkDiscardFuriten(p);
+      checkDiscardFuriten(this, 0);
 
     }
 
@@ -643,7 +643,7 @@ endGame() {
 // 場進行
 nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parent = this.dealer;
-  const parentTenpai = isTenpai(this, parent);
+  const parentTenpai = isTenpaiNow(this, parent);
 
   // デバッグ用
   console.log("--- nextRound 呼び出し ---");
