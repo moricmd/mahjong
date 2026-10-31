@@ -367,6 +367,8 @@ onTurnStart() {
   // CHECK_WIN → 和了判定
   // -------------------------
 onCheckWin() {
+  console.log("onCheckWinが呼ばれた");
+  
   const p = this.players[this.turn];
   const lastTile = p.hand[p.hand.length - 1];
 
