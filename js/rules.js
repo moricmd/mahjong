@@ -78,6 +78,8 @@ export function getRiichiCandidates(game, playerIndex = 0){
     }
   }
 
+  console.log("待ち牌:", candidates);
+  
   return candidates;
 
 }

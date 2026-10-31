@@ -367,7 +367,6 @@ onTurnStart() {
   // CHECK_WIN → 和了判定
   // -------------------------
 onCheckWin() {
-  console.log("onCheckWinが呼ばれた");
 
   const p = this.players[this.turn];
 
