@@ -129,9 +129,14 @@ export class Game {
     renderPlayerHand(
       p,
       index => {
-        if(p.isWaitingRiichi && candidates && !candidates.includes(index)){
-          return;
+        if(p.isWaitingRiichi && candidates){
+          const tile = p.hand[index];
+          // candidates内にクリックした牌と一致するものがあるか
+          const isCandidates = candidates.some(c => c.suit === tile.suit && c.value === tile.value);
+
+          if(isCandidates) return;
         }
+
         this.onPlayerDiscard(index);
       },
       this.autoSort,
