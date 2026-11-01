@@ -134,7 +134,8 @@ export class Game {
           // candidates内にクリックした牌と一致するものがあるか
           const isCandidates = candidates.some(c => c.suit === tile.suit && c.value === tile.value);
 
-          if(isCandidates) return;
+          // 宣言牌候補でなければ打牌できない
+          if(!isCandidates) return;
         }
 
         this.onPlayerDiscard(index);
