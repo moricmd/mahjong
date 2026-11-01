@@ -39,7 +39,7 @@ export function onCancelRiichi(game, playerIndex = 0){
 
 
 export function onTsumo(game){
-  game.onCheckWin();
+  game.onCheckTsumo();
 }
 
 // 保留
@@ -221,7 +221,7 @@ export function onNorth(game, playerIndex = 0) {
     game.clearIppatsu();
 
     game.state = "CHECK_WIN";
-    game.onCheckWin(); 
+    game.onCheckTsumo(); 
     game.updateUI();
   }
 
@@ -312,7 +312,6 @@ export function canTsumo(game, playerIndex = 0) {
     p.hand,
     lastTile,
     true,   // isTsumo
-    false,  // isRon
     game.playerWind,
     1,
     openDora,

@@ -10,7 +10,6 @@ export function judgeYaku(
   handTiles,
   winTile,
   isTsumo,
-  isRon,
   playerWind = 1,
   roundWind = 1,
   doraIndicators = [],
@@ -38,7 +37,7 @@ export function judgeYaku(
     han += chiitoiHan;
 
     // 立直・一発などの共通役を加算してリターン
-    han += addCommonYaku(player, isTsumo, isRon, isLastTile, yakuList);
+    han += addCommonYaku(player, isTsumo, isLastTile, yakuList);
     han += addDoraYaku(tiles, player, doraIndicators, uraIndicators, yakuList);
 
     return { han, yakuList };
@@ -48,7 +47,7 @@ export function judgeYaku(
   const { jantou, melds } = decomposition;
 
   // 立直系・ツモ等
-  han += addCommonYaku(player, isTsumo, isRon, isLastTile, yakuList);
+  han += addCommonYaku(player, isTsumo, isLastTile, yakuList);
 
   // タンヤオ
   if (isTanyao(tiles, melds)) {
@@ -105,7 +104,7 @@ export function judgeYaku(
   }
 
   // 三暗刻
-  if (checkSanankou(player, winTile, isRon, melds)) {
+  if (checkSanankou(player, winTile, isTsumo, melds)) {
     yakuList.push("三暗刻");
     han += 2;
   }
@@ -185,7 +184,7 @@ export function judgeYaku(
 // ======================================================================
 // 共通役・ドラ加算のヘルパー
 // ======================================================================
-function addCommonYaku(player, isTsumo, isRon, isLastTile, yakuList) {
+function addCommonYaku(player, isTsumo, isLastTile, yakuList) {
   let han = 0;
   if (player.isRiichi) {
     yakuList.push("立直");
@@ -207,7 +206,7 @@ function addCommonYaku(player, isTsumo, isRon, isLastTile, yakuList) {
     yakuList.push("海底摸月");
     han += 1;
   }
-  if (isRon && isLastTile) {
+  if (!isTsumo && isLastTile) {
     yakuList.push("河底撈魚");
     han += 1;
   }
@@ -387,7 +386,7 @@ function checkIttsuu(melds) {
 }
 
 // 三暗刻
-function checkSanankou(player, winTile, isRon, melds) {
+function checkSanankou(player, winTile, isTsumo, melds) {
   let ankoCount = 0;
   for (const m of melds) {
     if ((m.type === "koutsu" || m.type === "kan") && !m.isOpen) {

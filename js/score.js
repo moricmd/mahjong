@@ -5,13 +5,13 @@ import { SCORE_TABLE } from './scoreTable.js';
  * 点数計算と点数移動を行う関数
  * @param {Game} game - game.js のインスタンス (this を渡す)
  * @param {Number} winnerIndex - 和了したプレイヤーのインデックス (0〜2)
- * @param {Number|null} loserIndex - 放銃したプレイヤーのインデックス (ロンの場合のみ。ツモの場合は null)
- * @param {Boolean} isRon - trueならロン、falseならツモ
+ * @param {Number|null} loserIndex - 放銃したプレイヤーのインデックス (ロンの場合のみ、ツモの場合は null)
  * @param {Number} han - 翻数
  * @param {Number} fu - 符数
  */
 
-export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
+export function calcScore(game, winnerIndex, loserIndex, han, fu) {
+  const isTsumo = loserIndex === null ? true : false;
   const isChild = (winnerIndex !== game.dealer);
   const role = isChild ? 'child' : 'parent';
 
@@ -25,7 +25,7 @@ export function calcScore(game, winnerIndex, loserIndex, isRon, han, fu) {
   let gainScore = 0;
   let baseScore = 0;
 
-  if (isRon) {
+  if (!isTsumo) {
     // ==========================================
     // ロン和了の場合
     // ==========================================

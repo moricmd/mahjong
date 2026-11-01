@@ -267,7 +267,7 @@ console.log(
       break;
 
     case "CHECK_WIN":
-      this.onCheckWin();
+      this.onCheckTsumo();
       break;
 
     case "DISCARD":
@@ -372,7 +372,9 @@ onTurnStart() {
   // -------------------------
   // CHECK_WIN → 和了判定
   // -------------------------
-onCheckWin() {
+
+/*
+onCheckTsumo() {
 
   const p = this.players[this.turn];
 
@@ -407,7 +409,10 @@ onCheckWin() {
   );
 
   // 待ち牌でない場合はreturn
-  if(!isWaitingTile) return;
+  if(!isWaitingTile){
+    this.state = "DISCARD";
+    return;
+  }
 
   console.log("==ツモチェック==");
   console.log("プレイヤー:", this.turn);
@@ -426,7 +431,6 @@ onCheckWin() {
     p.hand,
     lastTile,
     true,   // isTsumo
-    false,  // isRon
     this.playerWind,
     1,
     openDora,
@@ -457,7 +461,91 @@ onCheckWin() {
   }
 
 }
+*/
 
+onCheckTsumo(){
+
+  const p = this.players[this.turn];
+  isTenpaiNow(this, this.turn);
+
+  const lastTile = p.hand[p.hand.length - 1];
+
+  // ツモ牌が待ち牌であるか
+  const isWaitingTile = p.isTenpai && 
+                        p.waitingTiles.some(
+                          w => w.suit === lastTile.suit && w.value === lastTile.value 
+                        );
+
+  let isTsumoWin = false;
+  let result = null;
+
+  if(isWaitingTile){
+
+    // ドラ表示牌のめくられている部分を取り出す
+    const openDora = this.doraIndicators.slice(0, this.openDoraCount);
+    const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
+
+    result = judgeYaku(
+      p,                // プレイヤー
+      p.hand,           // 手牌
+      lastTile,         // 和了牌
+      true,             // ツモ和了
+      this.playerWind,  // 自風
+      1,                // 場風
+      openDora,         // 表ドラ表示牌
+      uraDora,          // 裏ドラ表示牌
+      this.wallIndex >= this.wall.length  // ハイテイか
+    );
+
+    if(p.isRiichi){
+      result.han += 1;
+      if(p.isIppatsu) result.han += 1;
+    }
+
+    if(result.han > 0){
+      isTsumoWin = true;
+    }
+  }
+
+  // 1. ツモ和了した場合
+  if(isTsumoWin){
+    if(p.isRiichi){
+      this.uraIndicators = [this.wall[this.wallIndex++]];
+    }
+
+    const winnerIndex = this.turn;
+    const renchan = (winnerIndex === this.dealer);
+    const gainScore = calcScore(
+      this,        // Gameインスタンス
+      this.turn,   // 和了者のインデックス
+      null,        // 放銃者のインデックス（ツモなのでfalse）
+      result.han,  // 飜数
+      result.fu    // 符数
+      );
+
+      alert(`プレイヤー${this.turn} ツモ和了! han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}$`);
+
+      // 次の局へ
+      this.nextRound(renchan, winnerIndex);
+      return;
+  }
+
+  // 2. 和了していない場合は打牌に進む
+  if(p.isCPU){
+    // CPU
+    const idx = chooseDiscardIndex(p.hand);
+    const discardTile = p.discard(idx);
+
+    if(this.onCheckRon(discardTile, this.turn)) return;
+    if(this.autoSort) this.sortHand(this.turn);
+
+    this.state = "NEXT_TURN";
+
+  } else {
+    // 人間
+    this.state = "DISCARD";
+  }
+}
   
 
   // -------------------------
@@ -481,7 +569,6 @@ onCheckRon(discardTile, discarderIndex) {
       tempHand,
       discardTile,
       false,  // isTsumo
-      true,   // isRon
       this.playerWind,
       1,
       openDora,
