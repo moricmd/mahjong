@@ -1,4 +1,4 @@
-// call.js
+// action.js
 
 import { judgeYaku } from "./yaku.js";
 import { sameTile, getRiichiCandidates } from "./rules.js";
