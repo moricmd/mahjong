@@ -71,7 +71,7 @@ export function renderPlayerHand(player, onClick, autoSort, candidates = null) {
     img.className = "tile";
 
     // 手牌から立直宣言牌に含まれている牌を抽出
-    const isCandidate = candidates && candidates.some(c =>
+    const isCandidates = candidates && candidates.some(c =>
       c.suit === tile.suit && c.value === tile.value
     );
 
