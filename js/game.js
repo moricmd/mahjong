@@ -139,7 +139,7 @@ export class Game {
           if(!isCandidates) return;
         }
 
-        this.onPlayerDiscard(index);
+        this.onDiscard(index);
       },
       this.autoSort,
       candidates
