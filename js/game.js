@@ -15,7 +15,7 @@ import { decomposeHand } from "./melds.js";
 import { onRiichi, onCancelRiichi, onTsumo, onRon, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
-        } from "./call.js";
+        } from "./action.js";
 import { checkTenpai, isTenpaiNow, getRiichiCandidates,
          checkDiscardFuriten, checkSameTurnFuriten, checkRiichiMissFuriten
         } from "./rules.js"; 
