@@ -53,11 +53,13 @@ export function calcScore(game, winnerIndex, loserIndex, han, fu) {
       baseScore = SCORE_TABLE.tsumo[role][han][normalizedFu] || SCORE_TABLE.tsumo[role][han][30];
     }
 
+    const honbaBonusTsumo = honbaBonus / 2;
+
     if (!isChild) {
       // ------------------------------------------
       // 親のツモ（残りの子2人から同額をもらう）
       // ------------------------------------------
-      const payChild = baseScore.child + honbaBonus;
+      const payChild = baseScore.child + honbaBonusTsumo;
 
       for (let i = 0; i < 3; i++) {
         if (i !== winnerIndex) {
@@ -76,8 +78,8 @@ export function calcScore(game, winnerIndex, loserIndex, han, fu) {
       const parentIndex = game.dealer;
       const childIndex = [0, 1, 2].find(i => i !== winnerIndex && i !== parentIndex);
 
-      const payParent = baseScore.parent + honbaBonus;
-      const payChild = baseScore.child + honbaBonus;
+      const payParent = baseScore.parent + honbaBonusTsumo;
+      const payChild = baseScore.child + honbaBonusTsumo;
 
       game.players[parentIndex].score -= payParent;
       game.players[childIndex].score -= payChild;
