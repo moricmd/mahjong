@@ -220,7 +220,7 @@ export function onNorth(game, playerIndex = 0) {
     game.canDoubleRiichi = false;
     game.clearIppatsu();
 
-    game.state = "CHECK_WIN";
+    game.state = "CHECK_TSUMO";
     game.onCheckTsumo(); 
     game.updateUI();
   }
@@ -363,7 +363,7 @@ export function canKan(game) {
   // -------------------------
   const isMyTurn =
     (game.turn === 0) &&
-    (game.state === "CHECK_WIN" || game.state === "DISCARD");
+    (game.state === "CHECK_TSUMO" || game.state === "DISCARD");
 
   if (!isMyTurn) return false;
 

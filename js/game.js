@@ -325,7 +325,7 @@ onTurnStart() {
 
     this.turnCount++; // 巡目を進める
 
-    this.state = "CHECK_WIN";
+    this.state = "CHECK_TSUMO";
   }
 
   // ------------------------------
@@ -370,7 +370,7 @@ onTurnStart() {
   
 
   // -------------------------
-  // CHECK_WIN → 和了判定
+  // CHECK_TSUMO → 和了判定
   // -------------------------
 
 /*
@@ -1123,10 +1123,10 @@ updateActionButtons() {
   // 他家の捨て牌でポン・カン待ち
   const isCallTurn = (this.state === "WAIT_PON_KAN");
 
-  // 自分のツモ番（CHECK_WIN → DISCARD）
+  // 自分のツモ番（CHECK_TSUMO → DISCARD）
   const isMyTurn =
     (this.turn === 0) &&
-    (this.state === "CHECK_WIN" || this.state === "DISCARD");
+    (this.state === "CHECK_TSUMO" || this.state === "DISCARD");
 
   if (!isCallTurn && !isMyTurn) {
     return; // 何も表示しない
