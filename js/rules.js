@@ -38,6 +38,10 @@ export function checkTenpai(hand) {
     }
   }
 
+  if(waitingTiles.length > 0){
+    console.log("待ち牌:", waitingTiles);
+  }
+
   // 聴牌判定の結果と待ち牌のリストを返す
   return {
     isTenpai: waitingTiles.length > 0,
@@ -74,12 +78,12 @@ export function getRiichiCandidates(game, playerIndex = 0){
     const res = checkTenpai(tempHand);
 
     if(res.isTenpai){
-      candidates.push(i)
+      candidates.push(p.hand[i]);
     }
   }
 
-  console.log("待ち牌:", candidates);
-  
+  console.log("宣言牌候補:", candidates);
+
   return candidates;
 
 }
