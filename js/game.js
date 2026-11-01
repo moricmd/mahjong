@@ -995,7 +995,7 @@ updateActionButtons() {
 
   } else if (isMyTurn) {
     // 立直（門前時のみ）
-    if (p.isMenzen && p.isTenpai && canRiichi(this, 0)) {
+    if (p.isMenzen && canRiichi(this, 0)) {
       list.push({ name: "立直", handler: () => onRiichi(this, 0) });
     }
 
