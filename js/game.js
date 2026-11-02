@@ -139,7 +139,7 @@ export class Game {
           if(!isCandidates) return;
         }
 
-        this.onDiscard(index);
+        this.discardStep(index);
       },
       this.autoSort,
       candidates
@@ -583,7 +583,7 @@ onCheckRon(discardTile, discarderIndex) {
   // -------------------------
   // DISCARD
   // -------------------------
-  onDiscard(){
+  onDiscard(cardIndex = null){
     const p = this.players[this.turn];
     let discardTile = null;
 
@@ -605,7 +605,8 @@ onCheckRon(discardTile, discarderIndex) {
 
       // 立直していない場合
       } else {
-        return false;  // 手動（クリックによる打牌）
+        if(cardIndex === null) return false;  // 手動（クリックによる打牌）
+        discardTile = p.discard(cardIndex);
       }
     }
 
@@ -642,10 +643,15 @@ onCheckRon(discardTile, discarderIndex) {
     };
   }
 
-  discardStep(){
-    const discardResult = this.onDiscard();
+  discardStep(cardIndex = null){
+    const p = this.players[this.turn];
 
-    // 手動（CPUや立直中でない）なら処理を抜ける
+    // 通常のプレイヤーかつ、打牌する牌がまだ指定されていない場合
+    if(!p.isCPU && !p.isRiichi && cardIndex === null) return;
+
+    const discardResult = this.onDiscard(cardIndex);
+
+    // 正常な打牌ができなかった場合
     if(!discardResult) return;
 
     const { discardTile, discarder } = discardResult;
