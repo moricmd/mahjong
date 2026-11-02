@@ -668,10 +668,12 @@ onCheckRon(discardTile, discarderIndex) {
   // NEXT_TURN
   // -------------------------
   onNextTurn() {
+    const prevTurn = this.turn;
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TURN_START";
 
-    const p = this.players[this.turn];
+    // 今打牌した人
+    const p = this.players[prevTurn];
     console.log(`[DEBUG] turn: ${this.turn}, isCPU: ${p.isCPU}, isRiichi: ${p.isRiichi}`);
 
     // 立直しているなら自動打牌に1秒遅延を入れる
