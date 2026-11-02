@@ -245,7 +245,6 @@ export function addKanDora(game) {
 
 // 立直
 export function canRiichi(game, playerIndex = 0) {
-  console.log("canRiichiが呼ばれた");
   const p = game.players[playerIndex];
   if (!p) return false;
 
