@@ -466,6 +466,7 @@ onCheckTsumo() {
 onCheckTsumo(){
 
   const p = this.players[this.turn];
+  console.log(`プレイヤー${this.turn}の手番`);
   isTenpaiNow(this, this.turn);
 
   const lastTile = p.hand[p.hand.length - 1];
