@@ -587,13 +587,14 @@ onCheckRon(discardTile, discarderIndex) {
     const p = this.players[this.turn];
     let discardTile = null;
 
+    // CPUの捨て牌
     if(p.isCPU){
-      // CPUの捨て牌
+
       const idx = chooseDiscardIndex(p.hand);
       discardTile = p.discard(idx);
 
+    // 人間の捨て牌
     } else {
-      // 人間の捨て牌
 
       // 立直している場合
       if(p.isRiichi){
@@ -602,10 +603,9 @@ onCheckRon(discardTile, discarderIndex) {
         const lastIndex = p.hand.length - 1;
         discardTile = p.discard(lastIndex);
 
+      // 立直していない場合
       } else {
-
-        // 立直していない場合は手動
-        return false;
+        return false;  // 手動（クリックによる打牌）
       }
     }
 
@@ -636,7 +636,10 @@ onCheckRon(discardTile, discarderIndex) {
     this.updateUI();
 
     this.state = "CHECK_RON";
-    return { discardTile, discarder };
+    return { 
+      discardTile,
+      discarder: this.turn  // 打牌したプレイヤー 
+    };
   }
 
   discardStep(){
