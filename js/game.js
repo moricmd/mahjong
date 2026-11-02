@@ -672,6 +672,7 @@ onCheckRon(discardTile, discarderIndex) {
     this.state = "TURN_START";
 
     const p = this.players[this.turn];
+    console.log(`[DEBUG] turn: ${this.turn}, isCPU: ${p.isCPU}, isRiichi: ${p.isRiichi}`);
 
     // 立直しているなら自動打牌に1秒遅延を入れる
     if(p.isRiichi){
