@@ -670,12 +670,15 @@ onCheckRon(discardTile, discarderIndex) {
 
     const p = this.players[this.turn];
 
-    if (p.isCPU) {
+    // 立直しているなら自動打牌に1秒遅延を入れる
+    if(p.isRiichi){
+      setTimeout(() => this.step(), 1000);
+    } else if (p.isCPU) {
       // CPUなら自動で進行
       const delay = this.getRandomDelay();
       setTimeout(() => this.step(), delay);
     } else {
-      // 自分の番ならUIだけ更新
+      // 立直しておらず自分の番ならUIだけ更新
       this.updateUI();
     }
   }
