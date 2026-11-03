@@ -712,7 +712,7 @@ onCheckRon(discardTile, discarderIndex) {
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TURN_START";
 
-    console.log(`[NEXT_TURN] プレイヤー${this.turn}の手番を開始する`);
+    console.log(`[NEXT_TURN] プレイヤー${this.turn}の手番を開始`);
 
     const nextPlayer = this.players[this.turn];
     if(!nextPlayer.isCPU && !nextPlayer.isRiichi){
