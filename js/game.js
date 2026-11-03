@@ -57,6 +57,8 @@ export class Game {
 
     this.isWaitingRiichi = false;  // 立直ボタン押下時の待ちフラグ
 
+    this._isStepping = false;  // step()の多重実行を防ぐフラグ
+
 
     this.initGame();
   }
@@ -256,8 +258,15 @@ console.log(
   "color:#4CAF50; font-weight:bold;"
 );
 
+if(this._isStepping){
+  console.log(`[REJECT] step()の多重実行: state=${this.state}`);
+  return;
+}
+
+this._isStepping = true;
+
   
-    
+try{    
   switch (this.state) {
     case "TURN_START":
       this.onTurnStart();
@@ -295,6 +304,9 @@ console.log(
       alert("局終了（仮）");
       break;
    }
+  } finally {
+    this._isStepping = false;
+  }
 
   this.updateUI();
   this.autoContinue();
