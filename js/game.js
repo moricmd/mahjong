@@ -282,6 +282,10 @@ console.log(
       this.callStep();
       break;
 
+    case "DELAY":
+      this.onDelay();
+      break;
+
     case "NEXT_TURN":
       this.onNextTurn();
       break;
@@ -663,33 +667,60 @@ onCheckRon(discardTile, discarderIndex) {
     this.state = "CHECK_RON";
     this.step();
   }
+
+  // ----------
+  // DELAY
+  // ----------
+  onDelay(){
+
+    // プレイヤーの打牌後、次のプレイヤーに移る（NEXT_TURNに移る）前に
+    // 数秒間遅延を入れる
+
+    const p = this.players[this.turn];
+
+    if(p.isRiichi){
+      console.log(`[DELAY] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
+
+      // 立直者の遅延は1000ms
+      setTimeout(() => {
+        this.state = "NEXT_TURN";
+        this.step();
+      }, 1000);
+      return;
+    }
+
+    if(p.isCPU){
+      const delay = this.getRandomDelay();
+      console.log(`[DELAY] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
+
+      // CPUの打牌後は
+      setTimeout(() => {
+        this.state = "NEXT_TURN";
+        this.step();
+      }, delay);
+    }
+
+    console.log(`[DELAY] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
+    this.state = "NEXT_TURN";
+    this.step();
+  }
   
   // -------------------------
   // NEXT_TURN
   // -------------------------
   onNextTurn() {
-    const prevTurn = this.turn;
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TURN_START";
 
-    // 今打牌した人
-    const p = this.players[prevTurn];
-    console.log(`[DEBUG] turn: ${this.turn}, isCPU: ${p.isCPU}, isRiichi: ${p.isRiichi}`);
+    console.log(`[NEXT_TURN] プレイヤー${this.turn}の手番を開始する`);
 
-    // 立直しているなら自動打牌に1秒遅延を入れる
-    if(p.isRiichi){
-      console.log("立直者の打牌: 1000ms遅延");
-      setTimeout(() => this.step(), 10000000);
-    } else if (p.isCPU) {
-      // CPUなら自動で進行
-      const delay = this.getRandomDelay();
-      console.log(`CPUの遅延: ${delay * 1000}ms遅延`);
-      setTimeout(() => this.step(), delay * 1000);
-    } else {
-      // 立直しておらず自分の番ならUIだけ更新
-      console.log("未立直者の打牌: 遅延なし");
+    const nextPlayer = this.playera[this.turn];
+    if(!nextPlayer.isCPU && !nextPlayer.isRiichi){
       this.updateUI();
     }
+
+    this.step();
+
   }
 
 
