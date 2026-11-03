@@ -674,14 +674,17 @@ onCheckRon(discardTile, discarderIndex) {
 
     const p = this.players[this.turn];
 
+    let delayTime = 0;
+
     if(p.isRiichi){
       console.log(`[DELAY] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
 
       // 立直者の遅延は1000ms
+      delayTime = 1000;
       setTimeout(() => {
         this.state = "NEXT_TURN";
         this.step();
-      }, 1000);
+      }, delayTime);
       return;
     }
 
@@ -689,17 +692,23 @@ onCheckRon(discardTile, discarderIndex) {
       const delay = this.getRandomDelay();
       console.log(`[DELAY] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
 
-      // CPUの打牌後は
+      // CPUの遅延は2500 ~ 3500ms
+      delayTime = this.getRandomDelay();
       setTimeout(() => {
         this.state = "NEXT_TURN";
         this.step();
-      }, delay);
+      }, delayTime);
       return;
     }
 
-    console.log(`[DELAY] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
-    this.state = "NEXT_TURN";
-    this.step();
+    // 通常打牌では遅延なし
+    delayTime = 0;
+    setTimeout(() => {
+      console.log(`[DELAY] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
+      this.state = "NEXT_TURN";
+      this.step();
+    }, delayTime);
+
   }
   
   // -------------------------
