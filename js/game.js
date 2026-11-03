@@ -646,7 +646,13 @@ onCheckRon(discardTile, discarderIndex) {
     // 通常のプレイヤーかつ、打牌する牌がまだ指定されていない場合
     if(!p.isCPU && !p.isRiichi && cardIndex === null) return;
 
+    // CPUのとき、またはDISCARDではないときには打牌できない
+    if(p.isCPU || this.state !== "DISCARD"){ 
+      console.log("[REJECT] 打牌できるタイミングではない");
+      return;
+    }
     const discardResult = this.onDiscard(cardIndex);
+
 
     // 正常な打牌ができなかった場合
     if(!discardResult) return;
