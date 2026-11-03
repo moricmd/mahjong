@@ -334,31 +334,20 @@ onTurnStart() {
   }
 
   // ------------------------------
-  // 処理待ちとCPUの自動進行
+  // 遅延による自動進行
   // ------------------------------
   autoContinue() {
     const p = this.players[this.turn];
 
-    // プレイヤーの打牌待ちだけ止める
-    if (!p.isCPU && this.state === "DISCARD") {
+    // 自動進行を入れないタイミング
+    if ((!p.isCPU && this.state === "DISCARD") ||  // クリックによる打牌
+         this.state === "WAIT_CALL" ||             // 副露待ち
+         this.state === "DELAY"                    // 遅延発生中
+    ){
       return;
     }
-
-    // ポン・カン選択待ち
-    if (this.state === "WAIT_PON_KAN") {
-      return;
-    }
-    
-    // onCPUDiscardで管理
-    if (p.isCPU && this.state === "DISCARD") return;
-
-    // 次のプレイヤーに移る際は500ms
-    if (this.state === "NEXT_TURN") {
-      setTimeout(() => this.step(), 500);
-      return;
-    }
-
-    // 基本の処理遅延は300ms
+  
+    // stateが進むとき300msずつ遅延を入れる
     setTimeout(() => this.step(), 300);
     
   }
