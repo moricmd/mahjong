@@ -683,7 +683,7 @@ onCheckRon(discardTile, discarderIndex) {
     } else if (p.isCPU) {
       // CPUなら自動で進行
       const delay = this.getRandomDelay();
-      console.log(`CPUの遅延: ${delay}ms遅延`);
+      console.log(`CPUの遅延: ${delay * 1000}ms遅延`);
       setTimeout(() => this.step(), delay * 1000);
     } else {
       // 立直しておらず自分の番ならUIだけ更新
