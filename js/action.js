@@ -14,12 +14,16 @@ import { sameTile, getRiichiCandidates } from "./rules.js";
 export function onRiichi(game, playerIndex = 0) {
   const p = game.players[playerIndex];
 
-  // 聴牌確認
-  if (!canRiichi(game, playerIndex)) return;
+  judge = !canRiichi(game, playerIndex) || p.isRiichi || !p.isMenzen || p.score;
 
-  // 未立直で門前、持ち点1000点以上であるか確認
-  if (p.isRiichi || !p.isMenzen || p.score < 1000) return;
+  if(true){
+    if(!canRiichi(game, playerIndex)) console.log("[Reject] 立直できない状態");
+    if(p.isRiichi) console.log("[Reject] すでに立直している");
+    if(!p.isMenzen) console.log("[Reject] 門前でない");
+    if(p.score < 1000) console.log("[Reject] 持ち点が1000点未満");
 
+    if(judge) return;
+  }
   // 立直待ちのフラグ
   p.isWaitingRiichi = true;
 
@@ -29,7 +33,15 @@ export function onRiichi(game, playerIndex = 0) {
 // 立直キャンセルボタン
 export function onCancelRiichi(game, playerIndex = 0){
   const p = game.players[playerIndex];
-  if(!p || !p.isWaitingRiichi) return;
+  
+  judge = !p || !p.isWaitingRiichi;
+
+  if(true){
+    if(!p) console.log("[Reject] プレイヤーが存在しない");
+    if(!p.isWaitingRiichi) console.log("[Reject] 立直待ち状態ではない");
+
+    if(judge) return;
+  }
 
   // 立直待ちを解除する（宣言牌選択から戻る）
   p.isWaitingRiichi = false;
@@ -82,7 +94,7 @@ export function onPon(game, playerIndex, tile) {
   game.clearIppatsu();
 
   game.turn = playerIndex;
-  game.state = "DISCARD";
+  game.state = "Discard";
   game.updateUI();
 }
 
@@ -121,7 +133,7 @@ export function onAnkan(game, playerIndex, tile) {
   game.canDoubleRiichi = false;
   game.clearIppatsu();
 
-  game.state = "DRAW";
+  game.state = "Draw";
   game.updateUI();
 }
 
@@ -162,7 +174,7 @@ export function onDaiminkan(game, playerIndex, tile) {
   game.clearIppatsu();
 
   game.turn = playerIndex;
-  game.state = "DRAW";
+  game.state = "Draw";
   game.updateUI();
 }
 
@@ -193,7 +205,7 @@ export function onKakan(game, playerIndex, tile) {
     game.canDoubleRiichi = false;
     game.clearIppatsu();
 
-    game.state = "DRAW";
+    game.state = "Draw";
     game.updateUI();
   }
 
@@ -204,8 +216,10 @@ export function onNorth(game, playerIndex = 0) {
     const p = game.players[playerIndex];
 
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
-    if (idx < 0) return;
-
+    if (idx < 0){
+      console.log("[Reject] 北が手牌にない");
+      return;
+    }
     p.hand.splice(idx, 1);
 
     p.northCount++;
@@ -220,7 +234,7 @@ export function onNorth(game, playerIndex = 0) {
     game.canDoubleRiichi = false;
     game.clearIppatsu();
 
-    game.state = "CHECK_TSUMO";
+    game.state = "CheckTsumo";
     game.onCheckTsumo(); 
     game.updateUI();
   }
@@ -325,7 +339,7 @@ export function canTsumo(game, playerIndex = 0) {
 
 // ロン
 export function canRon(game) {
-  if (game.state === "WAIT_RON") {
+  if (game.state === "CheckRon") {
     const p = game.players[0];
     if (!p.isFuriten) {
       return true;
@@ -337,11 +351,11 @@ export function canRon(game) {
 
 // ポン
 export function canPon(game) {
-  return game.state === "WAIT_PON_KAN" && game.ponCandidates?.length > 0;
+  return game.state === "WaitCall" && game.ponCandidates?.length > 0;
 }
 
 /* canKan() {
-  return game.state === "WAIT_PON_KAN" && kanCandidates?.length > 0;
+  return game.state === "WaitCall" && kanCandidates?.length > 0;
 } */
 
 // カン
@@ -353,7 +367,7 @@ export function canKan(game) {
   // -------------------------
   // ① 他家の捨て牌 → 大明槓
   // -------------------------
-  if (game.state === "WAIT_PON_KAN") {
+  if (game.state === "WaitCall") {
     return game.kanCandidates?.length > 0; // 大明槓候補がある
   }
 
@@ -362,7 +376,7 @@ export function canKan(game) {
   // -------------------------
   const isMyTurn =
     (game.turn === 0) &&
-    (game.state === "CHECK_TSUMO" || game.state === "DISCARD");
+    (game.state === "CheckTsumo" || game.state === "Discard");
 
   if (!isMyTurn) return false;
 

@@ -29,7 +29,7 @@ export class Game {
       new Player(2, true)
     ];
 
-    this.state = "INIT";
+    this.state = "Init";
     this.turn = 0; // 手番管理
     this.turnCount = 0; // 巡目カウンター
 
@@ -85,7 +85,7 @@ export class Game {
     this.lastDiscarder = null;
     
     this.buildWall();
-    this.state = "DEAL";
+    this.state = "Deal";
     this.deal();
   }
 
@@ -116,7 +116,7 @@ export class Game {
 
     if (this.autoSort) this.sortHand(0);
 
-    this.state = "TURN_START";
+    this.state = "TurnStart";
     this.updateUI();
   }
 
@@ -138,7 +138,11 @@ export class Game {
           const isCandidates = candidates.some(c => c.suit === tile.suit && c.value === tile.value);
 
           // 宣言牌候補でなければ打牌できない
-          if(!isCandidates) return;
+          if(!isCandidates) {
+            console.log("[Reject] 宣言牌ではない");
+            return;
+          }
+
         }
 
         this.discardStep(index);
@@ -206,8 +210,10 @@ clearIppatsu() {
 // -------------------------
 sortHand(playerIndex) {
   const p = this.players[playerIndex];
-  if (p.hand.length !== 13) return;
-
+  if (p.hand.length !== 13) {
+    console.log("[Reject] 手牌が13枚ではない");
+    return;
+  }
   const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
   const dragonOrder = { 1: 0, 2: 1, 3: 2 };
   const suitOrder = { man: 0, pin: 1, sou: 2, wind: 3, dragon: 4 };
@@ -254,12 +260,12 @@ step() {
 const p = this.players[this.turn];
 const windChar = {1:"東", 2:"南", 3:"西"};
 console.log(
-  `%c[STEP] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
+  `%c[Step] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
   "color:#4CAF50; font-weight:bold;"
 );
 
 if(this._isStepping){
-  console.log(`[REJECT] step()の多重実行: state=${this.state}`);
+  console.log(`[Reject] step()の多重実行: state=${this.state}`);
   return;
 }
 
@@ -268,39 +274,39 @@ this._isStepping = true;
   
 try{    
   switch (this.state) {
-    case "TURN_START":
+    case "TurnStart":
       this.onTurnStart();
       break;
 
-    case "DRAW":
+    case "Draw":
       this.onDraw();
       break;
 
-    case "CHECK_TSUMO":
+    case "CheckTsumo":
       this.tsumoStep();
       break;
 
-    case "DISCARD":
+    case "Discard":
       this.discardStep();
       break;
     
-    case "CHECK_RON":
+    case "CheckRon":
       this.ronStep();
       break;
 
-    case "WAIT_CALL":
+    case "WaitCall":
       this.callStep();
       break;
 
-    case "DELAY":
+    case "Delay":
       this.onDelay();
       break;
 
-    case "NEXT_TURN":
+    case "NextTurn":
       this.onNextTurn();
       break;
 
-    case "END_ROUND":
+    case "EndRound":
       alert("局終了（仮）");
       break;
    }
@@ -328,7 +334,7 @@ onTurnStart() {
     return;
   }
 
-  this.state = "DRAW";
+  this.state = "Draw";
 }
 
 
@@ -342,7 +348,7 @@ onTurnStart() {
 
     this.turnCount++; // 巡目を進める
 
-    this.state = "CHECK_TSUMO";
+    this.state = "CheckTsumo";
   }
 
   // ------------------------------
@@ -352,10 +358,11 @@ onTurnStart() {
     const p = this.players[this.turn];
 
     // 自動進行を入れないタイミング
-    if ((!p.isCPU && this.state === "DISCARD") ||  // クリックによる打牌
-         this.state === "WAIT_CALL" ||             // 副露待ち
-         this.state === "DELAY"                    // 遅延発生中
+    if ((!p.isCPU && this.state === "Discard") ||  // クリックによる打牌
+         this.state === "WaitCall" ||             // 副露待ち
+         this.state === "Delay"                    // 遅延発生中
     ){
+      console.log("[Reject] 自動進行は行わない");
       return;
     }
   
@@ -376,7 +383,7 @@ onTurnStart() {
   
 
   // -------------------------
-  // CHECK_TSUMO → 和了判定
+  // CheckTsumo → 和了判定
   // -------------------------
 
 /*
@@ -527,7 +534,7 @@ tsumoStep(){
   }
 
   // 和了していなければ打牌へ
-  this.state = "DISCARD";
+  this.state = "Discard";
 
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   const p = this.players[this.turn];
@@ -645,7 +652,7 @@ onCheckRon(discardTile, discarderIndex) {
     if(this.autoSort) this.sortHand(this.turn);
     this.updateUI();
 
-    this.state = "CHECK_RON";
+    this.state = "CheckRon";
     return { 
       discardTile,
       discarder: this.turn  // 打牌したプレイヤー 
@@ -658,14 +665,14 @@ onCheckRon(discardTile, discarderIndex) {
 
 
     // DISCARDではないときには打牌できない
-    if(this.state !== "DISCARD"){ 
-      console.log("[REJECT] 打牌できるタイミングではない");
+    if(this.state !== "Discard"){ 
+      console.log("[Reject] 打牌できるタイミングではない");
       return;
     }
 
     // クリックによる打牌だが捨てる牌が指定されていない
     if(!p.isCPU && cardIndex === null){
-      console.log("[REJECT] 捨てる牌が指定されていない");
+      console.log("[Reject] 捨てる牌が指定されていない");
       return;
     }
     const discardResult = this.onDiscard(cardIndex);
@@ -673,14 +680,14 @@ onCheckRon(discardTile, discarderIndex) {
 
     // 正常な打牌ができなかった場合
     if(!discardResult){
-      console.log("[REJECT] 正常に打牌できなかった");
+      console.log("[Reject] 正常に打牌できなかった");
       return;
     }
 
     const { discardTile, discarder } = discardResult;
     this.pendingDiscard = { discardTile, discarder };
 
-    this.state = "CHECK_RON";
+    this.state = "CheckRon";
     this.step();
   }
 
@@ -697,12 +704,12 @@ onCheckRon(discardTile, discarderIndex) {
     let delayTime = 0;
 
     if(p.isRiichi){
-      console.log(`[DELAY] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
+      console.log(`[Delay] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
 
       // 立直者の遅延は1000ms
       delayTime = 1000;
       setTimeout(() => {
-        this.state = "NEXT_TURN";
+        this.state = "NextTurn";
         this.step();
       }, delayTime);
       return;
@@ -710,12 +717,12 @@ onCheckRon(discardTile, discarderIndex) {
 
     if(p.isCPU){
       const delay = this.getRandomDelay();
-      console.log(`[DELAY] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
+      console.log(`[Delay] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
 
       // CPUの遅延は2500 ~ 3500ms
       delayTime = this.getRandomDelay();
       setTimeout(() => {
-        this.state = "NEXT_TURN";
+        this.state = "NextTurn";
         this.step();
       }, delayTime);
       return;
@@ -724,8 +731,8 @@ onCheckRon(discardTile, discarderIndex) {
     // 通常打牌では遅延なし
     delayTime = 0;
     setTimeout(() => {
-      console.log(`[DELAY] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
-      this.state = "NEXT_TURN";
+      console.log(`[Delay] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
+      this.state = "NextTurn";
       this.step();
     }, delayTime);
 
@@ -736,9 +743,9 @@ onCheckRon(discardTile, discarderIndex) {
   // -------------------------
   onNextTurn() {
     this.turn = this.getNextTurnIndex(this.turn);
-    this.state = "TURN_START";
+    this.state = "TurnStart";
 
-    console.log(`[NEXT_TURN] プレイヤー${this.turn}の手番を開始`);
+    console.log(`[NextTurn] プレイヤー${this.turn}の手番を開始`);
 
     const nextPlayer = this.players[this.turn];
     if(!nextPlayer.isCPU && !nextPlayer.isRiichi){
@@ -852,12 +859,12 @@ ronStep(){
   }
 
   this.pendingDiscard = null;
-  this.state = "WAIT_CALL";
+  this.state = "WaitCall";
   this.step();
 }
 
 callStep(){
-  this.state = "DELAY";
+  this.state = "Delay";
   this.step();
 }
 
@@ -892,7 +899,7 @@ endGame() {
 
   alert(resultMsg);
 
-  this.state = "END_ROUND";
+  this.state = "EndRound";
 }
 
 
@@ -1062,7 +1069,7 @@ startNewHand() {
   this.turn = this.dealer;
 
   // --- 配牌 ---
-  this.state = "DEAL";
+  this.state = "Deal";
   this.deal();
 
 
@@ -1200,12 +1207,12 @@ updateActionButtons() {
   // -------------------------
 
   // 他家の捨て牌でポン・カン待ち
-  const isCallTurn = (this.state === "WAIT_PON_KAN");
+  const isCallTurn = (this.state === "WaitCall");
 
-  // 自分のツモ番（CHECK_TSUMO → DISCARD）
+  // 自分のツモ番（CheckTsumo → Discard）
   const isMyTurn =
     (this.turn === 0) &&
-    (this.state === "CHECK_TSUMO" || this.state === "DISCARD");
+    (this.state === "CheckTsumo" || this.state === "Discard");
 
   if (!isCallTurn && !isMyTurn) {
     return; // 何も表示しない
