@@ -643,19 +643,27 @@ onCheckRon(discardTile, discarderIndex) {
   discardStep(cardIndex = null){
     const p = this.players[this.turn];
 
-    // 通常のプレイヤーかつ、打牌する牌がまだ指定されていない場合
-    if(!p.isCPU && !p.isRiichi && cardIndex === null) return;
 
-    // CPUのとき、またはDISCARDではないときには打牌できない
-    if(p.isCPU || this.state !== "DISCARD"){ 
+
+    // DISCARDではないときには打牌できない
+    if(this.state !== "DISCARD"){ 
       console.log("[REJECT] 打牌できるタイミングではない");
+      return;
+    }
+
+    // クリックによる打牌だが捨てる牌が指定されていない
+    if(!p.isCPU && cardIndex === null){
+      console.log("[REJECT] 捨てる牌が指定されていない");
       return;
     }
     const discardResult = this.onDiscard(cardIndex);
 
 
     // 正常な打牌ができなかった場合
-    if(!discardResult) return;
+    if(!discardResult){
+      console.log("[REJECT] 正常に打牌できなかった");
+      return;
+    }
 
     const { discardTile, discarder } = discardResult;
     this.pendingDiscard = { discardTile, discarder };
