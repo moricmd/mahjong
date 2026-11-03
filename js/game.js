@@ -679,12 +679,12 @@ onCheckRon(discardTile, discarderIndex) {
     // 立直しているなら自動打牌に1秒遅延を入れる
     if(p.isRiichi){
       console.log("立直者の打牌: 1000ms遅延");
-      setTimeout(() => this.step(), 1000);
+      setTimeout(() => this.step(), 10000000);
     } else if (p.isCPU) {
       // CPUなら自動で進行
       const delay = this.getRandomDelay();
       console.log(`CPUの遅延: ${delay}ms遅延`);
-      setTimeout(() => this.step(), delay);
+      setTimeout(() => this.step(), delay * 1000);
     } else {
       // 立直しておらず自分の番ならUIだけ更新
       console.log("未立直者の打牌: 遅延なし");
