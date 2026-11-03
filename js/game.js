@@ -823,6 +823,7 @@ ronStep(){
 
 callStep(){
   this.state = "DELAY";
+  this.step();
 }
 
 
