@@ -277,6 +277,7 @@ console.log(
     
     case "CHECK_RON":
       this.ronStep();
+      break;
 
     case "WAIT_CALL":
       this.callStep();
@@ -698,6 +699,7 @@ onCheckRon(discardTile, discarderIndex) {
         this.state = "NEXT_TURN";
         this.step();
       }, delay);
+      return;
     }
 
     console.log(`[DELAY] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
