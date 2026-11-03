@@ -831,7 +831,7 @@ ronStep(){
 }
 
 callStep(){
-  this.state = "NEXT_TURN";
+  this.state = "DELAY";
 }
 
 
