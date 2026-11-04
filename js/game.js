@@ -575,7 +575,7 @@ tsumoStep(){
     }
 
     if(p.isCPU){
-      console.log(`[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
+      console.log(`[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`);
 
       // CPUの遅延は2500 ~ 3500ms
       delayTime = this.getRandomDelay();
