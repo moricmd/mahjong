@@ -864,8 +864,40 @@ ronStep(){
 }
 
 callStep(){
-  this.state = "Delay";
-  this.step();
+  const p = this.players[this.turn];
+  const discardTile = this.pendingDiscard.discardTile;
+
+  let canCall = false;
+
+  for(let i = 0; i < this.players.length; i++){
+    if(i === this.turn) continue;
+    const targetPlayer = this.players[i];
+    const result = this.matchCallCount(targetPlayer, discardTile);
+    const { canPon, canKan } = result;
+
+    if(canPon || canKan){
+
+      canCall = true;
+      console.log(`[WaitCall] プレイヤー${i}は${canPon ? "ポン" : ""} ${canKan ? "カン" : ""} が可能`);
+    }
+  }
+
+  if(!canCall){
+    console.log(`[WaitCall] 副露できるプレイヤーがいない`);
+    this.state = "Delay";
+    this.step();
+  }
+}
+
+matchCallCount(player, tile){
+
+  const len = player.hand.filter(t => t.suit === tile.suit && 
+                                 t.value === tile.value).length;
+
+  return {
+    canPon: len >= 2,
+    canKan: len >= 3
+  };
 }
 
 
