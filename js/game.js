@@ -752,7 +752,8 @@ callStep(){
   const p = this.players[this.turn];
   const discardTile = this.pendingDiscard.discardTile;
 
-  let canCall = false;
+  let canCall = false;       // 一人でも副露できるか
+  let humanCanCall = false;  // 人間が副露できるか
 
   for(let i = 0; i < this.players.length; i++){
     if(i === this.turn) continue;
@@ -764,8 +765,20 @@ callStep(){
 
       canCall = true;
       console.log(`[WaitCall: callStep] プレイヤー${i}は${canPon ? "ポン" : ""} ${canKan ? "カン" : ""} が可能`);
+
+      // 人間が副露できる場合
+      if(!targetPlayer.isCPU){
+        humanCanCall = true;
+
+      // CPUが副露できる場合
+      } else {
+        //
+        //  CPUが副露するかを判定
+        //
+      }
     }
   }
+
 
   this.pendingDiscard = null;
 
@@ -773,8 +786,12 @@ callStep(){
     console.log(`[Reject: callStep] 副露できるプレイヤーがいない`);
     this.state = "Delay";
     this.scheduleStep(300);
-  } else {
+  } else if(humanCanCall){
     console.log("[WaitCall: callStep] 副露選択待ち");
+  } else {
+    console.log("[WaitCall: callStep] CPUなので副露をスキップした");
+    this.state = "Delay";
+    this.scheduleStep(300);
   }
 }
 
