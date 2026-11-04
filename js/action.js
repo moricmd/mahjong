@@ -16,14 +16,22 @@ export function onRiichi(game, playerIndex = 0) {
 
   judge = !canRiichi(game, playerIndex) || p.isRiichi || !p.isMenzen || p.score;
 
-  if(true){
-    if(!canRiichi(game, playerIndex)) console.log("[Reject] 立直できない状態");
-    if(p.isRiichi) console.log("[Reject] すでに立直している");
-    if(!p.isMenzen) console.log("[Reject] 門前でない");
-    if(p.score < 1000) console.log("[Reject] 持ち点が1000点未満");
+    if(!canRiichi(game, playerIndex)) {
+      console.log("[Reject] 立直できない状態");
+      return;
+    }
+    if(p.isRiichi){
+      console.log("[Reject] すでに立直している");
+      return;
+    }
+    if(!p.isMenzen){
+      console.log("[Reject] 門前でない");
+      return;
+    }
+    if(p.score < 1000){
+      console.log("[Reject] 持ち点が1000点未満");
+      return;}
 
-    if(judge) return;
-  }
   // 立直待ちのフラグ
   p.isWaitingRiichi = true;
 
@@ -34,14 +42,15 @@ export function onRiichi(game, playerIndex = 0) {
 export function onCancelRiichi(game, playerIndex = 0){
   const p = game.players[playerIndex];
   
-  judge = !p || !p.isWaitingRiichi;
+    if(!p){
+      console.log("[Reject] プレイヤーが存在しない");
+      return;
+    }
+    if(!p.isWaitingRiichi){
+      console.log("[Reject] 立直待ち状態ではない");
+      return;
+    }
 
-  if(true){
-    if(!p) console.log("[Reject] プレイヤーが存在しない");
-    if(!p.isWaitingRiichi) console.log("[Reject] 立直待ち状態ではない");
-
-    if(judge) return;
-  }
 
   // 立直待ちを解除する（宣言牌選択から戻る）
   p.isWaitingRiichi = false;

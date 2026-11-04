@@ -322,6 +322,7 @@ try{
   // TURN_START
   // -------------------------
 onTurnStart() {
+  console.log("[TurnStart: onTurnStart] 開始");
   if (this.wallIndex >= this.wall.length) {
     // ★ 流局処理（END_ROUND にしない）
     const parent = this.dealer;
@@ -335,6 +336,7 @@ onTurnStart() {
   }
 
   this.state = "Draw";
+  this.scheduleStep(300);
 }
 
 
@@ -342,6 +344,7 @@ onTurnStart() {
   // DRAW → ツモ
   // -------------------------
   onDraw() {
+    console.log("[Draw: onDraw] 開始");
     const p = this.players[this.turn];
     const tile = this.wall[this.wallIndex++];
     p.draw(tile);
@@ -349,6 +352,7 @@ onTurnStart() {
     this.turnCount++; // 巡目を進める
 
     this.state = "CheckTsumo";
+    this.scheduleStep(300);
   }
  
   // ------------------------------
@@ -365,98 +369,8 @@ onTurnStart() {
   // -------------------------
   // CheckTsumo → 和了判定
   // -------------------------
-
-/*
-onCheckTsumo() {
-
-  const p = this.players[this.turn];
-
-  isTenpaiNow(this, this.turn);
-
-  // 聴牌していなければ打牌へ
-  if(!p.isTenpai){
-
-    // CPUの場合
-    if (p.isCPU) {
-      const idx = chooseDiscardIndex(p.hand);
-      const discardTile = p.discard(idx);
-
-      if (this.onCheckRon(discardTile, this.turn)) return;
-      if (this.autoSort) this.sortHand(this.turn);
-
-      this.state = "NEXT_TURN";
-    
-    // プレイヤーの場合
-    } else {
-      this.state = "DISCARD";
-    }
-    return;
-  }
-
-  // ツモ牌を取り出す
-  const lastTile = p.hand[p.hand.length - 1];
-
-  // ツモ牌が待ち牌に含まれているか（和了したか）を判定
-  const isWaitingTiles = p.waitingTiles.some(
-    w => w.suit === lastTile.suit && w.value === lastTile.value
-  );
-
-  // 待ち牌でない場合はreturn
-  if(!isWaitingTiles){
-    this.state = "DISCARD";
-    return;
-  }
-
-  console.log("==ツモチェック==");
-  console.log("プレイヤー:", this.turn);
-  console.log("isRiichi:", p.isRiichi);
-  console.log("手牌枚数:", p.hand.length);
-  console.log("手牌:", JSON.stringify(p.hand));
-  console.log("ツモ牌:", JSON.stringify(lastTile));
-
-
-  // ドラ表示牌の部分を取り出す
-  const openDora = this.doraIndicators.slice(0, this.openDoraCount);
-  const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
-
-  const result = judgeYaku(
-    p,
-    p.hand,
-    lastTile,
-    true,   // isTsumo
-    this.playerWind,
-    1,
-    openDora,
-    uraDora,
-    this.wallIndex >= this.wall.length
-  );
-
-  // 立直していた場合の処理（先に飜を確定させる）
-  if (p.isRiichi) {
-    result.han += 1; // 立直
-    if (p.isIppatsu) result.han += 1; // 一発
-    this.uraIndicators = [this.wall[this.wallIndex++]];
-  }
-
-  if (result.han > 0) {
-
-    const winnerIndex = this.turn;
-    const renchan = (winnerIndex === this.dealer);
-
-    // ★ 点数計算
-    const gainScore = calcScore(this, this.turn, null, false, result.han, result.fu);
-
-    alert(`プレイヤー${this.turn} ツモ和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
-
-    this.nextRound(renchan, winnerIndex);
-    return;
-
-  }
-
-}
-*/
-
 onCheckTsumo(){
+  console.log("[CheckTsumo: onCheckTsumo] 開始");
 
   const p = this.players[this.turn];
   console.log(`プレイヤー${this.turn}の手番`);
@@ -473,8 +387,10 @@ onCheckTsumo(){
   let isTsumoWin = false;
   let result = null;
 
-  if(!isWaitingTiles) return null;
-
+  if(!isWaitingTiles){
+    console.log(`[Reject: onCheckTsumo] ツモ牌は待ち牌ではない`);
+    return null;
+  }
     // ドラ表示牌のめくられている部分を取り出す
     const openDora = this.doraIndicators.slice(0, this.openDoraCount);
     const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
@@ -496,19 +412,24 @@ onCheckTsumo(){
       if(p.isIppatsu) result.han += 1;
     }
 
-    if(result.han <= 0) return null;
+    if(result.han <= 0){
+      console.log(`[Reject: onCheckTsumo] ツモ和了していない`);
+      return null;
 
-    // ツモ和了成立の場合
-    return {
-      winnerIndex: this.turn,
-      result: result
-    };
-}
+      // ツモ和了成立の場合
+      return {
+        winnerIndex: this.turn,
+        result: result
+      };
+    }
+  }
 
 tsumoStep(){
+  console.log("[CheckTsumo: tsumoStep] 開始");
   const tsumoResult = this.onCheckTsumo();
 
   if(tsumoResult){
+    console.log(`[CheckTsumo: tsumoStep] プレイヤー${tsumoResult.winnerIndex}がツモ和了`);
     this.tsumoPayment(tsumoResult);
     return;
   }
@@ -519,6 +440,7 @@ tsumoStep(){
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
+    console.log(`[CheckTsumo: tsumoStep] 自動打牌する`);
     this.scheduleStep(300);
   }
 }
@@ -526,64 +448,19 @@ tsumoStep(){
   // -------------------------
   // ロン判定
   // -------------------------
-/*
-onCheckRon(discardTile, discarderIndex) {
-  for (let i = 0; i < 3; i++) {
-    if (i === discarderIndex) continue;
-
-    const p = this.players[i];
-    const tempHand = [...p.hand, discardTile];
-
-    const openDora = this.doraIndicators.slice(0, this.openDoraCount);
-    const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
-
-    const honbaBonus = this.honba * 300;
-    const kyotakuBonus = this.kyotaku * 1000;
-
-    const result = judgeYaku(
-      p,
-      tempHand,
-      discardTile,
-      false,  // isTsumo
-      this.playerWind,
-      1,
-      openDora,
-      uraDora,
-      this.wallIndex >= this.wall.length
-    );
-
-    if (result.han > 0) {
-
-      // ★ 先に winnerIndex を宣言する（最重要）
-      const winnerIndex = i;
-      const renchan = (winnerIndex === this.dealer);
-
-      // ★ 点数計算
-      const gainScore = calcScore(this, winnerIndex, discarderIndex, true, result.han, result.fu);
-
-      alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
-
-      this.nextRound(renchan, winnerIndex);
-      return true;
-    }
-  }
-
-  return false;
-}
-*/
-
 
 
   // -------------------------
   // DISCARD
   // -------------------------
   onDiscard(cardIndex = null){
+    console.log("[Discard: onDiscard] 開始");
     const p = this.players[this.turn];
     let discardTile = null;
 
     // CPUの捨て牌
     if(p.isCPU){
-
+      console.log("[Discard: onDiscard] CPUの打牌");
       const idx = chooseDiscardIndex(p.hand);
       discardTile = p.discard(idx);
 
@@ -593,12 +470,14 @@ onCheckRon(discardTile, discarderIndex) {
       // 立直している場合
       if(p.isRiichi){
 
+        console.log("[Discard: onDiscard] 立直者の打牌（ツモ切り）");
         // ツモ切りする
         const lastIndex = p.hand.length - 1;
         discardTile = p.discard(lastIndex);
 
       // 立直していない場合
       } else {
+        console.log("[Discard: onDiscard] クリックによる打牌");
         if(cardIndex === null) return false;  // 手動（クリックによる打牌）
         discardTile = p.discard(cardIndex);
       }
@@ -608,6 +487,7 @@ onCheckRon(discardTile, discarderIndex) {
 
     // 一発消し
     if(p.isRiichi && p.isIppatsu){
+      console.log("[Discard: onDiscard] 一発フラグを消す");
       p.isIppatsu = false;
     }
 
@@ -621,10 +501,11 @@ onCheckRon(discardTile, discarderIndex) {
       this.kyotaku++;
       p.isIppatsu = true;  // 一発フラグ
 
-      console.log("立直した");
+      console.log("[Discard: onDiscard] 立直した");
 
       // ダブル立直
       if(this.turnCount === 1 && this.canDoubleRiichi){
+        console.log("[Discard: onDiscard] ダブル立直した");
         p.isDoubleRiichi = true;
       }
       checkDiscardFuriten(this, this.turn);
@@ -632,7 +513,6 @@ onCheckRon(discardTile, discarderIndex) {
     if(this.autoSort) this.sortHand(this.turn);
     this.updateUI();
 
-    this.state = "CheckRon";
     return { 
       discardTile,
       discarder: this.turn  // 打牌したプレイヤー 
@@ -640,17 +520,18 @@ onCheckRon(discardTile, discarderIndex) {
   }
 
   discardStep(cardIndex = null){
+    console.log("[Discard: discardStep] 開始");
     const p = this.players[this.turn];
 
     // DISCARDではないときには打牌できない
     if(this.state !== "Discard"){ 
-      console.log("[Reject] 打牌できるタイミングではない");
+      console.log("[Reject: discardStep] 打牌できるタイミングではない");
       return;
     }
 
     // クリックによる打牌だが捨てる牌が指定されていない
     if(!p.isCPU && cardIndex === null){
-      console.log("[Reject] 捨てる牌が指定されていない");
+      console.log("[Reject: discardStep] 捨てる牌が指定されていない");
       return;
     }
     const discardResult = this.onDiscard(cardIndex);
@@ -658,7 +539,7 @@ onCheckRon(discardTile, discarderIndex) {
 
     // 正常な打牌ができなかった場合
     if(!discardResult){
-      console.log("[Reject] 正常に打牌できなかった");
+      console.log("[Reject: discardStep] 正常に打牌できなかった");
       return;
     }
 
@@ -666,12 +547,15 @@ onCheckRon(discardTile, discarderIndex) {
     this.pendingDiscard = { discardTile, discarder };
 
     this.state = "CheckRon";
+    this.scheduleStep(300);
   }
 
   // ----------
   // DELAY
   // ----------
   onDelay(){
+
+    console.log("[Delay: onDelay] 開始");
 
     // プレイヤーの打牌後、次のプレイヤーに移る（NEXT_TURNに移る）前に
     // 数秒間遅延を入れる
@@ -681,7 +565,7 @@ onCheckRon(discardTile, discarderIndex) {
     let delayTime = 0;
 
     if(p.isRiichi){
-      console.log(`[Delay] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
+      console.log(`[Delay: onDelay] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`);
 
       // 立直者の遅延は1000ms
       delayTime = 1000;
@@ -691,7 +575,7 @@ onCheckRon(discardTile, discarderIndex) {
     }
 
     if(p.isCPU){
-      console.log(`[Delay] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
+      console.log(`[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
 
       // CPUの遅延は2500 ~ 3500ms
       delayTime = this.getRandomDelay();
@@ -700,7 +584,9 @@ onCheckRon(discardTile, discarderIndex) {
       return;
     }
 
+
     // 通常打牌では遅延なし
+    console.log("[Delay: onDelay] クリックによる打牌: 遅延なし");
     delayTime = 0;
     this.state = "NextTurn";
     this.scheduleStep(delayTime);
@@ -710,13 +596,15 @@ onCheckRon(discardTile, discarderIndex) {
   // NEXT_TURN
   // -------------------------
   onNextTurn() {
+    console.log("[NextTurn: onNextTurn]");
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TurnStart";
 
-    console.log(`[NextTurn] プレイヤー${this.turn}の手番を開始`);
+    console.log(`[NextTurn: onNextTurn] プレイヤー${this.turn}の手番を開始`);
 
     const nextPlayer = this.players[this.turn];
     if(!nextPlayer.isCPU && !nextPlayer.isRiichi){
+      console.log("[NextTurn: onNextTurn] 次のプレイヤーが人間なのでUIを更新");
       this.updateUI();
     }
 
@@ -745,7 +633,7 @@ onCheckRon(discardTile, discarderIndex) {
 }
 
 onCheckRon(discardTile, discarderIndex){
-
+  console.log("[CheckRon: onCheckRon] 開始");
   for(let i = 0; i < 3; i++){
     if(i === discarderIndex) continue;
 
@@ -758,6 +646,14 @@ onCheckRon(discardTile, discarderIndex){
 
     if(!isWaitingTiles || p.isFuriten) continue;
 
+    if(!isWaitingTiles){
+      console.log("[Reject: onCheckRon] 待ち牌ではない");
+      continue;
+    }
+
+    if(p.isFuriten){
+      console.log("[Reject: onCheckRon] フリテンである");
+    }
     const tempHand = [...p.hand, discardTile];
     const openDora = this.doraIndicators.slice(0, this.openDoraCount);
     const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount): [];
@@ -776,6 +672,7 @@ onCheckRon(discardTile, discarderIndex){
 
     if(result.han > 0){
       
+      console.log("[CheckRon: onCheckRon] ロン和了した");
       // ロンならJSONを返す
       return {
         winnerIndex: i,
@@ -785,11 +682,12 @@ onCheckRon(discardTile, discarderIndex){
     }
   }
   // ロンでないならnull
+  console.log("[CheckRon: onCheckRon] ロン和了していない");
   return null;
 }
 
 tsumoPayment(tsumoResult){
-  
+  console.log("[CheckTsumo: tsumoPayment] 開始");
   const { winnerIndex, result } = tsumoResult;
   const p = this.players[winnerIndex];
 
@@ -799,6 +697,10 @@ tsumoPayment(tsumoResult){
   const renchan = (winnerIndex === this.dealer);
   const gainScore = calcScore(this, winnerIndex, null, result.han, result.fu);
   alert(`プレイヤー${winnerIndex} ツモ和了! han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
+  
+  console.log(`[CheckTsumo: tsumoPayment] プレイヤー${winnerIndex} ツモ: han= ${result.han}\n
+    yaku=${result.yakuList.join(" / ")}\n
+    score=${gainScore}\n`);
 
   // 次の局へ
   this.nextRound(renchan, winnerIndex); 
@@ -807,32 +709,42 @@ tsumoPayment(tsumoResult){
 // ロンの処理
 ronPayment(ronResult){
 
+  console.log("[CheckRon: ronPayment] 開始");
   const { winnerIndex, discarderIndex, result} = ronResult;
   const renchan = (winnerIndex === this.dealer);
 
   const gainScore = calcScore(this, winnerIndex, discarderIndex, result.han, result.fu);
 
   alert(`プレイヤー${winnerIndex} が ロン和了！ han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
+
+    console.log(`[CheckRon: ronPayment] プレイヤー${winnerIndex} ロン: han= ${result.han}\n
+    yaku=${result.yakuList.join(" / ")}\n
+    score=${gainScore}\n`);
+
   this.nextRound(renchan, winnerIndex);
 }
 
 ronStep(){
+  console.log("[CheckRon: ronStep] 開始");
   const { discardTile, discarder } = this.pendingDiscard;
   const ronResult = this.onCheckRon(discardTile, discarder);
 
   if(ronResult){
+    console.log("[CheckRon: ronStep] ロン和了成立");
     this.ronPayment(ronResult);
     this.pendingDiscard = null;
     return;
   }
 
+  console.log("[CheckRon: ronStep] ロン和了しなかった");
   this.state = "WaitCall";
   this.scheduleStep(300);
 }
 
 callStep(){
+  console.log("[WaitCall: callStep] 開始");
   if(!this.pendingDiscard || !this.pendingDiscard.discardTile){
-    console.log("[Reject] 捨て牌情報がないためDelayへ移行");
+    console.log("[Reject: callStep] 捨て牌情報がないためDelayへ移行");
     this.state = "Delay";
     this.scheduleStep(300);
     return;
@@ -851,23 +763,24 @@ callStep(){
     if(canPon || canKan){
 
       canCall = true;
-      console.log(`[WaitCall] プレイヤー${i}は${canPon ? "ポン" : ""} ${canKan ? "カン" : ""} が可能`);
+      console.log(`[WaitCall: callStep] プレイヤー${i}は${canPon ? "ポン" : ""} ${canKan ? "カン" : ""} が可能`);
     }
   }
 
   this.pendingDiscard = null;
 
   if(!canCall){
-    console.log(`[WaitCall] 副露できるプレイヤーがいない`);
+    console.log(`[Reject: callStep] 副露できるプレイヤーがいない`);
     this.state = "Delay";
     this.scheduleStep(300);
   } else {
-    console.log("[WaitCall] 副露選択待ち");
+    console.log("[WaitCall: callStep] 副露選択待ち");
   }
 }
 
 matchCallCount(player, tile){
 
+  console.log("[WaitCall: matchCallCount] 開始");
   const len = player.hand.filter(t => t.suit === tile.suit && 
                                  t.value === tile.value).length;
 
@@ -884,12 +797,16 @@ matchCallCount(player, tile){
 
 // step()の予約
 scheduleStep(delay){
+  console.log("[Timer: scheduleStep] 開始");
+
   if(this.timerId){
+    console.log("[Timer: scheduleStep] 既存タイマーの破棄");
     clearTimeout(this.timerId);
     this.timerId = null;
   }
 
   this.timerId = setTimeout(() => {
+    console.log(`[Timer: scheduleStep] 次のstate（${this.state}）を開始`);
     this.timerId = null;
     this.step();
   }, delay);
@@ -897,7 +814,9 @@ scheduleStep(delay){
 
 // タイマーのキャンセル
 clearTimer(){
+  console.log("[Timer: clearTimer] 開始");
   if(this.timerId){
+    console.log("[Timer: clearTimer] タイマーのキャンセル");
     this.clearTimeout(this.timerId);
     this.timerId = null;
   }

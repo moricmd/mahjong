@@ -109,7 +109,7 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
 
   // 捨て牌に待ち牌が含まれているか
   for (const w of waits) {
-    if (discards.includes(w)) {
+    if (discards.some(d => sameTile(d, w))) {
       p.isFuriten = true;
       p.furitenType = "discard";
       return;
