@@ -856,12 +856,17 @@ ronStep(){
     return;
   }
 
-  this.pendingDiscard = null;
   this.state = "WaitCall";
   setTimeout(() => this.step(), 300);
 }
 
 callStep(){
+  if(!this.pendingDiscard || !this.pendingDiscard.discardTile){
+    console.log("[Reject] 捨て牌情報がないためDelayへ移行");
+    this.state = "Delay";
+    setTimeout(() => this.step(), 300);
+    return;
+  }
   const p = this.players[this.turn];
   const discardTile = this.pendingDiscard.discardTile;
 
@@ -879,6 +884,8 @@ callStep(){
       console.log(`[WaitCall] プレイヤー${i}は${canPon ? "ポン" : ""} ${canKan ? "カン" : ""} が可能`);
     }
   }
+
+  this.pendingDiscard = null;
 
   if(!canCall){
     console.log(`[WaitCall] 副露できるプレイヤーがいない`);

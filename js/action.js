@@ -235,8 +235,22 @@ export function onNorth(game, playerIndex = 0) {
     game.clearIppatsu();
 
     game.state = "CheckTsumo";
-    game.onCheckTsumo(); 
-    game.updateUI();
+    const result = game.onCheckTsumo();
+    if(result){
+      game.tsumoPayment(result);
+    } else {
+      console.log("[CheckTsumo] 嶺上牌で和了しなかった");
+      game.state = "Discard";
+      game.updateUI();
+
+      if(p.isCPU || p.isRiichi){
+        if(p.isCPU) console.log("[CheckTsumo] CPUの打牌");
+        if(p.isRiichi) console.log("[CheckTsumo] 立直者の打牌");
+
+        setTimeout(() => game.step(), 300);
+      }
+    }
+
   }
 
   // -------------------------
