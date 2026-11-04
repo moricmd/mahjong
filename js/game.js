@@ -57,6 +57,7 @@ export class Game {
 
     this.isWaitingRiichi = false;  // 立直ボタン押下時の待ちフラグ
 
+    this.timerId = null;  // step()進行用タイマーの管理
     this._isStepping = false;  // step()の多重実行を防ぐフラグ
 
 
@@ -518,7 +519,7 @@ tsumoStep(){
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
-    setTimeout(() => this.step(), 300);
+    this.scheduleStep(300);
   }
 }
 
@@ -665,7 +666,6 @@ onCheckRon(discardTile, discarderIndex) {
     this.pendingDiscard = { discardTile, discarder };
 
     this.state = "CheckRon";
-    setTimeout(() => this.step(), 300);
   }
 
   // ----------
@@ -685,34 +685,25 @@ onCheckRon(discardTile, discarderIndex) {
 
       // 立直者の遅延は1000ms
       delayTime = 1000;
-      setTimeout(() => {
-        this.state = "NextTurn";
-        this.step();
-      }, delayTime);
+      this.state = "NextTurn";
+      this.scheduleStep(delayTime);
       return;
     }
 
     if(p.isCPU){
-      const delay = this.getRandomDelay();
       console.log(`[Delay] CPU（プレイヤー${this.turn}）の打牌: ${delay}ms遅延`);
 
       // CPUの遅延は2500 ~ 3500ms
       delayTime = this.getRandomDelay();
-      setTimeout(() => {
-        this.state = "NextTurn";
-        this.step();
-      }, delayTime);
+      this.state = "NextTurn";
+      this.scheduleStep(delayTime);
       return;
     }
 
     // 通常打牌では遅延なし
     delayTime = 0;
-    setTimeout(() => {
-      console.log(`[Delay] クリックによる打牌（プレイヤー${this.turn}の打牌）: 遅延なし`);
-      this.state = "NextTurn";
-      this.step();
-    }, delayTime);
-
+    this.state = "NextTurn";
+    this.scheduleStep(delayTime);
   }
   
   // -------------------------
@@ -729,7 +720,7 @@ onCheckRon(discardTile, discarderIndex) {
       this.updateUI();
     }
 
-    setTimeout(() => this.step(), 300);
+    this.scheduleStep(1500);
 
   }
 
@@ -836,14 +827,14 @@ ronStep(){
   }
 
   this.state = "WaitCall";
-  setTimeout(() => this.step(), 300);
+  this.scheduleStep(300);
 }
 
 callStep(){
   if(!this.pendingDiscard || !this.pendingDiscard.discardTile){
     console.log("[Reject] 捨て牌情報がないためDelayへ移行");
     this.state = "Delay";
-    setTimeout(() => this.step(), 300);
+    this.scheduleStep(300);
     return;
   }
   const p = this.players[this.turn];
@@ -869,7 +860,7 @@ callStep(){
   if(!canCall){
     console.log(`[WaitCall] 副露できるプレイヤーがいない`);
     this.state = "Delay";
-    setTimeout(() => this.step(), 300);
+    this.scheduleStep(300);
   } else {
     console.log("[WaitCall] 副露選択待ち");
   }
@@ -886,6 +877,31 @@ matchCallCount(player, tile){
   };
 }
 
+
+// ----------
+// タイマー
+// ----------
+
+// step()の予約
+scheduleStep(delay){
+  if(this.timerId){
+    clearTimeout(this.timerId);
+    this.timerId = null;
+  }
+
+  this.timerId = setTimeout(() => {
+    this.timerId = null;
+    this.step();
+  }, delay);
+}
+
+// タイマーのキャンセル
+clearTimer(){
+  if(this.timerId){
+    this.clearTimeout(this.timerId);
+    this.timerId = null;
+  }
+}
 
   // -------------------------
   // 場進行
@@ -1289,7 +1305,7 @@ updateActionButtons() {
       container.innerHTML = "";
       this.pendingDiscard = null;
       this.state = "Delay";
-      setTimeout(() => this.step(), 300);
+      this.scheduleStep(300);
                  }
   }
   

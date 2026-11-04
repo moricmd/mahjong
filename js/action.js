@@ -247,7 +247,7 @@ export function onNorth(game, playerIndex = 0) {
         if(p.isCPU) console.log("[CheckTsumo] CPUの打牌");
         if(p.isRiichi) console.log("[CheckTsumo] 立直者の打牌");
 
-        setTimeout(() => game.step(), 300);
+        game.scheduleStep(300);
       }
     }
 
