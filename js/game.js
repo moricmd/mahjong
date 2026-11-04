@@ -315,7 +315,6 @@ try{
   }
 
   this.updateUI();
-  this.autoContinue();
 }
 
   // -------------------------
@@ -349,26 +348,6 @@ onTurnStart() {
     this.turnCount++; // 巡目を進める
 
     this.state = "CheckTsumo";
-  }
-
-  // ------------------------------
-  // 遅延による自動進行
-  // ------------------------------
-  autoContinue() {
-    const p = this.players[this.turn];
-
-    // 自動進行を入れないタイミング
-    if ((!p.isCPU && this.state === "Discard") ||  // クリックによる打牌
-         this.state === "WaitCall" ||             // 副露待ち
-         this.state === "Delay"                    // 遅延発生中
-    ){
-      console.log("[Reject] 自動進行は行わない");
-      return;
-    }
-  
-    // stateが進むとき300msずつ遅延を入れる
-    setTimeout(() => this.step(), 300);
-    
   }
  
   // ------------------------------
@@ -1304,7 +1283,16 @@ updateActionButtons() {
 
   const slots = new Array(6).fill(null);
   
-  const skip = { name: "スキップ", handler: () => { container.innerHTML = ""; } }
+  const skip = { 
+    name: "スキップ",
+    handler: () => {
+      container.innerHTML = "";
+      this.pendingDiscard = null;
+      this.state = "Delay";
+      setTimeout(() => this.step(), 300);
+                 }
+  }
+  
   //
   //  slots = [0] [1] [2]
   //          [3] [4] [5]
