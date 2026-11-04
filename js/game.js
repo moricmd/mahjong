@@ -539,7 +539,7 @@ tsumoStep(){
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
-    this.step();
+    setTimeout(() => this.step(), 300);
   }
 }
 
@@ -662,8 +662,6 @@ onCheckRon(discardTile, discarderIndex) {
   discardStep(cardIndex = null){
     const p = this.players[this.turn];
 
-
-
     // DISCARDではないときには打牌できない
     if(this.state !== "Discard"){ 
       console.log("[Reject] 打牌できるタイミングではない");
@@ -688,7 +686,7 @@ onCheckRon(discardTile, discarderIndex) {
     this.pendingDiscard = { discardTile, discarder };
 
     this.state = "CheckRon";
-    this.step();
+    setTimeout(() => this.step(), 300);
   }
 
   // ----------
@@ -752,7 +750,7 @@ onCheckRon(discardTile, discarderIndex) {
       this.updateUI();
     }
 
-    this.step();
+    setTimeout(() => this.step(), 300);
 
   }
 
@@ -860,7 +858,7 @@ ronStep(){
 
   this.pendingDiscard = null;
   this.state = "WaitCall";
-  this.step();
+  setTimeout(() => this.step(), 300);
 }
 
 callStep(){
@@ -885,7 +883,9 @@ callStep(){
   if(!canCall){
     console.log(`[WaitCall] 副露できるプレイヤーがいない`);
     this.state = "Delay";
-    this.step();
+    setTimeout(() => this.step(), 300);
+  } else {
+    console.log("[WaitCall] 副露選択待ち");
   }
 }
 
