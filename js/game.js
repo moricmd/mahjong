@@ -433,13 +433,12 @@ onCheckTsumo(){
     if(result.han <= 0){
       console.log("%c[Reject: onCheckTsumo] ツモ和了していない", "color: #e44848;");
       return null;
-
+    }
       // ツモ和了成立の場合
       return {
         winnerIndex: this.turn,
         result: result
       };
-    }
   }
 
 tsumoStep(){
@@ -459,7 +458,7 @@ tsumoStep(){
   const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
     console.log("%c[CheckTsumo: tsumoStep] 自動打牌する", "color: #4b88c2;");
-    this.scheduleStep(300);
+    this.scheduleStep(500);
   }
 }
 
