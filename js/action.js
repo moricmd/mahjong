@@ -17,19 +17,19 @@ export function onRiichi(game, playerIndex = 0) {
   judge = !canRiichi(game, playerIndex) || p.isRiichi || !p.isMenzen || p.score;
 
     if(!canRiichi(game, playerIndex)) {
-      console.log("[Reject] 立直できない状態");
+      console.log("%c[Reject] 立直できない状態", "color: #e44848;");
       return;
     }
     if(p.isRiichi){
-      console.log("[Reject] すでに立直している");
+      console.log("%c[Reject] すでに立直している", "color: #e44848;");
       return;
     }
     if(!p.isMenzen){
-      console.log("[Reject] 門前でない");
+      console.log("%c[Reject] 門前でない", "color: #e44848;");
       return;
     }
     if(p.score < 1000){
-      console.log("[Reject] 持ち点が1000点未満");
+      console.log("%c[Reject] 持ち点が1000点未満", "color: #e44848;");
       return;}
 
   // 立直待ちのフラグ
@@ -43,11 +43,11 @@ export function onCancelRiichi(game, playerIndex = 0){
   const p = game.players[playerIndex];
   
     if(!p){
-      console.log("[Reject] プレイヤーが存在しない");
+      console.log("%c[Reject] プレイヤーが存在しない", "color: #e44848;");
       return;
     }
     if(!p.isWaitingRiichi){
-      console.log("[Reject] 立直待ち状態ではない");
+      console.log("%c[Reject] 立直待ち状態ではない", "color: #e44848;");
       return;
     }
 
@@ -226,7 +226,7 @@ export function onNorth(game, playerIndex = 0) {
 
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
     if (idx < 0){
-      console.log("[Reject] 北が手牌にない");
+      console.log("%c[Reject] 北が手牌にない", "color: #e44848;");
       return;
     }
     p.hand.splice(idx, 1);
@@ -248,15 +248,15 @@ export function onNorth(game, playerIndex = 0) {
     if(result){
       game.tsumoPayment(result);
     } else {
-      console.log("[CheckTsumo] 嶺上牌で和了しなかった");
+      console.log("%c[CheckTsumo] 嶺上牌で和了しなかった", "color: #4b88c2;");
       game.state = "Discard";
       game.updateUI();
 
       if(p.isCPU || p.isRiichi){
-        if(p.isCPU) console.log("[CheckTsumo] CPUの打牌");
-        if(p.isRiichi) console.log("[CheckTsumo] 立直者の打牌");
+        if(p.isCPU) console.log("%c[CheckTsumo] CPUの打牌", "color: #4b88c2;");
+        if(p.isRiichi) console.log("%c[CheckTsumo] 立直者の打牌", "color: #4b88c2;");
 
-        game.scheduleStep(300);
+        game.scheduleStep(100);
       }
     }
 
@@ -287,21 +287,30 @@ export function canRiichi(game, playerIndex = 0) {
 
   // 基本条件のチェック
   if (game.turn !== playerIndex){
-    console.log("自分の手番でない");
+    console.log("%c[Reject: canRiichi] 自分の手番でない", "color: #e44848");
     return false;
   }
 
-  if (!p.isMenzen || p.isRiichi || p.score < 1000){
-    console.log("門前でない or すでに立直している or 1000点未満");
-    return false;
+  if(!p.isMenzen){
+    console.log("%c[Reject: canRiichi] 面前でない", "color: #e44848");;
+    return;
   }
+  if(p.isRiichi){
+    console.log("%c[Reject: canRiichi] すでに立直している", "color: #e44848");
+    return;
+  }
+  if(p.score < 1000){
+    console.log("%c[Reject: canRiichi] 持ち点が1000点未満", "color: #e44848");
+    return;
+  }
+
   if ((game.wall.length - game.wallIndex) < 4){
-    console.log("次のツモ番がない");
+    console.log("%c[Reject: canRiichi] 次のツモ番がない", "color: #e44848");
     return false;
   }
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
   if (p.hand.length % 3 !== 2){
-    console.log("手牌が揃っていない: 現在の手牌は", p.hand.length);
+    console.log(`%c[Reject: canRiichi] 手牌が揃っていない: 現在の手牌は${p.hand.length}枚`, "color: #e44848");
     return false;
   }
 

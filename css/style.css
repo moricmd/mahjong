@@ -451,6 +451,7 @@ body {
   grid-template-columns: repeat(3, 120px);
   grid-auto-rows: 40px;
   gap: 4px;
+
 }
 
 
