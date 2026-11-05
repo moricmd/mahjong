@@ -388,8 +388,8 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   // CheckTsumo → 和了判定
   // -------------------------
 onCheckTsumo(){
-  console.log(`%c[CheckTsumo: onCheckTsumo] 開
-    プレイヤー${this.turn}の手番`, "color: #4b88c2;");
+  console.log(`%c[CheckTsumo: onCheckTsumo] 開始
+  プレイヤー${this.turn}の手番`, "color: #4b88c2;");
 
   const p = this.players[this.turn];
   isTenpaiNow(this, this.turn);
@@ -595,20 +595,18 @@ tsumoStep(){
     let delayTime = 0;
 
     if(p.isRiichi){
-      console.log(`%c[Delay: onDelay] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`, "color: #4b88c2;");
-
       // 立直者の遅延は1000ms
       delayTime = 1000;
+      console.log(`%c[Delay: onDelay] 立直者（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #4b88c2;");
       this.state = "NextTurn";
       this.scheduleStep(delayTime);
       return;
     }
 
     if(p.isCPU){
-      console.log(`%c[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #4b88c2;");
-
-      // CPUの遅延は2500 ~ 3500ms
+      // CPUの遅延は500 ~ 1000ms
       delayTime = this.getRandomDelay();
+      console.log(`%c[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #4b88c2;");
       this.state = "NextTurn";
       this.scheduleStep(delayTime);
       return;
@@ -616,8 +614,8 @@ tsumoStep(){
 
 
     // 通常打牌では遅延なし
-    console.log("%c[Delay: onDelay] クリックによる打牌: 遅延なし", "color: #4b88c2;");
     delayTime = 0;
+    console.log("%c[Delay: onDelay] クリックによる打牌: 遅延なし", "color: #4b88c2;");
     this.state = "NextTurn";
     this.scheduleStep(delayTime);
   }
@@ -626,7 +624,7 @@ tsumoStep(){
   // NEXT_TURN
   // -------------------------
   onNextTurn() {
-    console.log("%c[NextTurn: onNextTurn]", "color: #4b88c2;");
+    console.log("%c[NextTurn: onNextTurn] 開始", "color: #4b88c2;");
     this.turn = this.getNextTurnIndex(this.turn);
     this.state = "TurnStart";
 
