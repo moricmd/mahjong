@@ -14,8 +14,6 @@ import { sameTile, getRiichiCandidates } from "./rules.js";
 export function onRiichi(game, playerIndex = 0) {
   const p = game.players[playerIndex];
 
-  judge = !canRiichi(game, playerIndex) || p.isRiichi || !p.isMenzen || p.score;
-
     if(!canRiichi(game, playerIndex)) {
       console.log("%c[Reject: onRiichi] 立直できない状態", "color: #e44848;");
       return;
