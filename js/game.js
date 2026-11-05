@@ -546,13 +546,25 @@ tsumoStep(){
       return;
     }
 
-    // クリックによる打牌だが捨てる牌が指定されていない
-    if(!p.isCPU && cardIndex === null){
-      console.log("%c[Reject: discardStep] 捨てる牌が指定されていない", "color: #e44848;");
+    // 立直者は自動打牌する
+    if(p.isRiichi){
+      cardIndex = p.hand.length - 1;
+      console.log("%c[Discard: discardStep] 立直中のためツモ切り", "color: #e44848");
+    }
+
+    // クリックによる打牌
+    // ----------
+    //
+    //  step()から呼ばれるとcardIndexがnullとなるためreturnされ、
+    //  牌のクリックイベントからcardIndexを受け取るのを待つ
+    //
+    if(!p.isCPU && !p.isRiichi && cardIndex === null){
+      console.log("%c[WaitUser: discardStep] 打牌待ち", "color: #dd5d92;");
       return;
     }
-    const discardResult = this.onDiscard(cardIndex);
 
+
+    const discardResult = this.onDiscard(cardIndex);
 
     // 正常な打牌ができなかった場合
     if(!discardResult){
