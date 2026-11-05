@@ -638,7 +638,7 @@ tsumoStep(){
       this.updateUI();
     }
 
-    this.scheduleStep(500);
+    this.scheduleStep(100);
   }
 
 
