@@ -388,8 +388,7 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   // CheckTsumo → 和了判定
   // -------------------------
 onCheckTsumo(){
-  console.log(`%c[CheckTsumo: onCheckTsumo] 開始
-  プレイヤー${this.turn}の手番`, "color: #4b88c2;");
+  console.log(`%c[CheckTsumo: onCheckTsumo] 開始\nプレイヤー${this.turn}の手番`, "color: #4b88c2;");
 
   const p = this.players[this.turn];
   isTenpaiNow(this, this.turn);
