@@ -354,7 +354,7 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   }
 
   this.state = "Draw";
-  this.scheduleStep(100);
+  this.scheduleStep(0);
 }
 
 
@@ -370,7 +370,7 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
     this.turnCount++; // 巡目を進める
 
     this.state = "CheckTsumo";
-    this.scheduleStep(100);
+    this.scheduleStep(0);
   }
  
   // ------------------------------
@@ -575,7 +575,7 @@ tsumoStep(){
     this.pendingDiscard = { discardTile, discarder };
 
     this.state = "CheckRon";
-    this.scheduleStep(100);
+    this.scheduleStep(0);
   }
 
   // ----------
@@ -634,7 +634,7 @@ tsumoStep(){
       this.updateUI();
     }
 
-    this.scheduleStep(100);
+    this.scheduleStep(0);
   }
 
 
@@ -764,7 +764,7 @@ ronStep(){
 
   console.log("%c[CheckRon: ronStep] ロン和了しなかった", "color: #4b88c2;");
   this.state = "WaitCall";
-  this.scheduleStep(100);
+  this.scheduleStep(0);
 }
 
 callStep(){
@@ -772,7 +772,7 @@ callStep(){
   if(!this.pendingDiscard || !this.pendingDiscard.discardTile){
     console.log("%c[Reject: callStep] 捨て牌情報がないためDelayへ移行", "color: #e44848;");
     this.state = "Delay";
-    this.scheduleStep(100);
+    this.scheduleStep(0);
     return;
   }
   const discardTile = this.pendingDiscard.discardTile;
@@ -810,13 +810,13 @@ callStep(){
   if(!canCall){
     console.log(`%c[Reject: callStep] 副露できるプレイヤーがいない`, "color: #e44848;");
     this.state = "Delay";
-    this.scheduleStep(100);
+    this.scheduleStep(0);
 /*  } else if(humanCanCall){
     console.log("[WaitCall: callStep] 副露選択待ち") */
   } else {
     console.log("%c[WaitCall: callStep] CPUなので副露をスキップした\n副露ボタン未実装のためプレイヤーでもスキップしている", "color: #4b88c2;");
     this.state = "Delay";
-    this.scheduleStep(100);
+    this.scheduleStep(0);
   }
 }
 
@@ -1271,7 +1271,7 @@ updateActionButtons() {
       container.innerHTML = "";
       this.pendingDiscard = null;
       this.state = "Delay";
-      this.scheduleStep(100);
+      this.scheduleStep(0);
                  }
   }
   

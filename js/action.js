@@ -254,7 +254,7 @@ export function onNorth(game, playerIndex = 0) {
         if(p.isCPU) console.log("%c[CheckTsumo: onNorth] CPUの打牌", "color: #4b88c2;");
         if(p.isRiichi) console.log("%c[CheckTsumo: onNorth] 立直者の打牌", "color: #4b88c2;");
 
-        game.scheduleStep(100);
+        game.scheduleStep(0);
       }
     }
 
