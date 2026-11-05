@@ -60,6 +60,10 @@ export class Game {
     this.timerId = null;  // step()進行用タイマーの管理
     this._isStepping = false;  // step()の多重実行を防ぐフラグ
 
+    // デバッグ用: 各手番の終了までにかかる時間を計測
+    this.startTurnTime = 0;
+    this.endTurnTime = 0;
+
 
     this.initGame();
   }
@@ -322,7 +326,21 @@ try{
   // TURN_START
   // -------------------------
 onTurnStart() {
-  console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
+
+
+console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
+
+ if(this.startTurnTime > 0){
+    this.endTurnTime = performance.now();
+    console.log(`%c[PassedTime] ターン終了までの時間: ${this.endTurnTime - this.startTurnTime}`, "color: #1bc7a2ff");
+
+    this.endTurnTime = 0;
+  }
+  
+  this.startTurnTime = performance.now();
+  console.log("%c[PassedTime] 計測開始", "color: #1bc7a2ff");
+
+
   if (this.wallIndex >= this.wall.length) {
     // ★ 流局処理（END_ROUND にしない）
     const parent = this.dealer;
@@ -608,7 +626,6 @@ tsumoStep(){
     }
 
     this.scheduleStep(500);
-
   }
 
 
