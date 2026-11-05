@@ -140,7 +140,7 @@ export class Game {
 
           // 宣言牌候補でなければ打牌できない
           if(!isCandidates) {
-            console.log("%c[Reject] 宣言牌ではない", "color: #e44848;");
+            console.log("%c[Reject: updateUI] 宣言牌ではない", "color: #e44848;");
             return;
           }
 
@@ -212,7 +212,7 @@ clearIppatsu() {
 sortHand(playerIndex) {
   const p = this.players[playerIndex];
   if (p.hand.length !== 13) {
-    console.log("%c[Reject] 手牌が13枚ではない", "color: #e44848;");
+    console.log("%c[Reject: sortHand] 手牌が13枚ではない", "color: #e44848;");
     return;
   }
   const windOrder = { 1: 0, 2: 1, 3: 2, 4: 3 };
@@ -266,7 +266,7 @@ console.log(
 );
 
 if(this._isStepping){
-  console.log(`%c[Reject] step()の多重実行: state=${this.state}`, "color: #e44848;");
+  console.log(`%c[Reject: step] step()の多重実行: state=${this.state}`, "color: #e44848;");
   return;
 }
 

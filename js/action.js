@@ -17,19 +17,19 @@ export function onRiichi(game, playerIndex = 0) {
   judge = !canRiichi(game, playerIndex) || p.isRiichi || !p.isMenzen || p.score;
 
     if(!canRiichi(game, playerIndex)) {
-      console.log("%c[Reject] 立直できない状態", "color: #e44848;");
+      console.log("%c[Reject: onRiichi] 立直できない状態", "color: #e44848;");
       return;
     }
     if(p.isRiichi){
-      console.log("%c[Reject] すでに立直している", "color: #e44848;");
+      console.log("%c[Reject: onRiichi] すでに立直している", "color: #e44848;");
       return;
     }
     if(!p.isMenzen){
-      console.log("%c[Reject] 門前でない", "color: #e44848;");
+      console.log("%c[Reject: onRiichi] 門前でない", "color: #e44848;");
       return;
     }
     if(p.score < 1000){
-      console.log("%c[Reject] 持ち点が1000点未満", "color: #e44848;");
+      console.log("%c[Reject: onRiichi] 持ち点が1000点未満", "color: #e44848;");
       return;}
 
   // 立直待ちのフラグ
@@ -43,11 +43,11 @@ export function onCancelRiichi(game, playerIndex = 0){
   const p = game.players[playerIndex];
   
     if(!p){
-      console.log("%c[Reject] プレイヤーが存在しない", "color: #e44848;");
+      console.log("%c[Reject: onCancelRiichi] プレイヤーが存在しない", "color: #e44848;");
       return;
     }
     if(!p.isWaitingRiichi){
-      console.log("%c[Reject] 立直待ち状態ではない", "color: #e44848;");
+      console.log("%c[Reject: onCancelRiichi] 立直待ち状態ではない", "color: #e44848;");
       return;
     }
 
@@ -226,7 +226,7 @@ export function onNorth(game, playerIndex = 0) {
 
     const idx = p.hand.findIndex(t => t.suit === "wind" && t.value === 4);
     if (idx < 0){
-      console.log("%c[Reject] 北が手牌にない", "color: #e44848;");
+      console.log("%c[Reject: onNorth] 北が手牌にない", "color: #e44848;");
       return;
     }
     p.hand.splice(idx, 1);
@@ -248,13 +248,13 @@ export function onNorth(game, playerIndex = 0) {
     if(result){
       game.tsumoPayment(result);
     } else {
-      console.log("%c[CheckTsumo] 嶺上牌で和了しなかった", "color: #4b88c2;");
+      console.log("%c[CheckTsumo: onNorth] 嶺上牌で和了しなかった", "color: #4b88c2;");
       game.state = "Discard";
       game.updateUI();
 
       if(p.isCPU || p.isRiichi){
-        if(p.isCPU) console.log("%c[CheckTsumo] CPUの打牌", "color: #4b88c2;");
-        if(p.isRiichi) console.log("%c[CheckTsumo] 立直者の打牌", "color: #4b88c2;");
+        if(p.isCPU) console.log("%c[CheckTsumo: onNorth] CPUの打牌", "color: #4b88c2;");
+        if(p.isRiichi) console.log("%c[CheckTsumo: onNorth] 立直者の打牌", "color: #4b88c2;");
 
         game.scheduleStep(100);
       }
