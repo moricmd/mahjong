@@ -388,7 +388,8 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   // CheckTsumo → 和了判定
   // -------------------------
 onCheckTsumo(){
-  console.log(`%c[CheckTsumo: onCheckTsumo] 開始\nプレイヤー${this.turn}の手番`, "color: #4b88c2;");
+  console.log(`%c[CheckTsumo: onCheckTsumo] 開
+    プレイヤー${this.turn}の手番`, "color: #4b88c2;");
 
   const p = this.players[this.turn];
   isTenpaiNow(this, this.turn);
@@ -726,8 +727,9 @@ tsumoPayment(tsumoResult){
   const gainScore = calcScore(this, winnerIndex, null, result.han, result.fu);
   alert(`プレイヤー${winnerIndex} ツモ和了! han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
   
-  console.log(`%c[CheckTsumo: tsumoPayment] プレイヤー${winnerIndex} ツモ: han= ${result.han}\n
-    yaku=${result.yakuList.join(" / ")}\n
+  console.log(`%c[CheckTsumo: tsumoPayment] プレイヤー${winnerIndex} ツモ
+    han= ${result.han}
+    yaku=${result.yakuList.join(" / ")}
     score=${gainScore}\n`, "color: #4b88c2;");
 
   // 次の局へ
@@ -906,10 +908,10 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   const parentTenpai = isTenpaiNow(this, parent);
 
   // デバッグ用
-  console.log(`%c[nextRound] 次の局を開始\n
-    isDraw: ${isDraw}\n
-    parentIndex: ${parent}\n
-    parentTenpai: ${parentTenpai}\n
+  console.log(`%c[nextRound] 次の局を開始
+    isDraw: ${isDraw}
+    parentIndex: ${parent}
+    parentTenpai: ${parentTenpai}
     winnerIndex: ${winnerIndex}`, "color: #9453df;");
 
 
@@ -933,12 +935,12 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   // --- 本場処理 ---
   if (isDraw) {
     // 流局
-    console.log("%c[nextRound] 流局: 積み棒を増やす");
+    console.log("%c[nextRound] 流局: 積み棒を増やす", "color: #9453df;");
     this.honba += 1;  // 親テンパイでもノーテンでも +1
   } else {
     // 和了
     if (winnerIndex === parent) {
-      console.log("%c[nextyRound] 親の和了（連荘）: 積み棒を増やす", "color: #9453df;");
+      console.log("%c[nextRound] 親の和了（連荘）: 積み棒を増やす", "color: #9453df;");
       // 親和了 → 連荘
       this.honba += 1;
     } else {
