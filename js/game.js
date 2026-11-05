@@ -850,7 +850,7 @@ scheduleStep(delay){
   }
 
   this.timerId = setTimeout(() => {
-    console.log(`%c[Timer: scheduleStep] 次のstate（${this.state}）を開始`, "color: #f07b0e;");
+    console.log(`%c[Timer: scheduleStep] 次のstate（${this.state}）を開始: ${delay}ms遅延`, "color: #f07b0e;");
     this.timerId = null;
     this.step();
   }, delay);
