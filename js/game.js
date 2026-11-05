@@ -262,7 +262,7 @@ const p = this.players[this.turn];
 const windChar = {1:"東", 2:"南", 3:"西"};
 console.log(
   `%c[Step] Player=${this.turn} (${p.isCPU ? "CPU" : "YOU"})  Wind=${windChar[p.wind]}  State=${this.state}`,
-  "color: #4CAF50;"
+  "color: #4caf50;"
 );
 
 if(this._isStepping){
@@ -344,7 +344,7 @@ onTurnStart() {
   // DRAW → ツモ
   // -------------------------
   onDraw() {
-    console.log("%c[Draw: onDraw] 開始", "color: #4b88c2");
+    console.log("%c[Draw: onDraw] 開始", "color: #4b88c2;");
     const p = this.players[this.turn];
     const tile = this.wall[this.wallIndex++];
     p.draw(tile);
@@ -781,7 +781,7 @@ callStep(){
   this.pendingDiscard = null;
 
   if(!canCall){
-    console.log(`%c[Reject: callStep] 副露できるプレイヤーがいない`, "color: #e44848");
+    console.log(`%c[Reject: callStep] 副露できるプレイヤーがいない`, "color: #e44848;");
     this.state = "Delay";
     this.scheduleStep(100);
 /*  } else if(humanCanCall){
@@ -821,7 +821,7 @@ scheduleStep(delay){
   }
 
   this.timerId = setTimeout(() => {
-    console.log(`%c[Timer: scheduleStep] 次のstate（${this.state}）を開始`, "color: #f07b0e");
+    console.log(`%c[Timer: scheduleStep] 次のstate（${this.state}）を開始`, "color: #f07b0e;");
     this.timerId = null;
     this.step();
   }, delay);
@@ -829,9 +829,9 @@ scheduleStep(delay){
 
 // タイマーのキャンセル
 clearTimer(){
-  console.log("%c[Timer: clearTimer] 開始", "color: #f07b0e");
+  console.log("%c[Timer: clearTimer] 開始", "color: #f07b0e;");
   if(this.timerId){
-    console.log("%c[Timer: clearTimer] タイマーのキャンセル", "color: #f07b0e");
+    console.log("%c[Timer: clearTimer] タイマーのキャンセル", "color: #f07b0e;");
     this.clearTimeout(this.timerId);
     this.timerId = null;
   }
@@ -881,12 +881,12 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
     isDraw: ${isDraw}\n
     parentIndex: ${parent}\n
     parentTenpai: ${parentTenpai}\n
-    winnerIndex: ${winnerIndex}`, "color: #9453df");
+    winnerIndex: ${winnerIndex}`, "color: #9453df;");
 
 
   // 飛び終了チェック: 持ち点が0未満のプレイヤーがいるなら強制終了
   if(this.players.some(p => p.score < 0)){
-    console.log("%c[nextRound] 飛び終了", "color: #9453df");
+    console.log("%c[nextRound] 飛び終了", "color: #9453df;");
     this.endGame();
     return;
   }
@@ -895,7 +895,7 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   // 南入後では40000点を超えるプレイヤーが現れた時点で終了
   if (this.round >= 2){
     if (this.hasPlayerOver40000()){
-      console.log("%c[nextRound] 南入後: 40000点持ちのプレイヤーが現れた", "color: #9453df")
+      console.log("%c[nextRound] 南入後: 40000点持ちのプレイヤーが現れた", "color: #9453df;")
       this.endGame();
       return;
     }
@@ -909,11 +909,11 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   } else {
     // 和了
     if (winnerIndex === parent) {
-      console.log("%c[nextyRound] 親の和了（連荘）: 積み棒を増やす", "color: #9453df");
+      console.log("%c[nextyRound] 親の和了（連荘）: 積み棒を増やす", "color: #9453df;");
       // 親和了 → 連荘
       this.honba += 1;
     } else {
-      console.log("%c[nextRound] 子の和了: 積み棒をリセットする", "color: #9453df");
+      console.log("%c[nextRound] 子の和了: 積み棒をリセットする", "color: #9453df;");
       // 子和了 → 本場リセット
       this.honba = 0;
     }
@@ -933,15 +933,15 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
     if(isEast3){
       // 40000点を超えていたなら終了
       if(this.players[parent].score >= 40000){
-        console.log("%c[nextRound] 東3局での連荘: 親の40000点越え（終了）", "color: #9453df");
+        console.log("%c[nextRound] 東3局での連荘: 親の40000点越え（終了）", "color: #9453df;");
         this.endGame()
         return;
       } else {
-        console.log("%c[nextRound] 東3局での連荘: 40000点に満たない（続行）", "color: #9453df");
+        console.log("%c[nextRound] 東3局での連荘: 40000点に満たない（続行）", "color: #9453df;");
       }
     }
 
-    console.log("%c[nextRound] 通常の連荘", "color: #9453df");
+    console.log("%c[nextRound] 通常の連荘", "color: #9453df;");
     this.startNewHand();  // 局は進めない、親も風もそのまま
     return;
   }
@@ -949,19 +949,19 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
   // ------------------------------
   //  連荘しなかった場合
   // ------------------------------
-  console.log("%c[nextRound] 連荘しなかった", "color: #9453df");
+  console.log("%c[nextRound] 連荘しなかった", "color: #9453df;");
 
   // 東3局終了時
   if(isEast3){
 
     // 40000点以上のプレイヤーが存在するなら終了
     if(this.hasPlayerOver40000()){
-      console.log("%c[nextRound] 東3局終了: 40000点以上のプレイヤーが存在（終了）", "color: #9453df");
+      console.log("%c[nextRound] 東3局終了: 40000点以上のプレイヤーが存在（終了）", "color: #9453df;");
       this.endGame();
       return;
     } else {
       // 南入
-      console.log("%c[nextRound] 東3局終了: 南入", "color: #9453df")
+      console.log("%c[nextRound] 東3局終了: 南入", "color: #9453df;")
       this.round = 2;
       this.kyoku = 1;
       this.dealer = (this.dealer + 1) % 3;
@@ -979,12 +979,12 @@ nextRound(renchan, winnerIndex = null, isDraw = false) {
 
   // 南3局までやったら終了
   if(this.round === 2 && this.kyoku > 3){
-    console.log("%c[nextRound] 南3局終了: ゲーム終了");
+    console.log("%c[nextRound] 南3局終了: ゲーム終了", "color: #9453df;");
     this.endGame();
     return;
   }
 
-  console.log(`%c[nextRound] ${this.round === 1 ? "東" : "南"}${this.kyoku}局開始`);
+  console.log(`%c[nextRound] ${this.round === 1 ? "東" : "南"}${this.kyoku}局開始`, "color: #9453df;");
   this.startNewHand();
 }
 

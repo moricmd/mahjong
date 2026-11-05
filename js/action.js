@@ -292,25 +292,25 @@ export function canRiichi(game, playerIndex = 0) {
   }
 
   if(!p.isMenzen){
-    console.log("%c[Reject: canRiichi] 面前でない", "color: #e44848");;
+    console.log("%c[Reject: canRiichi] 面前でない", "color: #e44848;");
     return;
   }
   if(p.isRiichi){
-    console.log("%c[Reject: canRiichi] すでに立直している", "color: #e44848");
+    console.log("%c[Reject: canRiichi] すでに立直している", "color: #e44848;");
     return;
   }
   if(p.score < 1000){
-    console.log("%c[Reject: canRiichi] 持ち点が1000点未満", "color: #e44848");
+    console.log("%c[Reject: canRiichi] 持ち点が1000点未満", "color: #e44848;");
     return;
   }
 
   if ((game.wall.length - game.wallIndex) < 4){
-    console.log("%c[Reject: canRiichi] 次のツモ番がない", "color: #e44848");
+    console.log("%c[Reject: canRiichi] 次のツモ番がない", "color: #e44848;");
     return false;
   }
   // 手牌が3の倍数 + 2（雀頭）でない場合はリーチ不可
   if (p.hand.length % 3 !== 2){
-    console.log(`%c[Reject: canRiichi] 手牌が揃っていない: 現在の手牌は${p.hand.length}枚`, "color: #e44848");
+    console.log(`%c[Reject: canRiichi] 手牌が揃っていない: 現在の手牌は${p.hand.length}枚`, "color: #e44848;");
     return false;
   }
 
