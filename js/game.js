@@ -114,7 +114,7 @@ export class Game {
 
     this.wall = tiles;
     this.wall.forEach(t => t.type = "wall");
-    
+
     this.wallIndex = 0;
   }
 
@@ -402,7 +402,7 @@ onCheckTsumo(){
 
   const lastTile = p.hand[p.hand.length - 1];
 
-  console.log(`%c[CheckTsumo: onCheckTsumo] 牌をツモった\n\nツモ牌: ${lastTile}\n待ち牌: ${p.waitingTiles}`);
+  console.log(`%c[CheckTsumo: onCheckTsumo] 牌をツモった\n\nツモ牌: ${lastTile}\n待ち牌: ${p.waitingTiles}`, "color: #4b88c2;");
 
   // ツモ牌が待ち牌であるか
   const isWaitingTiles = p.isTenpai && 
