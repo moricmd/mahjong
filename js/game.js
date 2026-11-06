@@ -402,7 +402,7 @@ onCheckTsumo(){
 
   const lastTile = p.hand[p.hand.length - 1];
 
-  console.log(`%c[CheckTsumo: onCheckTsumo] 牌をツモった\n\nツモ牌: ${lastTile}\n待ち牌: ${p.waitingTiles}`, "color: #4b88c2;");
+  console.log(`%c[CheckTsumo: onCheckTsumo] 牌をツモった\n\nツモ牌: ${JSON.stringify(lastTile)}\n待ち牌: ${JSON.stringify(p.waitingTiles)}`, "color: #4b88c2;");
 
   // ツモ牌が待ち牌であるか
   const isWaitingTiles = p.isTenpai && 
@@ -510,26 +510,29 @@ tsumoStep(){
 
     // CPUの捨て牌
     if(p.isCPU){
-      console.log("%c[Discard: onDiscard] CPUの打牌", "color: #4b88c2;");
       const idx = chooseDiscardIndex(p.hand);
       discardTile = p.discard(idx);
+      console.log(`%c[Discard: onDiscard] CPUの打牌\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
 
     // 人間の捨て牌
     } else {
 
       // 立直している場合
       if(p.isRiichi){
-
-        console.log("%c[Discard: onDiscard] 立直者の打牌（ツモ切り）", "color: #4b88c2;");
         // ツモ切りする
         const lastIndex = p.hand.length - 1;
         discardTile = p.discard(lastIndex);
+        console.log(`%c[Discard: onDiscard] 立直者の打牌（ツモ切り）\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
 
       // 立直していない場合
       } else {
-        console.log("%c[Discard: onDiscard] クリックによる打牌", "color: #4b88c2;");
-        if(cardIndex === null) return false;  // 手動（クリックによる打牌）
+
+        if(cardIndex === null){
+          console.log("%c[Discard: onDiscard] 捨て牌のクリックを受け付ける", "color: #4b88c2;");
+          return false;  // 手動（クリックによる打牌）
+        }
         discardTile = p.discard(cardIndex);
+        console.log(`%c[Discard: onDiscard] クリックによる打牌\n\n捨て牌:${JSON.stringify(discardTile)}`, "color: #4b88c2;");
       }
     }
 
