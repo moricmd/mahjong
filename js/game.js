@@ -12,7 +12,7 @@ import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
 import { decomposeHand } from "./melds.js";
-import { onRiichi, onCancelRiichi, onTsumo, onRon, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
+import { onRiichi, onCancelRiichi, onRon, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
         } from "./action.js";
