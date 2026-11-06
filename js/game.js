@@ -377,8 +377,8 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   // CPUの思考時間をランダム生成
   // ------------------------------
   getRandomDelay() {
-    // CPUの打牌は500〜1000ms遅延を入れる
-    return 500 + Math.floor(Math.random() * 500); 
+    // CPUの打牌は250〜750ms遅延を入れる
+    return Math.floor(Math.random() * 500) + 250; 
   }
 
 
@@ -457,7 +457,7 @@ tsumoStep(){
   const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
     console.log("%c[CheckTsumo: tsumoStep] 自動打牌する", "color: #4b88c2;");
-    this.scheduleStep(500);
+    this.scheduleStep(750);
   }
 }
 
