@@ -8,7 +8,7 @@ export function generateTiles() {
   // 萬子 1,9 のみ（雀魂三麻仕様）
   [1, 9].forEach(v => {
     for (let i = 0; i < 4; i++) {
-      tiles.push({ id: id++, suit: "man", value: v, red: false });
+      tiles.push({ id: id++, suit: "man", value: v, red: false, type: null });
     }
   });
 
@@ -16,10 +16,10 @@ export function generateTiles() {
   for (let v = 1; v <= 9; v++) {
     const count = (v === 5) ? 3 : 4;  // ★ 5だけ3枚にする
     for (let i = 0; i < count; i++) {
-      tiles.push({ id: id++, suit: "pin", value: v, red: false });
+      tiles.push({ id: id++, suit: "pin", value: v, red: false, type: null });
     }
     if (v === 5) {
-      tiles.push({ id: id++, suit: "pin", value: 5, red: true }); // ★ 赤5p
+      tiles.push({ id: id++, suit: "pin", value: 5, red: true, type: null }); // ★ 赤5p
     }
   }
 
@@ -27,10 +27,10 @@ export function generateTiles() {
   for (let v = 1; v <= 9; v++) {
     const count = (v === 5) ? 3 : 4;  // ★ 5だけ3枚にする
     for (let i = 0; i < count; i++) {
-      tiles.push({ id: id++, suit: "sou", value: v, red: false });
+      tiles.push({ id: id++, suit: "sou", value: v, red: false, type: null });
     }
     if (v === 5) {
-      tiles.push({ id: id++, suit: "sou", value: 5, red: true }); // ★ 赤5s
+      tiles.push({ id: id++, suit: "sou", value: 5, red: true, type: null }); // ★ 赤5s
     }
   }
 
@@ -38,7 +38,7 @@ export function generateTiles() {
   const winds = [1, 2, 3, 4];
   winds.forEach(v => {
     for (let i = 0; i < 4; i++) {
-      tiles.push({ id: id++, suit: "wind", value: v, red: false });
+      tiles.push({ id: id++, suit: "wind", value: v, red: false, type: null });
     }
   });
 
@@ -46,7 +46,7 @@ export function generateTiles() {
   const dragons = [1, 2, 3];
   dragons.forEach(v => {
     for (let i = 0; i < 4; i++) {
-      tiles.push({ id: id++, suit: "dragon", value: v, red: false });
+      tiles.push({ id: id++, suit: "dragon", value: v, red: false, type: null });
     }
   });
 

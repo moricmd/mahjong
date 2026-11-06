@@ -240,7 +240,7 @@ export function onNorth(game, playerIndex = 0) {
 
     game.state = "CheckTsumo";
     const result = game.onCheckTsumo();
-    if(result){
+    if(result.isTsumoWin){
       game.tsumoPayment(result);
     } else {
       console.log("%c[CheckTsumo: onNorth] 嶺上牌で和了しなかった", "color: #4b88c2;");

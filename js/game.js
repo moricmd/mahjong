@@ -102,12 +102,19 @@ export class Game {
     shuffle(tiles);
 
     this.rinshan = tiles.splice(-8); // 嶺上牌: カン最大4回、北抜き最大4回
+    this.rinshan.forEach(t => t.type = "rinshan");
+
     this.doraIndicators = tiles.splice(-5); // ドラ表示牌
+    this.doraIndicators.forEach(t => t.type = "dora");
+
     this.uraIndicators = tiles.splice(-5); // 裏ドラ表示牌
+    this.uraIndicators.forEach(t => t.type = "uraDora");
 
     this.openDoraCount = 1; // 1枚だけ公開
 
     this.wall = tiles;
+    this.wall.forEach(t => t.type = "wall");
+    
     this.wallIndex = 0;
   }
 
