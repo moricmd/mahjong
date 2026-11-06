@@ -395,24 +395,33 @@ onCheckTsumo(){
 
   const lastTile = p.hand[p.hand.length - 1];
 
+  console.log(`%c[CheckTsumo: onCheckTsumo] 牌をツモった\n\nツモ牌: ${lastTile}\n待ち牌: ${p.waitingTiles}`);
+
   // ツモ牌が待ち牌であるか
   const isWaitingTiles = p.isTenpai && 
                         p.waitingTiles.some(
                           w => w.suit === lastTile.suit && w.value === lastTile.value 
                         );
 
-  let isTsumoWin = false;
-  let result = null;
+  let yakuResult = null;
+
+  // ツモ和了判定の結果オブジェクト
+  const resultList = {
+    isTsumoWin: false,
+    lastTile: lastTile,
+    winnerIndex: null,
+    yakuResult: null
+  }
 
   if(!isWaitingTiles){
     console.log("%c[Reject: onCheckTsumo] ツモ牌は待ち牌ではない", "color: #e44848;");
-    return null;
+    return resultList;
   }
     // ドラ表示牌のめくられている部分を取り出す
     const openDora = this.doraIndicators.slice(0, this.openDoraCount);
     const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];
 
-    result = judgeYaku(
+    yakuResult = judgeYaku(
       p,                // プレイヤー
       p.hand,           // 手牌
       lastTile,         // 和了牌
@@ -425,36 +434,54 @@ onCheckTsumo(){
     );
 
     if(p.isRiichi){
-      result.han += 1;
-      if(p.isIppatsu) result.han += 1;
+      yakuResult.han += 1;
+      if(p.isIppatsu) yakuResult.han += 1;
     }
 
-    if(result.han <= 0){
+    if(yakuResult.han <= 0){
       console.log("%c[Reject: onCheckTsumo] ツモ和了していない", "color: #e44848;");
-      return null;
+      return resultList;
     }
+
       // ツモ和了成立の場合
-      return {
-        winnerIndex: this.turn,
-        result: result
-      };
+      p.canCallTsumo = true;  // Playerインスタンスのツモフラグを入れる
+
+      resultList.isTsumoWin = true;
+      resultList.winnerIndex = this.turn;
+      resultList.yakuResult = yakuResult;
+
+      return resultList;
   }
 
 tsumoStep(){
   console.log("%c[CheckTsumo: tsumoStep] 開始", "color: #4b88c2;");
+
+  const p = this.players[this.turn];
   const tsumoResult = this.onCheckTsumo();
 
-  if(tsumoResult){
-    console.log(`%c[CheckTsumo: tsumoStep] プレイヤー${tsumoResult.winnerIndex}がツモ和了`, "color: #4b88c2;");
-    this.tsumoPayment(tsumoResult);
+
+  // ツモ和了した場合
+  if(tsumoResult.isTsumoWin){
+
+    p.tsumoResult = tsumoResult;
+
+    if(p.isCPU){
+      // CPUは自動和了
+      console.log(`%c[CheckTsumo: tsumoStep] CPU（プレイヤー${tsumoResult.winnerIndex}）がツモ和了`, "color: #4b88c2;");
+      this.tsumoPayment(tsumoResult);
+      return;
+    }
+
+    // ユーザーならツモボタンを出して選択させる
+    console.log("%c[WaitUser: tsumoStep] ツモ和了できる", "color: #dd5d92");
     return;
+
   }
 
   // 和了していなければ打牌へ
   this.state = "Discard";
 
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
-  const p = this.players[this.turn];
   if(p.isCPU || p.isRiichi){
     console.log("%c[CheckTsumo: tsumoStep] 自動打牌する", "color: #4b88c2;");
     this.scheduleStep(750);
@@ -1234,9 +1261,15 @@ updateActionButtons() {
     }
 
 
-    // 和了（ツモ / ロン）
-    if (canTsumo(this, 0)) list.push({ name: "ツモ", handler: () => onTsumo(this) });
-    if (canRon(this))   list.push({ name: "ロン", handler: () => onRon() });
+    // ツモ和了
+    if (p.canCallTsumo){
+      list.push({ name: "ツモ", handler: () => {
+        container.innerHTML = "";
+        this.tsumoPayment(p.tsumoResult);  // 点数授受処理を呼ぶ
+      }});
+    }
+
+    if (p.canCallRon)   list.push({ name: "ロン", handler: () => onRon() });
 
     // 暗槓（自分のツモ番のみ）
     if (canAnkan(this)) {

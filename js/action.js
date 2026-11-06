@@ -57,9 +57,6 @@ export function onCancelRiichi(game, playerIndex = 0){
 }
 
 
-export function onTsumo(game){
-  game.onCheckTsumo();
-}
 
 // 保留
 export function onRon(game){

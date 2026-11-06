@@ -55,6 +55,22 @@ export class Player {
     // -------------------------
     this.kanCount = 0;          // カンの回数（三槓子判定用）
     this.northCount = 0;        // 北抜きの回数（北ドラ用）
+
+    // ----------
+    // 和了フラグ
+    // ----------
+    this.canCallTsumo = false;
+    this.canCallRon= false;
+
+    // ----------
+    // 和了結果
+    // ----------
+    //
+    //  Playerインスタンスでは和了判定の結果を保持し、Game側で点数授受処理に渡す
+    //
+    this.tsumoResult = null;
+    this.ronResult = null;
+
   }
 
   // -------------------------
