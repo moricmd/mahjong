@@ -10,18 +10,26 @@ export function checkTenpai(hand) {
   // テンパイ判定：手牌（13枚）に任意の1枚を足して、和了形になる組み合わせがあるかチェック
   const allTileTypes = [];
 
-  // 数の牌 (man, pin, sou) の1〜9を生成
-  for (const suit of ["man", "pin", "sou"]) {
-      for (let v = 1; v <= 9; v++) {
-        allTileTypes.push({ suit, value: v, red: false });
-      }
+
+  // 数牌
+  // 萬子は1, 9のみ
+  [1, 9].forEach(v => {
+    allTileTypes.push({ suit: "man", value: v, red: false, type: null})
+  });
+
+  // 筒子と索子は1 ~ 9
+  for(const suit of ["pin", "sou"]){
+    for(let v = 1; v <= 9; v++){
+      allTileTypes.push({ suit, value: v, red: false, type: null})
+    }
   }
-  // 字牌 (wind: 1~4, dragon: 1~3) を生成
+
+  // 字牌 (wind（風牌）: 1 ~ 4, dragon（三元牌）: 1 ~ 3) を生成
   for (let v = 1; v <= 4; v++) {
-      allTileTypes.push({ suit: "wind", value: v, red: false });
+      allTileTypes.push({ suit: "wind", value: v, red: false, type: null });
   }
   for (let v = 1; v <= 3; v++) {
-      allTileTypes.push({ suit: "dragon", value: v, red: false });
+      allTileTypes.push({ suit: "dragon", value: v, red: false, type: null });
   }
 
   // 待ち牌の配列
