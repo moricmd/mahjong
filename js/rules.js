@@ -49,7 +49,7 @@ export function checkTenpai(hand) {
   }
 
   if(waitingTiles.length > 0){
-    console.log(`%c[checkTenpai] 待ち牌: ${waitingTiles}`, "color: #4b88c2");
+    console.log("%c[checkTenpai] 待ち牌: " + waitingTiles, "color: #4b88c2");
   }
 
   // 聴牌判定の結果と待ち牌のリストを返す
@@ -69,7 +69,7 @@ export function isTenpaiNow(game, playerIndex) {
   p.isTenpai = res.isTenpai;  // watingTilesがあるなら聴牌している
   p.waitingTiles = res.waitingTiles;
 
-  console.log(`%c[isTenpaiNow] 聴牌判定\n\n待ち牌: ${p.waitingTiles}`)
+  console.log(`%c[isTenpaiNow] 聴牌判定\n\n待ち牌: ${p.waitingTiles}`, "color: #4b88c2")
 
   return p.isTenpai;
   }
@@ -94,7 +94,7 @@ export function getRiichiCandidates(game, playerIndex = 0){
     }
   }
 
-  console.log("宣言牌候補:", candidates);
+  console.log("%c[getRiichiCandidates] 宣言牌候補: " + candidates, "color: #4b88c2");
 
   return candidates;
 
