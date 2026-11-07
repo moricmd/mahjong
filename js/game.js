@@ -557,12 +557,15 @@ tsumoStep(){
 
       // ダブル立直
       if(this.turnCount === 1 && this.canDoubleRiichi){
-        console.log("%c[Discard: onDiscard] ダブル立直した", "color: #4b88c2;");
+        console.log("%c[Discard: onDiscard] ダブル立直", "color: #4b88c2;");
         p.isDoubleRiichi = true;
       }
       checkDiscardFuriten(this, this.turn);
     }
     if(this.autoSort) this.sortHand(this.turn);
+
+    const res = isTenpaiNow(this, this.turn);
+    console.log(`[Discard: onDiscard]  ${res ? `待ち牌: ${JSON.stringify(p.waitingTiles)}` : "聴牌していない"}`);
     this.updateUI();
 
     return { 
