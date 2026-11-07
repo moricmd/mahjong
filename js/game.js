@@ -398,7 +398,6 @@ onCheckTsumo(){
   console.log(`%c[CheckTsumo: onCheckTsumo] 開始\nプレイヤー${this.turn}の手番`, "color: #4b88c2;");
 
   const p = this.players[this.turn];
-  isTenpaiNow(this, this.turn);
 
   const lastTile = p.hand[p.hand.length - 1];
 

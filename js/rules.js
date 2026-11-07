@@ -10,6 +10,8 @@ export function checkTenpai(hand) {
   // テンパイ判定：手牌（13枚）に任意の1枚を足して、和了形になる組み合わせがあるかチェック
   const allTileTypes = [];
 
+  // 聴牌判定ではtypeは使用しないのでnullとしている
+
 
   // 数牌
   // 萬子は1, 9のみ
@@ -47,7 +49,7 @@ export function checkTenpai(hand) {
   }
 
   if(waitingTiles.length > 0){
-    console.log("待ち牌:", waitingTiles);
+    console.log(`%c[checkTenpai] 待ち牌: ${waitingTiles}`, "color: #4b88c2");
   }
 
   // 聴牌判定の結果と待ち牌のリストを返す
@@ -66,6 +68,8 @@ export function isTenpaiNow(game, playerIndex) {
   
   p.isTenpai = res.isTenpai;  // watingTilesがあるなら聴牌している
   p.waitingTiles = res.waitingTiles;
+
+  console.log(`%c[isTenpaiNow] 聴牌判定\n\n待ち牌: ${p.waitingTiles}`)
 
   return p.isTenpai;
   }
