@@ -505,7 +505,13 @@ tsumoStep(){
     }
 
     // ユーザーならツモボタンを出して選択させる
-    console.log("%c[WaitUser: tsumoStep] ツモ和了できる", "color: #dd5d92");
+    console.log("%c[WaitUser: tsumoStep] ツモ和了できる", "color: #ff4794;");
+    this.state = "Discard";
+    return;
+  }
+
+  if(canNorth(this) && !p.isCPU){
+    console.log("%c[WaitUser: tsumoStep] 北抜きできる", "color: #ff4794;");
     this.state = "Discard";
     return;
   }
@@ -615,7 +621,7 @@ tsumoStep(){
     // 立直者は自動打牌する
     if(p.isRiichi){
       cardIndex = p.hand.length - 1;
-      console.log("%c[Discard: discardStep] 立直中のためツモ切り", "color: #e44848");
+      console.log("%c[Discard: discardStep] 立直中のためツモ切り", "color: #e44848;");
     }
 
     // クリックによる打牌
@@ -625,7 +631,7 @@ tsumoStep(){
     //  牌のクリックイベントからcardIndexを受け取るのを待つ
     //
     if(!p.isCPU && !p.isRiichi && cardIndex === null){
-      console.log("%c[WaitUser: discardStep] 打牌待ち", "color: #dd5d92;");
+      console.log("%c[WaitUser: discardStep] 打牌待ち", "color: #ff4794;");
       return;
     }
 
@@ -1373,6 +1379,16 @@ updateActionButtons() {
     handler: () => {
       console.log("%c[ClickedButton: updateActionButtons] スキップボタンが押された", "color: #7a0808;");
       container.innerHTML = "";
+
+      const p = this.players[this.turn];
+
+      // 立直中なら、スキップボタンを押したら自動打牌させる
+      if(p && p.isRiichi){
+        console.log("%c[updateActionButtons] 立直中のため自動打牌に移行", "color: #4b88c2;");
+        this.state = "Discard";
+        this.scheduleStep(0);
+        return;
+      }
     }
   };
   
