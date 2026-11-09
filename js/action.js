@@ -234,28 +234,15 @@ export function onNorth(game, playerIndex = 0) {
     p.draw(rinshanTile);
   }
 
-
     game.canDoubleRiichi = false;
     game.clearIppatsu();
 
+    game.updateUI();
+
     game.state = "CheckTsumo";
-    const result = game.onCheckTsumo();
-    if(result.isTsumoWin){
-      game.tsumoPayment(result);
-    } else {
-      console.log("%c[CheckTsumo: onNorth] 嶺上牌で和了しなかった", "color: #4b88c2;");
-      game.state = "Discard";
-      game.updateUI();
+    game.scheduleStep(0);
 
-      if(p.isCPU || p.isRiichi){
-        if(p.isCPU) console.log("%c[CheckTsumo: onNorth] CPUの打牌", "color: #4b88c2;");
-        if(p.isRiichi) console.log("%c[CheckTsumo: onNorth] 立直者の打牌", "color: #4b88c2;");
-
-        game.scheduleStep(0);
-      }
     }
-
-  }
 
   // -------------------------
   // カンドラ追加（仮実装）

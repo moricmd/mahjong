@@ -336,10 +336,6 @@ try{
       this.callStep();
       break;
 
-    case "Delay":
-      this.onDelay();
-      break;
-
     case "NextTurn":
       this.onNextTurn();
       break;
@@ -410,8 +406,8 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
   // CPUの思考時間をランダム生成
   // ------------------------------
   getRandomDelay() {
-    // CPUの打牌は250〜750ms遅延を入れる
-    return Math.floor(Math.random() * 500) + 250; 
+    // CPUの打牌は1000〜1500ms遅延を入れる
+    return Math.floor(Math.random() * 1000) + 500; 
   }
 
 
@@ -650,46 +646,6 @@ tsumoStep(){
     this.state = "CheckRon";
     this.scheduleStep(0);
   }
-
-  // ----------
-  // Delay
-  // ----------
-  onDelay(){
-
-    console.log("%c[Delay: onDelay] 開始", "color: #4b88c2;");
-
-    // プレイヤーの打牌後、次のプレイヤーに移る（NEXT_TURNに移る）前に
-    // 数秒間遅延を入れる
-
-    const p = this.players[this.turn];
-
-    let delayTime = 0;
-
-    if(p.isRiichi){
-      // 立直者の遅延は1000ms
-      delayTime = 1000;
-      console.log(`%c[Delay: onDelay] 立直者（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #4b88c2;");
-      this.state = "NextTurn";
-      this.scheduleStep(delayTime);
-      return;
-    }
-
-    if(p.isCPU){
-      // CPUの遅延は500 ~ 1000ms
-      delayTime = this.getRandomDelay();
-      console.log(`%c[Delay: onDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #4b88c2;");
-      this.state = "NextTurn";
-      this.scheduleStep(delayTime);
-      return;
-    }
-
-
-    // 通常打牌では遅延なし
-    delayTime = 0;
-    console.log("%c[Delay: onDelay] クリックによる打牌: 遅延なし", "color: #4b88c2;");
-    this.state = "NextTurn";
-    this.scheduleStep(delayTime);
-  }
   
   // -------------------------
   // NEXT_TURN
@@ -882,15 +838,37 @@ callStep(){
 
   if(!canCall){
     console.log(`%c[Reject: callStep] 副露できるプレイヤーがいない`, "color: #e44848;");
-    this.state = "Delay";
-    this.scheduleStep(0);
-/*  } else if(humanCanCall){
-    console.log("[WaitCall: callStep] 副露選択待ち") */
   } else {
     console.log("%c[WaitCall: callStep] CPUなので副露をスキップした\n副露ボタン未実装のためプレイヤーでもスキップしている", "color: #4b88c2;");
-    this.state = "Delay";
-    this.scheduleStep(0);
   }
+
+  this.state = "NextTurn";
+  const delay = this.getDiscardDelay();
+
+  this.scheduleStep(delay);
+
+}
+
+getDiscardDelay(){
+
+  const p = this.players[this.turn];
+
+  // 立直者は1000ms遅延
+  if(p.isRiichi){
+    console.log(`%c[Delay: getDiscardDelay] 立直者（プレイヤー${this.turn}）の打牌: 1000ms遅延`, "color: #171f75;");
+    return 1000;
+  }
+
+  // CPUは1000 ~ 1500ms遅延
+  if(p.isCPU){
+    const delayTime = this.getRandomDelay();
+    console.log(`%c[Delay: getDiscardDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #171f75;");
+    return delayTime;
+  }
+
+  // クリックによる打牌では遅延なし
+  console.log(`%c[Delay: getDiscardDelay] クリックによる打牌（プレイヤー${this.turn}）: 遅延なし`, "color: #171f75;");
+  return 0;
 }
 
 matchCallCount(player, tile){
