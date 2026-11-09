@@ -561,6 +561,7 @@ tsumoStep(){
       }
     }
 
+    p.canCallTsumo = false;  // ツモ和了フラグを消去する
     this.lastDiscarder = this.turn;
 
     // 一発消し
@@ -588,6 +589,7 @@ tsumoStep(){
       }
       checkDiscardFuriten(this, this.turn);
     }
+
     if(this.autoSort) this.sortHand(this.turn);
 
     const res = isTenpaiNow(this, this.turn);

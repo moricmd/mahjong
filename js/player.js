@@ -60,7 +60,7 @@ export class Player {
     // 和了フラグ
     // ----------
     this.canCallTsumo = false;
-    this.canCallRon= false;
+    this.canCallRon = false;
 
     // ----------
     // 和了結果
