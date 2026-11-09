@@ -565,7 +565,7 @@ tsumoStep(){
     if(this.autoSort) this.sortHand(this.turn);
 
     const res = isTenpaiNow(this, this.turn);
-    console.log(`[Discard: onDiscard]  ${res ? `待ち牌: ${JSON.stringify(p.waitingTiles)}` : "聴牌していない"}`);
+    console.log(`%c[Discard: onDiscard]  ${res ? `待ち牌: ${JSON.stringify(p.waitingTiles)}` : "聴牌していない"}`, "color: #4b88c2;");
     this.updateUI();
 
     return { 
