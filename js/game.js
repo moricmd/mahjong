@@ -92,6 +92,30 @@ export class Game {
     this.buildWall();
     this.state = "Deal";
     this.deal();
+
+
+    // ----------
+    // デバッグ用: 任意の手牌を作成
+    // ----------
+    const p = this.players[0];
+    p.hand = [
+      { suit: "pin", value: 1, red: false, type: "wall" },
+      { suit: "pin", value: 1, red: false, type: "wall" },
+      { suit: "pin", value: 2, red: false, type: "wall" },
+      { suit: "pin", value: 2, red: false, type: "wall" },
+      { suit: "pin", value: 3, red: false, type: "wall" },
+      { suit: "pin", value: 3, red: false, type: "wall" },
+      { suit: "sou", value: 7, red: false, type: "wall" },
+      { suit: "sou", value: 8, red: false, type: "wall" },
+      { suit: "sou", value: 9, red: false, type: "wall" },
+      { suit: "wind", value: 1, red: false, type: "wall" },
+      { suit: "wind", value: 1, red: false, type: "wall" },
+      { suit: "dragon", value: 1, red: false, type: "wall" },
+      { suit: "dragon", value: 1, red: false, type: "wall" },
+    ];
+
+    isTenpaiNow(this, 0);
+    this,updateUI();
   }
 
   // -------------------------
@@ -1363,7 +1387,7 @@ updateActionButtons() {
     }
   }
 
-  console.log("result: ", slots.map(s => s ? s.name : "empty"));
+  console.log(`%c[updateActionButton] 生成するボタン: ${slots.map(s => s ? s.name : "empty")}`, "color: #4b88c2;");
     // -------------------------
   // ④ DOM に追加（null は描画しない）
   // -------------------------
@@ -1384,8 +1408,6 @@ updateActionButtons() {
 
 
   createActionButton(label, handler) {
-    console.log("生成したラベル: ", label);
-    
 
     const btn = document.createElement("button");
     btn.className = "action-btn";
