@@ -506,8 +506,8 @@ tsumoStep(){
 
     // ユーザーならツモボタンを出して選択させる
     console.log("%c[WaitUser: tsumoStep] ツモ和了できる", "color: #dd5d92");
+    this.state = "Discard";
     return;
-
   }
 
   // 和了していなければ打牌へ
@@ -1290,24 +1290,48 @@ updateActionButtons() {
 
   if(p.isWaitingRiichi){
     // 立直待ち中はキャンセルボタンしか表示させない
-    list.push({"name": "キャンセル", handler: () => onCancelRiichi(this, 0)});
+    list.push({
+      name: "キャンセル",
+      handler: () => {
+        console.log("%c[ClickedButton: updateActionButtons] キャンセルボタンが押された", "color: #7a0808;");
+        onCancelRiichi(this, 0);
+      }
+    });
 
   } else if (isMyTurn) {
     // 立直（門前時のみ）
     if (p.isMenzen && canRiichi(this, 0)) {
-      list.push({ name: "立直", handler: () => onRiichi(this, 0) });
+      list.push({ 
+        name: "立直",
+        handler: () => {
+          console.log("%c[ClickedButton: updateActionButtons] 立直ボタンが押された", "color: #7a0808;");
+          onRiichi(this, 0);
+        }
+      });
     }
 
 
     // ツモ和了
     if (p.canCallTsumo){
-      list.push({ name: "ツモ", handler: () => {
-        container.innerHTML = "";
-        this.tsumoPayment(p.tsumoResult);  // 点数授受処理を呼ぶ
-      }});
+      list.push({
+        name: "ツモ",
+        handler: () => {
+          console.log("%c[ClickedButton: updateActionButtons] ツモボタンが押された", "color: #7a0808;");          
+          container.innerHTML = "";
+          this.tsumoPayment(p.tsumoResult);  // 点数授受処理を呼ぶ
+        }
+      });
     }
 
-    if (p.canCallRon)   list.push({ name: "ロン", handler: () => onRon() });
+    if (p.canCallRon){
+      list.push({
+        name: "ロン",
+        handler: () => {
+          console.log("%c[ClickedButton: updateActionButtons] ロンボタンが押された", "color: #7a0808;");
+          onRon();
+        }
+      });
+    }
 
     // 暗槓（自分のツモ番のみ）
     if (canAnkan(this)) {
@@ -1316,7 +1340,13 @@ updateActionButtons() {
 
     // 北抜き
     if (canNorth(this)) {
-      list.push({ name: "北抜き", handler: () => onNorth(this, 0) });
+      list.push({
+        name: "北抜き",
+        handler: () => {
+          console.log("%c[ClickedButton: updateActionButtons] 北抜きボタンが押された", "color: #7a0808;");
+          onNorth(this, 0);
+        }
+      });
     }
 
   } else if (isCallTurn) {
@@ -1339,12 +1369,10 @@ updateActionButtons() {
   const skip = { 
     name: "スキップ",
     handler: () => {
+      console.log("%c[ClickedButton: updateActionButtons] スキップボタンが押された", "color: #7a0808;");
       container.innerHTML = "";
-      this.pendingDiscard = null;
-      this.state = "Delay";
-      this.scheduleStep(0);
-                 }
-  }
+    }
+  };
   
   //
   //  slots = [0] [1] [2]
