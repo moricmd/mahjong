@@ -98,6 +98,7 @@ export class Game {
     // デバッグ用: 任意の手牌を作成
     // ----------
     const p = this.players[0];
+    // 手牌を作成
     p.hand = [
       { suit: "pin", value: 1, red: false, type: "wall" },
       { suit: "pin", value: 1, red: false, type: "wall" },
@@ -114,8 +115,9 @@ export class Game {
       { suit: "dragon", value: 1, red: false, type: "wall" },
     ];
 
+    // 聴牌を確定させる
     isTenpaiNow(this, 0);
-    this,updateUI();
+    this.updateUI();
   }
 
   // -------------------------
