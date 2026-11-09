@@ -752,19 +752,19 @@ onCheckRon(discardTile, discarderIndex){
 
 tsumoPayment(tsumoResult){
   console.log("%c[CheckTsumo: tsumoPayment] 開始", "color: #4b88c2;");
-  const { winnerIndex, result } = tsumoResult;
+  const { winnerIndex, yakuResult } = tsumoResult;
   const p = this.players[winnerIndex];
 
   if(p.isRiichi){
     this.uraIndicators = [this.wall[this.wallIndex++]];
   }
   const renchan = (winnerIndex === this.dealer);
-  const gainScore = calcScore(this, winnerIndex, null, result.han, result.fu);
-  alert(`プレイヤー${winnerIndex} ツモ和了! han=${result.han}\n${result.yakuList.join(" / ")}\nscore=${gainScore}`);
+  const gainScore = calcScore(this, winnerIndex, null, yakuResult.han, yakuResult.fu);
+  alert(`プレイヤー${winnerIndex} ツモ和了! han=${yakuResult.han}\n${yakuResult.yakuList.join(" / ")}\nscore=${gainScore}`);
   
   console.log(`%c[CheckTsumo: tsumoPayment] プレイヤー${winnerIndex} ツモ
-    han= ${result.han}
-    yaku=${result.yakuList.join(" / ")}
+    han= ${yakuResult.han}
+    yaku=${yakuResult.yakuList.join(" / ")}
     score=${gainScore}\n`, "color: #4b88c2;");
 
   // 次の局へ
