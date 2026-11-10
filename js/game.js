@@ -518,7 +518,7 @@ tsumoStep(){
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   if(p.isCPU || p.isRiichi){
     console.log("%c[CheckTsumo: tsumoStep] 自動打牌する", "color: #4b88c2;");
-    this.scheduleStep(750);
+    this.scheduleStep(500);
   }
 }
 
@@ -663,7 +663,7 @@ tsumoStep(){
       this.updateUI();
     }
 
-    this.scheduleStep(500);
+    this.scheduleStep(0);
   }
 
 
@@ -843,9 +843,8 @@ callStep(){
   }
 
   this.state = "NextTurn";
-  const delay = this.getDiscardDelay();
 
-  this.scheduleStep(delay);
+  this.scheduleStep(0);
 
 }
 
