@@ -51,6 +51,8 @@ export class Game {
     this.round = 1;   // 1=東, 2=南, 3=西
     this.kyoku = 1;   // 1〜3局
     this.dealer = 0; 
+
+    this.nextRoundArgs = null;  // 次局へ移る際にデータを保持する変数
     
     this.lastDiscarder = null;
     this.pendingDiscard;  // 保留中の捨て牌（ロンや副露待ちの牌）
@@ -307,11 +309,34 @@ if(this._isStepping){
   return;
 }
 
-this._isStepping = true;
-
-  
-try{    
   switch (this.state) {
+
+    // ----------
+    // ゲーム管理
+    // ----------
+    case "Init":
+      break;
+
+    case "RoundStart":
+      this.startNewHand();
+      break;
+
+    case "Deal":
+      this.deal();
+      break;
+
+    case "NextRound":
+      this.nextRound();
+      break;
+
+    case "EndRound":
+      alert("局終了（仮）");
+      break;
+
+
+    // ----------
+    // ターン管理
+    // ----------
     case "TurnStart":
       this.onTurnStart();
       break;
@@ -340,13 +365,9 @@ try{
       this.onNextTurn();
       break;
 
-    case "EndRound":
-      alert("局終了（仮）");
-      break;
+
    }
-  } finally {
-    this._isStepping = false;
-  }
+
 
   this.updateUI();
 }
@@ -378,7 +399,7 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
     const renchan = parentTenpai; // 親テンパイなら連荘
     const isDraw = true;
 
-    this.nextRound(renchan, null, isDraw);
+    this.triggerNextRound(renchan, null, isDraw);
     return;
   }
 
@@ -756,7 +777,7 @@ tsumoPayment(tsumoResult){
     score=${gainScore}\n`, "color: #4b88c2;");
 
   // 次の局へ
-  this.nextRound(renchan, winnerIndex); 
+  this.triggerNextRound(renchan, winnerIndex); 
 }
 
 // ロンの処理
@@ -774,7 +795,7 @@ ronPayment(ronResult){
     yaku=${result.yakuList.join(" / ")}\n
     score=${gainScore}\n`, "color: #4b88c2;");
 
-  this.nextRound(renchan, winnerIndex);
+  this.triggerNextRound(renchan, winnerIndex);
 }
 
 ronStep(){
@@ -944,11 +965,19 @@ endGame() {
   this.state = "EndRound";
 }
 
+// 和了者情報をnextRoundに渡す
+triggerNextRound(renchan, winnerIndex = null, isDraw = false){
+  this.nextRoundArgs = { renchan, winnerIndex, isDraw};
+  this.state = "NextRound";
+  this.scheduleStep(1500);
+}
 
 // 局進行
-nextRound(renchan, winnerIndex = null, isDraw = false) {
+nextRound() {
   const parent = this.dealer;
   const parentTenpai = isTenpaiNow(this, parent);
+
+  const { renchan, winnerIndex, isDraw } = this.nextRoundArgs;
 
   // デバッグ用
   console.log(`%c[nextRound] 次の局を開始
@@ -1117,11 +1146,7 @@ startNewHand() {
 
   // --- 配牌 ---
   this.state = "Deal";
-  this.deal();
-
-
-  // UI更新
-  this.updateUI();
+  this.scheduleStep(0);
 }
 
 
