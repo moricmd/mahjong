@@ -402,13 +402,7 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
     this.scheduleStep(0);
   }
  
-  // ------------------------------
-  // CPUの思考時間をランダム生成
-  // ------------------------------
-  getRandomDelay() {
-    // CPUの打牌は1000〜1500ms遅延を入れる
-    return Math.floor(Math.random() * 1000) + 500; 
-  }
+
 
 
   
@@ -863,7 +857,7 @@ getDiscardDelay(){
 
   // CPUは1000 ~ 1500ms遅延
   if(p.isCPU){
-    const delayTime = this.getRandomDelay();
+    const delayTime = Math.floor(Math.random() * (1500 - 1000 + 1)) + 1000; 
     console.log(`%c[Delay: getDiscardDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #171f75;");
     return delayTime;
   }
