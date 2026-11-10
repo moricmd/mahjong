@@ -518,7 +518,7 @@ tsumoStep(){
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   if(p.isCPU || p.isRiichi){
     console.log("%c[CheckTsumo: tsumoStep] 自動打牌する", "color: #4b88c2;");
-    this.scheduleStep(0);
+    this.scheduleStep(750);
   }
 }
 
