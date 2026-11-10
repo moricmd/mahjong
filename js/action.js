@@ -240,7 +240,7 @@ export function onNorth(game, playerIndex = 0) {
     game.updateUI();
 
     game.state = "CheckTsumo";
-    game.scheduleStep(0);
+    game.scheduleStep(1000);
 
     }
 
