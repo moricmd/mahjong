@@ -855,9 +855,9 @@ getDiscardDelay(){
     return 1000;
   }
 
-  // CPUは1000 ~ 1500ms遅延
+  // CPUは1000 ~ 1250ms遅延
   if(p.isCPU){
-    const delayTime = Math.floor(Math.random() * (1500 - 1000 + 1)) + 1000; 
+    const delayTime = Math.floor(Math.random() * (1250 - 1000 + 1)) + 1000; 
     console.log(`%c[Delay: getDiscardDelay] CPU（プレイヤー${this.turn}）の打牌: ${delayTime}ms遅延`, "color: #171f75;");
     return delayTime;
   }
