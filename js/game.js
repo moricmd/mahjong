@@ -157,7 +157,7 @@ export class Game {
     if (this.autoSort) this.sortHand(0);
 
     this.state = "TurnStart";
-    this.updateUI();
+    this.scheduleStep(0);
   }
 
   // -------------------------
