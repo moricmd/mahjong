@@ -530,6 +530,10 @@ tsumoStep(){
   // 和了していなければ打牌へ
   this.state = "Discard";
 
+  // ツモ和了のフラグや情報をリセット
+  p.canCallTsumo = false;
+  p.tsumoReslt = null;
+
   // CPUや立直中のプレイヤーなら自動で打牌処理に流す
   const delayTime = this.getDiscardDelay();
   if(p.isCPU || p.isRiichi){
@@ -671,12 +675,15 @@ tsumoStep(){
   // -------------------------
   onNextTurn() {
     console.log("%c[NextTurn: onNextTurn] 開始", "color: #4b88c2;");
+
+    // 次のプレイヤーのターンに移る
     this.turn = this.getNextTurnIndex(this.turn);
+    const nextPlayer = this.players[this.turn];
+
     this.state = "TurnStart";
 
     console.log(`%c[NextTurn: onNextTurn] プレイヤー${this.turn}の手番を開始`, "color: #4b88c2;");
 
-    const nextPlayer = this.players[this.turn];
     if(!nextPlayer.isCPU && !nextPlayer.isRiichi){
       console.log("%c[NextTurn: onNextTurn] 次のプレイヤーが人間なのでUIを更新", "color: #4b88c2;");
       this.updateUI();
