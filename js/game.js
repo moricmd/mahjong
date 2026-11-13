@@ -8,7 +8,7 @@ import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, 
          updateMelds, updateNorthTiles,
          updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo,
          updateFuritenIndicator
-        } from "./ui.js";
+        } from "./UI.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
