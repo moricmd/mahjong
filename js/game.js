@@ -211,8 +211,8 @@ export class Game {
 
     updateFuritenIndicator(this.players[0]);
 
-    this.updateHandPositions();
-    this.updateDiscardPositions();
+    updateHandPositions();
+    updateDiscardPositions();
 
     this.updateActionButtons();
     updateMelds(this);
