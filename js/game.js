@@ -9,6 +9,7 @@ import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, 
          updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo,
          updateFuritenIndicator
         } from "./UI.js";
+import { updateGameLayout  } from "./gameUI.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
@@ -1162,122 +1163,6 @@ startNewHand() {
   this.scheduleStep(0);
 }
 
-
-
-// ------------------------------
-  // 画面中央から均等に配置
-  // ------------------------------
-// ------------------------------
-  // 手牌の位置を更新
-  // ------------------------------
-  updateHandPositions() {
-    const table = document.getElementById("table");
-    const rect  = table.getBoundingClientRect();
-    const yama  = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
-
-    const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
-    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
-
-    // ★手牌用の独立したオフセット
-    const offset = yamaRect.width * 1.4;
-
-    // 各プレイヤーの position に応じて座標と回転を決定
-    this.players.forEach((player, index) => {
-      // プレイヤー(0)なら #player-wrapper、CPUなら #cpu1-wrapper, #cpu2-wrapper
-      const selector = index === 0 ? "#player-wrapper" : `#cpu${index}-wrapper`;
-      const el = document.querySelector(selector);
-      if (!el) return;
-
-      let x = cx;
-      let y = cy;
-      let rotate = 0;
-
-      switch (player.position) {
-        case "bottom":
-          y = cy + offset;
-          rotate = 0;
-          break;
-        case "top":
-          y = cy - offset;
-          rotate = 180;
-          break;
-        case "right":
-          x = cx + offset;
-          y = cy - 14;  // 牌0.5枚分
-          rotate = -90;
-          break;
-        case "left":
-          x = cx - offset;
-          y = cy + 14;
-          rotate = 90;
-          break;
-
-          //
-          // hand-areaが14枚分の箱を用意する都合上rightとleftでは牌1枚分の
-          // 高さのずれが起こるので、(40px * 0.7) = 28pxの半分だけそれぞれずらすことで
-          // 位置を合わせる
-          //
-
-      }
-
-      el.style.position = "absolute";
-      el.style.left = `${x}px`;
-      el.style.top  = `${y}px`;
-      el.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
-    });
-  }
-
-  // ------------------------------
-  // 捨て牌の位置を更新
-  // ------------------------------
-  updateDiscardPositions() {
-    const table = document.getElementById("table");
-    const rect  = table.getBoundingClientRect();
-    const yama  = document.getElementById("table-info");
-    const yamaRect = yama.getBoundingClientRect();
-
-    const cx = (yamaRect.left - rect.left) + yamaRect.width  / 2;
-    const cy = (yamaRect.top  - rect.top ) + yamaRect.height / 2;
-
-    // ★捨て牌用の独立したオフセット（手牌とは完全に別個の距離にできる！）
-    const offset = yamaRect.width * 0.8;
-
-    this.players.forEach((player, index) => {
-      // 捨て牌は #discards-0, #discards-1, #discards-2
-      const selector = `#discards-${index}`;
-      const el = document.querySelector(selector);
-      if (!el) return;
-
-      let x = cx;
-      let y = cy;
-      let rotate = 0;
-
-      switch (player.position) {
-        case "bottom":
-          y = cy + offset;
-          rotate = 0;
-          break;
-        case "top":
-          y = cy - offset;
-          rotate = 180;
-          break;
-        case "right":
-          x = cx + offset;
-          rotate = -90;
-          break;
-        case "left":
-          x = cx - offset;
-          rotate = 90;
-          break;
-      }
-
-      el.style.position = "absolute";
-      el.style.left = `${x}px`;
-      el.style.top  = `${y}px`;
-      el.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
-    });
-  }
 
   // 立直・副露ボタン
   // ===========================================================================

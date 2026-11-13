@@ -26,7 +26,7 @@ function getTableMetrics(){
 // ----------
 // 手牌の位置更新関数
 // ----------
-export function updateHandPositions(players){
+function updateHandPositions(players){
 
     const metrics = getTableMetrics();
 
@@ -91,7 +91,7 @@ export function updateHandPositions(players){
 // ----------
 // 捨て牌の位置更新関数
 // ----------
-export function updateDiscardPostions(players){
+function updateDiscardPostions(players){
 
     const metrics = getTableMetrics();
     if(!metrics) return;
@@ -143,7 +143,7 @@ export function updateDiscardPostions(players){
 // ----------
 // フリテン表示枠の位置更新関数
 // ----------
-export function updateFuritenPostion(player0Pos){
+function updateFuritenPostion(player0Pos){
 
     //
     //  top   :  手牌と同じ高さ
@@ -175,7 +175,7 @@ export function updateFuritenPostion(player0Pos){
 // ----------
 // action-btnの位置更新関数
 // ----------
-export function updateActionButtonsPosition(player0Pos){
+function updateActionButtonsPosition(player0Pos){
 
     const el = document.getElementById("action-buttons");
     if(!el || !player0Pos) return;
@@ -203,5 +203,15 @@ export function updateActionButtonsPosition(player0Pos){
     el.style.left = `${leftX}px`;
     el.style.top = `${topY}px`;
     el.style.transform = "translate(-50%, -50%)"; // 縦横ともに中心を合わせる
-    
+
+}
+
+export function updateGameLayout(players){
+    const player0Pos = updateHandPositions(players);
+    updateDiscardPostions(players);
+
+    if(player0Pos){
+        updateFuritenPostion(player0Pos);
+        updateActionButtonsPosition(player0Pos);
+    }
 }
