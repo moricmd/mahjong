@@ -6,7 +6,8 @@ import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, 
          createTileElement,
          assignSeatsByWind,
          updateMelds, updateNorthTiles,
-         updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo
+         updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo,
+         updateFuritenIndicator
         } from "./ui.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
@@ -207,6 +208,8 @@ export class Game {
     updateRelativeScores(this.players, this.showRelativeScores);
     updateTurnIndicator(this.turn, this.players);
 
+    updateFuritenIndicator(this.players[0]);
+
     this.updateHandPositions();
     this.updateDiscardPositions();
 
@@ -382,13 +385,13 @@ console.log("%c[TurnStart: onTurnStart] 開始", "color: #4b88c2;");
 
  if(this.startTurnTime > 0){
     this.endTurnTime = performance.now();
-    console.log(`%c[PassedTime] ターン終了までの時間: ${this.endTurnTime - this.startTurnTime}`, "color: #1bc7a2ff");
+    console.log(`%c[PassedTime] ターン終了までの時間: ${this.endTurnTime - this.startTurnTime}`, "color: #1bc7a2;");
 
     this.endTurnTime = 0;
   }
   
   this.startTurnTime = performance.now();
-  console.log("%c[PassedTime] 計測開始", "color: #1bc7a2ff");
+  console.log("%c[PassedTime] 計測開始", "color: #1bc7a2;");
 
 
   if (this.wallIndex >= this.wall.length) {
@@ -612,13 +615,16 @@ tsumoStep(){
         console.log("%c[Discard: onDiscard] ダブル立直", "color: #4b88c2;");
         p.isDoubleRiichi = true;
       }
-      checkDiscardFuriten(this, this.turn);
     }
 
     if(this.autoSort) this.sortHand(this.turn);
 
+    // 捨てたときにその手牌で聴牌しているか・フリテンかを確認
     const res = isTenpaiNow(this, this.turn);
+    checkDiscardFuriten(this, this.turn);
+
     console.log(`%c[Discard: onDiscard]  ${res ? `待ち牌: ${JSON.stringify(p.waitingTiles)}` : "聴牌していない"}`, "color: #4b88c2;");
+
     this.updateUI();
 
     return { 

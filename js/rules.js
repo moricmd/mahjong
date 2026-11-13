@@ -121,9 +121,13 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
 
   // 捨て牌に待ち牌が含まれているか
   for (const w of waits) {
-    if (discards.some(d => sameTile(d, w))) {
+    const matchedDiscard = discards.find(d => sameTile(d, w));
+    
+    if (matchedDiscard) {
       p.isFuriten = true;
       p.furitenType = "discard";
+
+      console.log(`%c[checkDiscardFuriten] 捨て牌によるフリテン: \nプレイヤー${this.turn}のフリテン\n捨て牌: ${JSON.stringify(matchedDiscard)}`, "color: #4b88c2;");
       return;
     }
   }

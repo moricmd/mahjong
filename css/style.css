@@ -348,6 +348,28 @@ body {
   width: calc((40px * 0.7) * 14);
 }
 
+/* フリテン表示 */
+.furiten-bagde {
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translate(0, -50%);
+  margin-right: 12px;
+
+  padding: 4px 10px;
+  background-color: #a81b1b;
+  color: #ffffff;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.furiten-bagde.hidden {
+  display: none;
+}
+
 
 /* 捨て牌の表示 */
 .discard-area {

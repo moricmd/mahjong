@@ -398,7 +398,21 @@ export function updateTurnIndicator(currentPlayer, players) {
   if (pos === "left")   document.getElementById("wall-left").style.display   = "block";
 }
 
+// ----------
+// フリテン表示
+// ----------
+export function updateFuritenIndicator(player){
+  const el = document.getElementById("furiten-indicator");
+  if(!el) return;
 
+  if(player.isFuriten){
+    el.classList.remove("hidden");
+    console.log("%c[updateFuritenIndicator] フリテン表示をオン", "color: #4b88c2;");
+  } else {
+    el.classList.add("hidden");
+    console.log("%c[updateFuritenIndicator] フリテン表示をオフ", "color: #4b88c2;");
+  }
+}
 
   // -------------------------
   // 風と優先順位の割り当て
