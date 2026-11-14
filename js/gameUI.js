@@ -10,14 +10,17 @@ function getTableMetrics(){
 
     if(!table || !yama) return null;
 
-    const rect = table.getBoundingClientRect();
-    const yamaRect = yama.getBoundingClientRect();
+    const tableWidth = table.clientWidth;
+    const tableHeight = table.clientHeight;
+
+    const yamaWidth = yama.offsetWidth;
+    const yamaHeight = yama.offsetHeight;
 
     return {
-        cx: (yamaRect.left - rect.left) + yamaRect.width / 2,
-        cy: (yamaRect.top - rect.top) + yamaRect.height / 2,
-        yamaWidth: yamaRect.width,
-        yamaHeight: yamaRect.height
+        cx: tableWidth / 2,
+        cy: tableHeight / 2,
+        yamaWidth: yamaWidth,
+        yamaHeight: yamaHeight
     };
 
 }
