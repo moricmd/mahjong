@@ -1,5 +1,6 @@
 // main.js
 import { Game } from "./game.js";
+import { updateGameLayout } from "./gameUI.js";
 
 let game = null;
 
@@ -42,9 +43,9 @@ window.addEventListener("load", () => {
 });
 
 window.addEventListener("resize", () => {
-  if(game){
-    game.updateHandPositions();
-    game.updateDiscardPositions();
+  if(game && game.players){
+    updateHandPositions();
+    updateDiscardPositions();
   }
 })
 
