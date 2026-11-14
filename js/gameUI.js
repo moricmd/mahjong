@@ -212,8 +212,8 @@ function updateActionButtonsPosition(player0Pos){
 }
 
 export function updateGameLayout(players){
-    const player0Pos = updateHandPositions(players);
-    updateDiscardPositions(players);
+    const player0Pos = updateHandPosition(players);
+    updateDiscardPosition(players);
 
     if(player0Pos){
         updateFuritenPosition(player0Pos);
