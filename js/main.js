@@ -44,8 +44,7 @@ window.addEventListener("load", () => {
 
 window.addEventListener("resize", () => {
   if(game && game.players){
-    updateHandPositions();
-    updateDiscardPositions();
+    updateGameLayout(game.players);
   }
 })
 
