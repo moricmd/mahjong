@@ -148,7 +148,7 @@ function updateDiscardPosition(players){
 // ----------
 // フリテン表示枠の位置更新関数
 // ----------
-function updateFuritenPostion(player0Pos){
+function updateFuritenPosition(player0Pos){
 
     //
     //  top   :  手牌と同じ高さ
