@@ -346,6 +346,7 @@ body {
 
 #player-wrapper {
   width: calc(40px * 14);
+  height: 60px;
 }
 
 #cpu1-wrapper, #cpu2-wrapper {
