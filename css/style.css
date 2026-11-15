@@ -25,6 +25,9 @@ body {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+
+  transform: scale(var(--game-scale, 1));
+  transform-origin: center center;
 }
  
 
@@ -164,8 +167,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(var(--table-scale, 1));
-  transform-origin: center center;
+  transform: translate(-50%, -50%);
   width: 90vw;
   height: 95vh;
   overflow: hidden;

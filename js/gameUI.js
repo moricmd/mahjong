@@ -217,7 +217,7 @@ function updateActionButtonsPosition(player0Pos){
 
 export function updateGameLayout(players){
 
-    const table = document.getElementById("table");
+    const gameScreen = document.getElementById("game-screen");
 
     // 今の画面のサイズと最初のサイズとの比率を計算
     const scaleX = window.innerWidth / baseWidth;
@@ -233,8 +233,7 @@ export function updateGameLayout(players){
     }
 
     // CSSにセット
-    table.style.setProperty("--table-scale", scale);
-
+    gameScreen.style.setProperty("--table-scale", scale);
 
     const player0Pos = updateHandPosition(players);
     updateDiscardPosition(players);
