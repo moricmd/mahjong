@@ -1,5 +1,9 @@
 // gameUI.js
 
+// 端末の全画面の width / height を基準とする
+const baseWidth = window.screen.width;
+const baseHeight = window.screen.height;
+
 // ----------
 // 基準座標の取得関数
 // ----------
@@ -212,6 +216,26 @@ function updateActionButtonsPosition(player0Pos){
 }
 
 export function updateGameLayout(players){
+
+    const table = document.getElementById("table");
+
+    // 今の画面のサイズと最初のサイズとの比率を計算
+    const scaleX = window.innerWidth / baseWidth;
+    const scaleY = window.innerHeight / baseHeight;
+
+    // 狭い方の比率を採用する（1よりは大きくしない）
+    let scale = Math.min(scaleX, scaleY);
+
+    // 全画面の40%より小さくすることはできない
+    const MIN_SCALE = 0.4;
+    if(scale < MIN_SCALE){
+        scale = MIN_SCALE;
+    }
+
+    // CSSにセット
+    table.style.setProperty("--table-scale", scale);
+
+
     const player0Pos = updateHandPosition(players);
     updateDiscardPosition(players);
 
