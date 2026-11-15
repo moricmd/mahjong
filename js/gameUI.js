@@ -221,7 +221,7 @@ function updateActionButtonsPosition(player0Pos){
             const actionRect = el.getBoundingClientRect();
             const handRect = handWrapper.querySelector(".tile").getBoundingClientRect();
 
-            console.log(`%c[Debug: updateActionButtonsPosition] 手牌の上端: ${handRect.top}\naction-buttonsの下端: ${actionRect.bottom}\n間隔: ${handRect.top - actionRect.bottom}`, "color: #d407ef");
+            console.log(`%c[Debug: updateActionButtonsPosition] 手牌の上端: ${handRect.top}\naction-buttonsの下端: ${actionRect.bottom}\n間隔: ${handRect.top - actionRect.bottom}\ngap: ${gap}`, "color: #d407ef");
         });
 }
 
