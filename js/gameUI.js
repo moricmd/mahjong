@@ -208,6 +208,8 @@ function updateActionButtonsPosition(player0Pos){
     // ボタン表示領域の中心のy座標（手牌の上端のy座標 - 間隔 - ボタン表示領域のheightの半分の長さ）
     const topY = handTopY - gap - (actionHeight / 2);
 
+    console.log(`%c[Debug: updateActionButtonsPosition]\n\nplayer0Pos.y: ${player0Pos.y}\nhandTopY: ${handTopY}\nactionHeight: ${actionHeight}\ngap: ${gap}\ntopY: ${topY}`, "color: #d407ef");
+
     el.style.position = "absolute";
     el.style.left = `${leftX}px`;
     el.style.top = `${topY}px`;
