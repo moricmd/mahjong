@@ -1,8 +1,8 @@
 // gameUI.js
 
-// 端末の全画面の width / height を基準とする
-const baseWidth = window.screen.width;
-const baseHeight = window.screen.height;
+// 1920 × 1080 の画面を100%とする
+const BASE_WIDTH = 1920;
+const BASE_HEIGHT = 1080;
 
 // ----------
 // 基準座標の取得関数
@@ -220,8 +220,8 @@ export function updateGameLayout(players){
     const gameScreen = document.getElementById("game-screen");
 
     // 今の画面のサイズと最初のサイズとの比率を計算
-    const scaleX = window.innerWidth / baseWidth;
-    const scaleY = window.innerHeight / baseHeight;
+    const scaleX = window.innerWidth / BASE_WIDTH;
+    const scaleY = window.innerHeight / BASE_HEIGHT;
 
     // 狭い方の比率を採用する（1よりは大きくしない）
     let scale = Math.min(scaleX, scaleY);
@@ -233,7 +233,7 @@ export function updateGameLayout(players){
     }
 
     // CSSにセット
-    gameScreen.style.setProperty("--table-scale", scale);
+    gameScreen.style.setProperty("--game-scale", scale);
 
     const player0Pos = updateHandPosition(players);
     updateDiscardPosition(players);

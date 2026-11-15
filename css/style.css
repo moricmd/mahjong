@@ -22,12 +22,14 @@ body {
 /* ゲーム画面 */
 #game-screen {
   display: none;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-
-  transform: scale(var(--game-scale, 1));
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(var(--game-scale, 1));
   transform-origin: center center;
+  overflow: hidden;
 }
  
 
@@ -163,13 +165,12 @@ body {
 
 /* 雀卓 */
 #table {
-  flex: 1;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 95vh;
+  width: 90%;
+  height: 95%;
   overflow: hidden;
 }
 
