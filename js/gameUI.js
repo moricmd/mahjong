@@ -219,7 +219,7 @@ function updateActionButtonsPosition(player0Pos){
     requestAnimationFrame(() => {
             const handWrapper = document.getElementById("player-wrapper");
             const actionRect = el.getBoundingClientRect();
-            const handRect = handWrapper.getBoundingClientRect();
+            const handRect = handWrapper.querySelector(".tile").getBoundingClientRect();
 
             console.log(`%c[Debug: updateActionButtonsPosition] 手牌の上端: ${handRect.top}\naction-buttonsの下端: ${actionRect.bottom}\n間隔: ${handRect.top - actionRect.bottom}`, "color: #d407ef");
         });
