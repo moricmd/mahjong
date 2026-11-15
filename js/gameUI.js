@@ -217,6 +217,7 @@ function updateActionButtonsPosition(player0Pos){
     el.style.transform = "translate(-50%, -50%)"; // 縦横ともに中心を合わせる
 
     requestAnimationFrame(() => {
+            const handWrapper = document.getElementById("player-wrapper");
             const actionRect = el.getBoundingClientRect();
             const handRect = handWrapper.getBoundingClientRect();
 
