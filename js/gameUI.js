@@ -210,11 +210,18 @@ function updateActionButtonsPosition(player0Pos){
 
     console.log(`%c[Debug: updateActionButtonsPosition]\n\nplayer0Pos.y: ${player0Pos.y}\nhandTopY: ${handTopY}\nactionHeight: ${actionHeight}\ngap: ${gap}\ntopY: ${topY}`, "color: #d407ef");
 
+
     el.style.position = "absolute";
     el.style.left = `${leftX}px`;
     el.style.top = `${topY}px`;
     el.style.transform = "translate(-50%, -50%)"; // 縦横ともに中心を合わせる
 
+    requestAnimationFrame(() => {
+            const actionRect = el.getBoundingClientRect();
+            const handRect = handWrapper.getBoundingClientRect();
+
+            console.log(`%c[Debug: updateActionButtonsPosition] 手牌の上端: ${handRect.top}\naction-buttonsの下端: ${actionRect.bottom}\n間隔: ${handRect.top - actionRect.bottom}`, "color: #d407ef");
+        });
 }
 
 export function updateGameLayout(players){
