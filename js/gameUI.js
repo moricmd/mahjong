@@ -156,7 +156,7 @@ function updateFuritenPosition(player0Pos){
 
     //
     //  top   :  手牌と同じ高さ
-    //  left  :  枠が手牌から20px離れる位置
+    //  left  :  枠が手牌から15px離れる位置
     //
 
     const el = document.getElementById("furiten-indicator");
@@ -165,7 +165,7 @@ function updateFuritenPosition(player0Pos){
 
     const halfHandWidth = handWrapper.offsetWidth / 2;  // 手牌の半分の幅
     const badgeWidth = el.offsetWidth;                  // フリテン表示枠のwidth
-    const gap = 20;                                     // 手牌（player-wrapper）との間隔
+    const gap = 15;                                     // 手牌（player-wrapper）との間隔
 
     // 手牌の左端のx座標（手牌の中心のx座標 - 手牌の半分の長さ）
     const handLeftX = player0Pos.x - halfHandWidth;
