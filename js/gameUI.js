@@ -40,7 +40,7 @@ function updateHandPosition(players){
     if(!metrics) return null;
 
     const { cx, cy, yamaWidth } = metrics;
-    const offset = yamaWidth * 1.2;
+    const offset = yamaWidth * 1.4;
     let player0Pos = null;
 
     players.forEach((player, index) => {
