@@ -647,6 +647,8 @@ if(this._isStepping){
     // CPUの捨て牌
     if(p.isCPU){
 
+      console.log(`%c[Discard: onDiscard] 現在のdebugForcedDiscard: ${JSON.stringify(this.debugForcedDiscard)}`, "color: #4b88c2;");
+
       // デバッグ用: CPUの捨て牌を操作
       if(this.debugForcedDiscard){
         discardTile = p.discard(0);
@@ -655,13 +657,17 @@ if(this._isStepping){
         discardTile.value = this.debugForcedDiscard.value;
         discardTile.red = this.debugForcedDiscard.red ?? false;
 
-      }
-
-      const idx = chooseDiscardIndex(p.hand);
-      discardTile = p.discard(idx);
+      console.log(`%c[Discard: onDiscard] 指定した牌を捨てさせた: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
       this.debugForcedDiscard = null;
-      console.log(`%c[Discard: onDiscard] CPUの打牌\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
 
+      // 通常の打牌
+      } else {
+
+        const idx = chooseDiscardIndex(p.hand);
+        discardTile = p.discard(idx);
+
+        console.log(`%c[Discard: onDiscard] CPUの打牌\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
+      }
     // 人間の捨て牌
     } else {
 
@@ -1271,7 +1277,10 @@ updateActionButtons() {
   // ① ボタンを表示する状況か？
   // -------------------------
 
-  // 他家の捨て牌でポン・カン待ち
+  // ロン待ち
+  const isCallRon = (this.state === "CheckRon");
+
+  // ポン・カン待ち
   const isCallTurn = (this.state === "WaitCall");
 
   // 自分のツモ番（CheckTsumo → Discard）
@@ -1279,7 +1288,7 @@ updateActionButtons() {
     (this.turn === 0) &&
     (this.state === "CheckTsumo" || this.state === "Discard");
 
-  if (!isCallTurn && !isMyTurn) {
+  if (!isCallRon && !isCallTurn && !isMyTurn) {
     return; // 何も表示しない
   }
 
