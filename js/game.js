@@ -999,6 +999,12 @@ nextRound() {
     parentTenpai: ${parentTenpai}
     winnerIndex: ${winnerIndex}`, "color: #9453df;");
 
+  // フリテンフラグをリセット
+  for(const p of this.players){
+    p.isFuriten = false;
+    p.furitenType = "none";
+  }
+
 
   // 飛び終了チェック: 持ち点が0未満のプレイヤーがいるなら強制終了
   if(this.players.some(p => p.score < 0)){
