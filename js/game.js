@@ -14,7 +14,7 @@ import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
 import { decomposeHand } from "./melds.js";
-import { onRiichi, onCancelRiichi, onRon, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
+import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
         } from "./action.js";
@@ -70,6 +70,9 @@ export class Game {
     this.startTurnTime = 0;
     this.endTurnTime = 0;
 
+    // デバッグ用: 相手の捨て牌
+    this.debugForcedDiscard = null;
+
 
     this.initGame();
   }
@@ -124,6 +127,12 @@ export class Game {
     // 聴牌を確定させる
     isTenpaiNow(this, 0);
     this.updateUI();
+  }
+
+  // デバッグ用: CPUの捨て牌を操作する
+  forceCpuDiscard(suit, value, red = false) {
+    this.debugForcedDiscard = { suit, value, red, type: "wall" };
+    console.log(`%c[Debug] 次のCPUの強制捨て牌をセットしました: ${suit}の${value}`, "color: #e44848;");
   }
 
   // -------------------------
@@ -639,8 +648,18 @@ if(this._isStepping){
 
     // CPUの捨て牌
     if(p.isCPU){
-      const idx = chooseDiscardIndex(p.hand);
+
+      if(this.debugForcedDiscard){
+        discardTile = p.discard(0);
+
+        discardTile.suit = this.debugForcedDiscard.suit;
+        discardTile.value = this.debugForcedDiscard.value;
+        discardTile.red = this.debugForcedDiscard.red ?? false;
+
+      }
+      idx = chooseDiscardIndex(p.hand);
       discardTile = p.discard(idx);
+      this.debugForcedDiscard = null;
       console.log(`%c[Discard: onDiscard] CPUの打牌\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
 
     // 人間の捨て牌
