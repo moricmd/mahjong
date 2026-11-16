@@ -191,6 +191,7 @@ function updateActionButtonsPosition(player0Pos){
 
     const halfHandWidth = (40 * 14) / 2;   // 手牌全体の半分の幅
     const tileHeight = 60;                 // 牌のheight
+    const tileWidth = 40;
     const actionWidth = el.offsetWidth;    // ボタン表示領域のwidth 
     const actionHeight = el.offsetHeight;  // ボタン表示領域のheight
     const gap = 20;                        // 手牌との間隔
@@ -198,8 +199,9 @@ function updateActionButtonsPosition(player0Pos){
     // 手牌の右端のx座標（手牌の中心のx座標 + 手牌の半分の長さ）
     const handRightX = player0Pos.x + halfHandWidth;
 
-    // ボタン表示領域の中心のx座標（手牌の右端のx座標 - ボタン表示領域のwidthの半分の長さ）
-    const leftX = handRightX - (actionWidth / 2);
+    // ボタン表示領域の中心のx座標（手牌の右端のx座標 - ボタン表示領域のwidthの半分の長さ - 牌1枚分のwidth）
+    // （ツモ牌を除いた手牌の右端と揃える）
+    const leftX = handRightX - (actionWidth / 2) - tileWidth;
 
 
     // 手牌の上端のy座標（手牌の中心のy座標 - 牌のheightの半分の長さ）
