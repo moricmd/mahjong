@@ -301,6 +301,21 @@ export function updateNorthTiles(game) {
   }
 }
 
+// ----------
+// 積み棒・供託の更新
+// ----------
+export function updateCounterArea(game){
+
+  const honbaEl = document.getElementById("honba-count");
+  if(honbaEl){
+    honbaEl.textContent = game.honba;
+  }
+
+  const kyotakuEl = document.getElementById("kyotaku-count");
+  if(kyotakuEl){
+    kyotakuEl.textContent = game.kyotaku;
+  }
+}
 
 
 // ------------------------------ 

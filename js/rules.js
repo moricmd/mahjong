@@ -166,3 +166,58 @@ export function sameTile(t1, t2){
   if(!t1 || !t2) return false;
   return t1.suit === t2.suit && t1.value === t2.value;
 }
+
+
+// ----------
+// ノーテン罰符計算
+// ----------
+export function calcNotenPenalty(game){
+  console.log("%c[calcNotenPenalty] ノーテン罰符計算", "color: #4b88c2;");
+
+  const tenpaiPlayers = game.players
+    .map((p, i) => ({ player: p, index: i}))
+    .filter(item => item.player.isTenpai === true);
+
+  const tenpaiCount = tenpaiPlayers.length;
+
+  // 全員ノーテン or 聴牌なら点数授受はなし
+  if(tenpaiCount === 0 || tenpaiCount === 3){
+    console.log(`%c[calcNotenPenalty] ${tenpaiCount === 0 ? "全員ノーテン": "全員聴牌"}のため支払いなし`, "color: #4b88c2;");
+    return;
+  }
+
+  // 1人聴牌なら聴牌者は+2000点
+  if(tenpaiCount === 1){
+
+    game.players.forEach((p, i) => {
+
+      if(p.isTenpai){
+        p.score += 2000;
+        console.log(`%c[calcNotenPenalty] 聴牌: プレイヤー${i}\n+2000点`, "color: #4b88c2;");
+      } else {
+        p.score -= 1000;
+        console.log(`%c[calcNotenPenalty] ノーテン: プレイヤー${i}\n-1000点`, "color: #4b88c2;");
+      }
+      
+    });
+  }
+
+  // 2人聴牌なら聴牌者は+1000点ずつ
+  if(tenpaiCount === 2){
+
+    game.players.forEach((p, i) => {
+      if(p.isTenpai){
+        p.score += 1000;
+        console.log(`%c[calcNotenPenalty] 聴牌: プレイヤー${i}\n+1000点`, "color: #4b88c2;");
+      } else {
+        p.score -= 2000;
+        console.log(`%c[calcNotenPenalty] ノーテン: プレイヤー${i}\n-2000点`, "color: #4b88c2;");
+      }
+      
+    });
+
+  }
+
+  this.updateUI();
+
+}
