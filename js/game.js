@@ -1394,7 +1394,13 @@ updateActionButtons() {
         this.scheduleStep(0);
         return;
       }
-
+      // ツモ和了しなかったなら打牌へ
+      if(p.canCallTsumo && this.state === "CheckTsumo"){
+        console.log("%c[updateActionButtons] ツモ和了をスキップしたため自動打牌に移行", "color: #4b88c2;");
+        this.state = "Discard";
+        this.scheduleStep(0);
+        return;
+      }
       const p0 = this.players[0];
 
       // 1. ロン可能なのにスキップしたなら同巡フリテンになる
