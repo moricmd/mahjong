@@ -2,7 +2,7 @@
 
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
-import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards, renderState,
+import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards,
          createTileElement,
          assignSeatsByWind,
          updateMelds, updateNorthTiles,
@@ -13,7 +13,6 @@ import { updateGameLayout  } from "./gameUI.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
-import { decomposeHand } from "./melds.js";
 import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth

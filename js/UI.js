@@ -302,14 +302,6 @@ export function updateNorthTiles(game) {
 }
 
 
-// -------------------------
-// 状態表示
-// -------------------------
-export function renderState(state, turn) {
-  document.getElementById("state").textContent = `State: ${state}, Turn: ${turn}`;
-}
-
-
 
 // ------------------------------ 
 // 相対点数表示
