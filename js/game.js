@@ -648,6 +648,7 @@ if(this._isStepping){
     // CPUの捨て牌
     if(p.isCPU){
 
+      // デバッグ用: CPUの捨て牌を操作
       if(this.debugForcedDiscard){
         discardTile = p.discard(0);
 
@@ -656,7 +657,8 @@ if(this._isStepping){
         discardTile.red = this.debugForcedDiscard.red ?? false;
 
       }
-      idx = chooseDiscardIndex(p.hand);
+
+      const idx = chooseDiscardIndex(p.hand);
       discardTile = p.discard(idx);
       this.debugForcedDiscard = null;
       console.log(`%c[Discard: onDiscard] CPUの打牌\n\n捨て牌: ${JSON.stringify(discardTile)}`, "color: #4b88c2;");
