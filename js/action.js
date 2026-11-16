@@ -56,14 +56,6 @@ export function onCancelRiichi(game, playerIndex = 0){
   game.updateUI();
 }
 
-
-
-// 保留
-export function onRon(game){
-  return false;
-}
-
-
 // -------------------------
 // ポン
 // -------------------------

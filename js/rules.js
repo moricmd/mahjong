@@ -139,34 +139,25 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
 
 
 
-// 同巡フリテン 
-export function checkSameTurnFuriten(game, playerIndex, tile) {
+// 待ち牌見逃しのフリテン
+export function missedRonFuriten(game, playerIndex){
+
   const p = game.players[playerIndex];
+  if(!p || !p.isTenpai) return;
 
-  // 自分の最後の捨て牌と一致したら同巡フリテン
-  const lastDiscard = p.discards[p.discards.length - 1];
-  if (lastDiscard && lastDiscard === tile) {
-    p.isFuriten = true;
-    p.furitenType = "sameTurn";
-    return true; // フリテン
-  }
-  return false;
-}
-
-
-
-// リーチ後見逃しフリテン
-export function checkRiichiMissFuriten(game, playerIndex) {
-  const p = game.players[playerIndex];
-
-  if (p.isRiichi && p.missedRon) {
+  // 立直後の見逃し
+  if(p.isRiichi){
     p.isFuriten = true;
     p.furitenType = "riichi";
-    return true;
+    console.log(`%c[missedRonFuriten] 立直後の見逃しによるフリテン（プレイヤー${playerIndex}）`, "color: #4b88c2;");
+    return;
   }
-  return false;
-}
 
+  // 同巡フリテン
+  p.isFuriten = true;
+  p.furitenType = "sameTurn";
+  console.log(`%c[missedRonFuriten] 同巡フリテン（プレイヤー${playerIndex}）`, "color: #4b88c2;");
+}
 
 // ----------
 // 同じ種類の牌かを判定
