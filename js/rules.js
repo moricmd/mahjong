@@ -127,7 +127,7 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
       p.isFuriten = true;
       p.furitenType = "discard";
 
-      console.log(`%c[checkDiscardFuriten] 捨て牌によるフリテン: \nプレイヤー${this.turn}のフリテン\n捨て牌: ${JSON.stringify(matchedDiscard)}`, "color: #4b88c2;");
+      console.log(`%c[checkDiscardFuriten] 捨て牌によるフリテン: \nプレイヤー${playerIndex}のフリテン\n捨て牌: ${JSON.stringify(matchedDiscard)}`, "color: #4b88c2;");
       return;
     }
   }
