@@ -1391,7 +1391,6 @@ updateActionButtons() {
       if(this.state === "CheckTsumo"){
         console.log("%c[updateActionButtons] スキップしたため打牌へ移行", "color: #4b88c2;");
         this.state = "Discard";
-        this.scheduleStep(0);
         return;
       }
 
