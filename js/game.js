@@ -176,7 +176,6 @@ export class Game {
   // UI 更新
   // -------------------------
   updateUI() {
-    renderState(this.state, this.turn);
 
     const p = this.players[0];
     const candidates = p.isWaitingRiichi ? getRiichiCandidates(this, 0) : null;
