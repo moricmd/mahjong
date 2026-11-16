@@ -1278,17 +1278,17 @@ updateActionButtons() {
   // -------------------------
 
   // ロン待ち
-  const isCallRon = (this.state === "CheckRon");
+  const isCheckRon = (this.state === "CheckRon");
 
   // ポン・カン待ち
-  const isCallTurn = (this.state === "WaitCall");
+  const isWaitCall = (this.state === "WaitCall");
 
   // 自分のツモ番（CheckTsumo → Discard）
   const isMyTurn =
     (this.turn === 0) &&
     (this.state === "CheckTsumo" || this.state === "Discard");
 
-  if (!isCallRon && !isCallTurn && !isMyTurn) {
+  if (!isCheckRon && !isWaitCall && !isMyTurn) {
     return; // 何も表示しない
   }
 
@@ -1332,16 +1332,7 @@ updateActionButtons() {
       });
     }
 
-    if (p.canCallRon && !p.isFuriten){
-      list.push({
-        name: "ロン",
-        handler: () => {
-          console.log("%c[ClickedButton: updateActionButtons] ロンボタンが押された", "color: #7a0808;");
-          container.innerHTML = "";
-          this.ronPayment(this.pendingRonResult);
-        }
-      });
-    }
+
 
     // 暗槓（自分のツモ番のみ）
     if (canAnkan(this)) {
@@ -1359,8 +1350,20 @@ updateActionButtons() {
       });
     }
 
-  } else if (isCallTurn) {
-    // 他家の捨て牌 → ポン / 大明槓 のみ
+  } else if(isCheckRon){
+    // ロン
+    if (p.canCallRon && !p.isFuriten){
+      list.push({
+        name: "ロン",
+        handler: () => {
+          console.log("%c[ClickedButton: updateActionButtons] ロンボタンが押された", "color: #7a0808;");
+          container.innerHTML = "";
+          this.ronPayment(this.pendingRonResult);
+        }
+      });
+    }
+  } else if (isWaitCall) {
+    // ポン・大明槓
     if (canPon(this)) {
       list.push({ name: "ポン", handler: () => onPon(this, 0) });
     }
