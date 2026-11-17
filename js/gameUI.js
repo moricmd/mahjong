@@ -210,21 +210,11 @@ function updateActionButtonsPosition(player0Pos){
     // ボタン表示領域の中心のy座標（手牌の上端のy座標 - 間隔 - ボタン表示領域のheightの半分の長さ）
     const topY = handTopY - gap - (actionHeight / 2);
 
-    console.log(`%c[Debug: updateActionButtonsPosition]\n\nplayer0Pos.y: ${player0Pos.y}\nhandTopY: ${handTopY}\nactionHeight: ${actionHeight}\ngap: ${gap}\ntopY: ${topY}`, "color: #d407ef");
-
-
     el.style.position = "absolute";
     el.style.left = `${leftX}px`;
     el.style.top = `${topY}px`;
     el.style.transform = "translate(-50%, -50%)"; // 縦横ともに中心を合わせる
-
-    requestAnimationFrame(() => {
-            const handWrapper = document.getElementById("player-wrapper");
-            const actionRect = el.getBoundingClientRect();
-            const handRect = handWrapper.querySelector(".tile").getBoundingClientRect();
-
-            console.log(`%c[Debug: updateActionButtonsPosition] 手牌の上端: ${handRect.top}\naction-buttonsの下端: ${actionRect.bottom}\n間隔: ${handRect.top - actionRect.bottom}\ngap: ${gap}`, "color: #d407ef");
-        });
+    
 }
 
 export function updateGameLayout(players){
