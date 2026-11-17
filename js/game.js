@@ -486,6 +486,13 @@ if(this._isStepping){
 
     this.turnCount++; // 巡目を進める
 
+    // 同巡フリテンを解除
+    if(p.isFuriten && p.furitenType === "sameTurn"){
+      p.isFuriten = false;
+      p.furitenType = "none";
+      console.log("%c[onDraw] 同巡フリテンを解除", "color: #4b88c2;");
+    }
+
     this.state = "CheckTsumo";
     this.scheduleStep(0);
   }
@@ -1390,6 +1397,8 @@ updateActionButtons() {
       // 自分のツモ番でスキップしたら打牌へ
       if(this.state === "Discard"){
         console.log("%c[updateActionButtons] スキップしたため打牌へ移行", "color: #4b88c2;");
+        this.state = "Discard";
+        this.scheduleStep(0);
         return;
       }
 

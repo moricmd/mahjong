@@ -109,6 +109,9 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
   const p = game.players[playerIndex];
   if(!p) return false;
 
+  // 見逃しによるフリテンを解除しない
+  if(p.isFuriten && (p.furitenType === "riichi" || p.furitenType === "sameTurn")) return;
+
   const waits = p.waitingTiles;
   const discards = p.discards;
 
@@ -119,22 +122,30 @@ export function checkDiscardFuriten(game, playerIndex = 0) {
     return;
   }
 
+  let hasDiscardMatch = false;
+
   // 捨て牌に待ち牌が含まれているか
   for (const w of waits) {
     const matchedDiscard = discards.find(d => sameTile(d, w));
     
     if (matchedDiscard) {
-      p.isFuriten = true;
-      p.furitenType = "discard";
-
-      console.log(`%c[checkDiscardFuriten] 捨て牌によるフリテン: \nプレイヤー${playerIndex}のフリテン\n捨て牌: ${JSON.stringify(matchedDiscard)}`, "color: #4b88c2;");
-      return;
+      hasDiscardMatch = true;
+      break;
     }
   }
 
+  // 捨て牌の中に待ち牌があるなら
+  if(hasDiscardMatch){
+    p.isFuriten = true;
+    p.furitenType = "discard";
+    console.log(`%c[checkDiscardFuriten] 捨て牌によるフリテン: プレイヤー${playerIndex}`, "color: #4b88c2;");      
+
   // フリテン解除
-  p.isFuriten = false;
-  p.furitenType = "none";
+  } else {
+    p.isFuriten = false;
+    p.furitenType = "none";
+  }
+
 }
 
 
@@ -144,6 +155,8 @@ export function missedRonFuriten(game, playerIndex){
 
   const p = game.players[playerIndex];
   if(!p || !p.isTenpai) return;
+
+  if(p.isFuriten && p.furitenType === "discard") return;
 
   // 立直後の見逃し
   if(p.isRiichi){
