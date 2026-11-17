@@ -1388,9 +1388,8 @@ updateActionButtons() {
       const p = this.players[this.turn];
 
       // 自分のツモ番でスキップしたら打牌へ
-      if(this.state === "CheckTsumo"){
+      if(this.state === "Discard"){
         console.log("%c[updateActionButtons] スキップしたため打牌へ移行", "color: #4b88c2;");
-        this.state = "Discard";
         return;
       }
 
