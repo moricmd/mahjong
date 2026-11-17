@@ -354,7 +354,7 @@ body {
 }
 
 /* フリテン表示 */
-.furiten-badge {
+#furiten-indicator {
   position: absolute;
   right: 100%;
   top: 50%;
@@ -374,7 +374,7 @@ body {
   pointer-events: none;
 }
 
-.furiten-badge.hidden {
+#furiten-indicator .hidden {
   display: none;
 }
 
