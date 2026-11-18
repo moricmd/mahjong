@@ -99,6 +99,19 @@ document.getElementById("pvp-mode").onclick = () => {
 socket.on("gameStart", (data) => {
   console.log("ゲーム開始");
   showScreen("game-screen");
+});
+
+socket.on("updateGameState", (state) => {
+  console.log("サーバーから状態を受信: ", state);
+
+  window.myIndex = state.myIndex;
+
+  updateTableInfo(state.round, state.kyoku, state.wallCount, state.playersInfo);
+
+  const myPlayer = {
+    hand: state.myHand,
+    //
+  };
 })
 
   
