@@ -376,7 +376,7 @@ body {
   pointer-events: none;
 }
 
-#furiten-indicator .hidden {
+#furiten-indicator.hidden {
   display: none;
 }
 
