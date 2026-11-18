@@ -2,6 +2,8 @@
 import { Game } from "./game.js";
 import { updateGameLayout } from "./gameUI.js";
 
+const socket = io();
+
 let game = null;
 
 window.addEventListener("load", () => {
@@ -89,6 +91,14 @@ Object.defineProperty(window, "game", {
 });
 
 
+document.getElementById("pvp-mode").onclick = () => {
+  console.log("対人戦のマッチングに参加中");
+  socket.emit("joinMatchmaking");
+}
 
+socket.on("gameStart", (data) => {
+  console.log("ゲーム開始");
+  showScreen("game-screen");
+})
 
   
