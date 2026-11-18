@@ -356,7 +356,6 @@ body {
 /* フリテン表示 */
 #furiten-indicator {
   position: absolute;
-  display: flex;
   right: 100%;
   top: 50%;
   transform: translate(0, -50%);
