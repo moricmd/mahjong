@@ -1,5 +1,5 @@
 // main.js
-import { Game } from "./game.js";
+import { CPUGame } from "./CPUGame.js";
 import { updateGameLayout } from "./gameUI.js";
 
 const socket = io();
@@ -13,7 +13,7 @@ window.addEventListener("load", () => {
     showScreen("game-screen");
 
     setTimeout(() => {
-      game = new Game();
+      game = new CPUGame();
       game.setPlayMode("CPU戦");
       game.step();
     }, 0);

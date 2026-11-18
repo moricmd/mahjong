@@ -3,11 +3,11 @@ import { SCORE_TABLE } from './scoreTable.js';
 
 /**
  * 点数計算と点数移動を行う関数
- * @param {Game} game - game.js のインスタンス (this を渡す)
- * @param {Number} winnerIndex - 和了したプレイヤーのインデックス (0〜2)
- * @param {Number|null} loserIndex - 放銃したプレイヤーのインデックス (ロンの場合のみ、ツモの場合は null)
- * @param {Number} han - 翻数
- * @param {Number} fu - 符数
+ * @param { Game | CPUGame } game - game / CPUGame のインスタンス (this を渡す)
+ * @param { Number } winnerIndex - 和了したプレイヤーのインデックス (0〜2)
+ * @param { Number | null } loserIndex - 放銃したプレイヤーのインデックス (ロンの場合のみ、ツモの場合は null)
+ * @param { Number } han - 翻数
+ * @param { Number } fu - 符数
  */
 
 export function calcScore(game, winnerIndex, loserIndex, han, fu) {
