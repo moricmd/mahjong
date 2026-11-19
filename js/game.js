@@ -2,18 +2,8 @@
 
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
-import { calcScore } from "./score.js";
-import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards,
-         createTileElement,
-         assignSeatsByWind,
-         updateMelds, updateNorthTiles,
-         updateRelativeScores, updateTurnIndicator, updateCPUHandPosition, updateTableInfo,
-         updateFuritenIndicator
-        } from "./UI.js";
-import { updateGameLayout  } from "./gameUI.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
-import { chooseDiscardIndex } from "./CPU.js";
 import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
          addKanDora,
          canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
@@ -98,7 +88,7 @@ export class Game {
         this.uraIndicators = tiles.splice(-5);  // 裏ドラ表示牌は5枚
         this.uraIndicators.forEach(t => t.type = "uraDora");
 
-        this.openDoracount = 1;
+        this.openDoraCount = 1;
 
         // 残りを山とする
         this.wall = tiles;
@@ -119,7 +109,7 @@ export class Game {
         this.players.forEach((_, idx) => this.sortHand(idx));
 
         this.state = "TurnStart";
-        this.broadcastGameState();
+        this.step();
 
     }
 
@@ -199,6 +189,118 @@ export class Game {
             socket.emit("updateGameState", playerState);
         });
     }
+
+    step(){
+
+        switch(this.state){
+
+            // ----------
+            // ゲーム管理
+            // ----------
+            // 後で実装
+            case "Deal":
+                this.deal();
+                break;
+
+            case "EndRound":
+                this.broadcastGameState();
+                break;
+
+            // ----------
+            // ターン管理
+            // ----------
+            case "TurnStart":
+                this.onTurnStart();
+                break;
+
+            case "Draw":
+                this.onDraw();
+                break;
+
+            case "Discard":
+                this.discardStep();
+                break;
+
+            case "NextTurn":
+                this.onNextTurn();
+                break;
+
+        }
+    }
+
+    // ----------
+    // TurnStart
+    // ----------
+    onTurnStart(){
+
+        if(this.wallIndex >= this.wall.length){
+
+            this.state = "EndRound";
+            this.step();
+            return;
+        }
+
+        this.state = "Draw";
+        this.step();
+    }
+
+
+    // ----------
+    // Draw
+    // ----------
+    onDraw(){
+        const p = this.players[this.turn];
+        const tile = this.wall[this.wallIndex++];
+
+        p.draw(tile);
+
+        this.turnCount++;
+        this.state = "Discard";
+        this.step();
+    }
+
+
+    // ----------
+    // Discard
+    // ----------
+    discardStep(tileIndex = null){
+        if(this.state !== "Discard"){
+            console.log("%c[Reject: discardStep] 打牌できるタイミングではない", "color: #e44848;");
+            return;
+        } 
+
+        // 一度Discardステートに入り、returnして打牌選択を待つ
+        if(tileIndex === null){
+            console.log("%c[WaitUser: discardStep] 打牌待ち", "color: #ff4794;");
+            return;
+        }
+
+        // 捨てる牌が選択されたなら打牌する
+        this.onDiscard(tileIndex);
+        this.state = "NextTurn";
+        this.step();
+    }
+
+    onDiscard(tileIndex){
+
+        const p = this.players[this.turn];
+        const [discardedTile] = p.hand.splice(tileIndex, 1);
+        p.discards.push(discardedTile);
+        this.lastDiscarder = this.turn;
+    }
+
+
+    // ----------
+    // NextTurn
+    // ----------
+    onNextTurn(){
+
+        this.turn = (this.turn + 1) % this.players.length;
+        this.state = "TurnStart";
+        this.step();
+    }
+
+
 }
 
 

@@ -5,7 +5,6 @@ import {
   updateTableInfo,
   updateTurnIndicator
 } from "./UI.js";
-import { updateGameLayout } from "./gameUI.js";
 
 /**
  * 対人戦クライアント側のSocketイベントと画面描画を初期化する
@@ -59,6 +58,7 @@ function buildViewPlayers(state) {
     viewPlayers.push({
       ...info,
       serverIndex: targetIndex,
+      relativeIndex: offset,
       position: getSeatPosition(myWind, info.wind),
       hand: offset === 0 ? state.myHand : new Array(info.handCount).fill(null)
     });
