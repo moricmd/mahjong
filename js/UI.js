@@ -130,12 +130,9 @@ export function renderOpponentHand(player) {
 // -------------------------
 export function renderDiscards(playerIndex, discards, position) {
   const area = document.getElementById(`discards-${playerIndex}`);
-  area.className = "discard-area opponent";
+  area.className = `discard-area${position !== "bottom" ? " opponent" : ""}`;
 
-  if (position === "top") area.classList.add("discard-top");
-  if (position === "right") area.classList.add("discard-right");
-  if (position === "left") area.classList.add("discard-left");
-  if (position === "bottom") area.classList.add("discard-bottom");
+  area.classList.add(`discard-${position}`);
 
   area.innerHTML = "";
   discards.forEach(tile => {

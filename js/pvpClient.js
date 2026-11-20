@@ -2,32 +2,45 @@
 import { updateGameLayout } from "./gameUI.js";
 import {
   renderPlayerHand,
+  renderOpponentHand,
   renderDiscards,
   updateTableInfo,
   updateTurnIndicator
 } from "./UI.js";
 
+let currentState = null;  // サーバーのGameインスタンスのステートを保持する変数
+
 /**
  * 対人戦クライアント側のSocketイベントと画面描画を初期化する
- * @param {Socket} socket - Socket.io クライアントインスタンス
- * @param {Object} deps - main.js から渡す依存関数・ゲッター
- * @param {Function} deps.showScreen - 画面切り替え関数
- * @param {Function} deps.getAutoSort - 現在の自動理牌フラグを返す関数
+ * @param { Socket } socket - Socket.io クライアントインスタンス
+ * @param { Object } deps - main.js から渡す依存関数・ゲッター
+ * @param { Function } deps.showScreen - 画面切り替え関数
+ * @param { Function } deps.getAutoSort - 現在の自動理牌フラグを返す関数
  */
 export function initPvPClient(socket, { showScreen, getAutoSort }) {
   // ゲーム開始通知（3人揃って画面切り替え）
   socket.on("gameStart", (data) => {
     console.log("ゲーム開始", data);
     showScreen("game-screen");
+
+    if(currentState){
+
+      requestAnimationFrame(() => {
+        const viewPlayers = buildViewPlayers(currentState);
+        renderGameState(socket, currentState, viewPlayers, getAutoSort());
+      })
+    }
   });
 
   // サーバーからの最新ステート受信＆描画
   socket.on("updateGameState", (state) => {
     console.log("サーバーから状態を受信:", state);
+
+    currentState = state;
     window.myIndex = state.myIndex;
 
     const viewPlayers = buildViewPlayers(state);
-    renderGameState(socket, state, viewPlayers, getAutoSort());
+    renderGameState(socket, currentState, viewPlayers, getAutoSort());
   });
 }
 
@@ -92,7 +105,11 @@ function renderGameState(socket, state, viewPlayers, autoSort) {
   renderPlayerHand(
     viewPlayers[0],
     (tileIndex) => {
-      if (state.turn === state.myIndex && state.state === "Discard") {
+      if (
+        currentState &&
+        state.turn === state.myIndex &&
+        state.state === "Discard"
+      ) {
         socket.emit("playerDiscard", { tileIndex });
       }
     },
@@ -100,8 +117,13 @@ function renderGameState(socket, state, viewPlayers, autoSort) {
     null
   );
 
-  // 全員の捨て牌描画
+  // 全員の手牌描画
   viewPlayers.forEach((p, i) => {
+
+    // 対戦相手なら手牌をback.pngで描画
+    if(p.position !== "bottom"){
+      renderOpponentHand(p);
+    }
     renderDiscards(i, p.discards, p.position);
   });
 
