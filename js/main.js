@@ -3,8 +3,6 @@ import { CPUGame } from "./CPUGame.js";
 import { updateGameLayout } from "./gameUI.js";
 import { initPvPClient } from "./pvpClient.js";
 
-const socket = io();
-
 let game = null;
 
 // ------------------------------
