@@ -100,10 +100,10 @@ export function renderPlayerHand(player, onClick, autoSort, candidates = null) {
 // 手牌表示（CPU）
 // -------------------------
 export function renderOpponentHand(player) {
-  const area = document.getElementById(`cpu${player.index}-hand`);
+  const area = document.getElementById(`cpu${player.relativeIndex}-hand`);
 
   if (!area) {
-    console.error("CPU hand area not found:", `cpu${player.index}-hand`);
+    console.log(`[Reject: renderOpponenthand] プレイヤー${player.relativeIndex}の手牌領域が存在しない`, "color: #e44848;");
     return;
   }
 
