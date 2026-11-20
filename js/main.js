@@ -48,8 +48,16 @@ window.addEventListener("load", () => {
 
   // メニュー → 対人戦（マッチング参加）
   document.getElementById("pvp-mode").onclick = () => {
-    console.log("対人戦のマッチングに参加中");
-    socket.emit("joinMatchmaking");
+    if(!socket){
+      const socket = io();
+      initPvPClient(socket, {
+        showScreen,
+        getAutoSort: () => autoSort
+      });
+    }
+
+    console.log("対人戦のマッチングを開始");
+    socket.emit("joinMatchMaking");
   };
 });
 
