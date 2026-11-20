@@ -2,7 +2,7 @@
 
 import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
-import { renderDoraIndicators, renderPlayerHand, renderCPUHand, renderDiscards,
+import { renderDoraIndicators, renderPlayerHand, renderOpponentHand, renderDiscards,
          createTileElement,
          assignSeatsByWind,
          updateMelds, updateNorthTiles,
@@ -202,8 +202,8 @@ export class CPUGame {
       candidates
     );
 
-    renderCPUHand(this.players[1]);
-    renderCPUHand(this.players[2]);
+    renderOpponentHand(this.players[1]);
+    renderOpponentHand(this.players[2]);
 
 
     renderDiscards(0, this.players[0].discards, this.players[0].position);

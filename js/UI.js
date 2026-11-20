@@ -99,7 +99,7 @@ export function renderPlayerHand(player, onClick, autoSort, candidates = null) {
 // -------------------------
 // 手牌表示（CPU）
 // -------------------------
-export function renderCPUHand(player) {
+export function renderOpponentHand(player) {
   const area = document.getElementById(`cpu${player.index}-hand`);
 
   if (!area) {

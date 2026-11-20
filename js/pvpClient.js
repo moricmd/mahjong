@@ -1,4 +1,5 @@
 // js/pvpClient.js
+import { updateGameLayout } from "./gameUI.js";
 import {
   renderPlayerHand,
   renderDiscards,

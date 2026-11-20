@@ -271,6 +271,7 @@ export class Game {
 
         // 一度Discardステートに入り、returnして打牌選択を待つ
         if(tileIndex === null){
+            this.broadcastGameState();
             console.log("%c[WaitUser: discardStep] 打牌待ち", "color: #ff4794;");
             return;
         }
