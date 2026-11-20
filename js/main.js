@@ -4,6 +4,7 @@ import { updateGameLayout } from "./gameUI.js";
 import { initPvPClient } from "./pvpClient.js";
 
 let game = null;
+let socket = null;
 
 // ------------------------------
 // 自動理牌
@@ -17,11 +18,6 @@ function showScreen(id) {
   document.getElementById(id).style.display = "block";
 }
 
-// 対人戦クライアント側の受信・描画を初期化
-initPvPClient(socket, {
-  showScreen,
-  getAutoSort: () => autoSort
-});
 
 window.addEventListener("load", () => {
   function startCPUmode() {
@@ -47,7 +43,7 @@ window.addEventListener("load", () => {
   // メニュー → 対人戦（マッチング参加）
   document.getElementById("pvp-mode").onclick = () => {
     if(!socket){
-      const socket = io();
+      socket = io();
       initPvPClient(socket, {
         showScreen,
         getAutoSort: () => autoSort
