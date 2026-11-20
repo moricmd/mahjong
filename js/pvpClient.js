@@ -106,7 +106,7 @@ function renderGameState(socket, state, viewPlayers, autoSort) {
   });
 
   // ターン表示とレイアウト更新
-  const relativeTurn = (state.turn - state.myIndex + 3) % 3;
+  const relativeTurn = viewPlayers.findIndex(p => p.serverIndex === state.turn);
   updateTurnIndicator(relativeTurn, viewPlayers);
   updateGameLayout(viewPlayers);
 }
