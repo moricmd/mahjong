@@ -132,3 +132,14 @@ function renderGameState(socket, state, viewPlayers, autoSort) {
   updateTurnIndicator(relativeTurn, viewPlayers);
   updateGameLayout(viewPlayers);
 }
+
+// ----------
+// リサイズ時にgame-screenをタブの大きさに追従させる
+// ----------
+window.addEventListener("resize", () => {
+
+  requestAnimationFrame(() => {
+    const viewPlayers = buildViewPlayers(currentState);
+    updateGameLayout(viewPlayers);
+  });
+});
