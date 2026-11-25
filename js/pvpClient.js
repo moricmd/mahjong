@@ -21,6 +21,19 @@ export function initPvPClient(socket, { showScreen, getAutoSort }) {
   // ゲーム開始通知（3人揃って画面切り替え）
   socket.on("gameStart", (data) => {
     console.log("ゲーム開始", data);
+
+
+    // リサイズ時にgame-screenをタブの大きさに追従させる
+    // ゲーム開始前にリサイズイベントが発生しないよう、ゲーム開始後にリスナーを登録
+    window.addEventListener("resize", () => {
+
+      requestAnimationFrame(() => {
+        const viewPlayers = buildViewPlayers(currentState);
+        updateGameLayout(viewPlayers);
+      });
+    });
+
+
     showScreen("game-screen");
 
     if(currentState){
@@ -133,13 +146,3 @@ function renderGameState(socket, state, viewPlayers, autoSort) {
   updateGameLayout(viewPlayers);
 }
 
-// ----------
-// リサイズ時にgame-screenをタブの大きさに追従させる
-// ----------
-window.addEventListener("resize", () => {
-
-  requestAnimationFrame(() => {
-    const viewPlayers = buildViewPlayers(currentState);
-    updateGameLayout(viewPlayers);
-  });
-});
