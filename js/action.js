@@ -33,7 +33,6 @@ export function onRiichi(game, playerIndex = 0) {
   // 立直待ちのフラグ
   p.isWaitingRiichi = true;
 
-  game.updateUI();
 }
 
 // 立直キャンセルボタン
@@ -53,7 +52,6 @@ export function onCancelRiichi(game, playerIndex = 0){
   // 立直待ちを解除する（宣言牌選択から戻る）
   p.isWaitingRiichi = false;
 
-  game.updateUI();
 }
 
 // -------------------------
@@ -91,7 +89,6 @@ export function onPon(game, playerIndex, tile) {
 
   game.turn = playerIndex;
   game.state = "Discard";
-  game.updateUI();
 }
 
 // ----------
@@ -130,7 +127,7 @@ export function onAnkan(game, playerIndex, tile) {
   game.clearIppatsu();
 
   game.state = "Draw";
-  game.updateUI();
+
 }
 
 // -------------------------
@@ -171,7 +168,7 @@ export function onDaiminkan(game, playerIndex, tile) {
 
   game.turn = playerIndex;
   game.state = "Draw";
-  game.updateUI();
+
 }
 
   // -------------------------
@@ -202,7 +199,7 @@ export function onKakan(game, playerIndex, tile) {
     game.clearIppatsu();
 
     game.state = "Draw";
-    game.updateUI();
+
   }
 
   // -------------------------
@@ -228,8 +225,6 @@ export function onNorth(game, playerIndex = 0) {
 
     game.canDoubleRiichi = false;
     game.clearIppatsu();
-
-    game.updateUI();
 
     game.state = "CheckTsumo";
     game.scheduleStep(250);
@@ -345,19 +340,40 @@ export function canTsumo(game, playerIndex = 0) {
 
 // ロン
 export function canRon(game) {
-  if (game.state === "CheckRon") {
-    const p = game.players[0];
-    if (!p.isFuriten) {
-      return true;
-    }
+  if (game.state !== "CheckRon"){
+    console.log("%c[Reject: canRon] ロンできるタイミングではない", "color: #e44848;");
+    return false;
   }
-  return false;
+
+  const p = game.players[playerIndex];
+
+  if(!p){
+    console.log(`%c[Reject: canRon] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848;");
+    return false;
+  }
+
+  // フリテンでなければロンが可能
+  return !p.isFuriten;
+
 }
 
 
 // ポン
 export function canPon(game) {
-  return game.state === "WaitCall" && game.ponCandidates?.length > 0;
+  if(game.state !== "WaitCall"){
+    console.log("%c[Reject: canPon] ポンできるタイミングではない", "color: #e44848;");
+    return false;
+  }
+
+  const p = game.players[playerIndex];
+
+  if(!p){
+    console.log(`%c[Reject: canPon] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848;");
+    return false;
+  }
+
+  // いったん保留
+  return false;
 }
 
 /* canKan() {
@@ -424,8 +440,14 @@ export function canKakan(game){
 
 
 // 北抜き
-export function canNorth(game) {
-  const p = game.players[0];
-  return p.hand.some(t => t.suit === "wind" && t.value === 4);
+export function canNorth(game, playerIndex) {
+  const p = game.players[playerIndex];
+
+  if(!p){
+    console.log(`%c[Reject: canNorth] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848");
+    return;
+  }
+    // 手牌に北があるか
+    return p.hand.some(t => t.suit === "wind" && t.value === 4);
 }
 
