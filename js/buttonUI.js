@@ -84,6 +84,12 @@ export function renderActionButtons(actions, handler){
             handler?.(type);
         });
 
+      const row = Math.floor(index / 3) + 1;
+      const col = (index % 3) + 1;
+      
+      btn.style.gridRow = row;
+      btn.style.gridColumn = col;
+
         container.appendChild(btn);    
     });
 }
