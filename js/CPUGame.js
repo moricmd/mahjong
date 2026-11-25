@@ -13,9 +13,9 @@ import { updateGameLayout  } from "./gameUI.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
 import { chooseDiscardIndex } from "./CPU.js";
-import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
+import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onShominkan, onNorth,
          addKanDora,
-         canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
+         canRiichi, canTsumo, canRon, canPon, canKan, canNorth
         } from "./action.js";
 import { checkTenpai, isTenpaiNow, getRiichiCandidates,
          checkDiscardFuriten, missedRonFuriten

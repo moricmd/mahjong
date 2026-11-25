@@ -4,9 +4,9 @@ import { generateTiles, shuffle } from "./tiles.js";
 import { Player } from "./player.js";
 import { judgeYaku } from "./yaku.js";
 import { calcScore } from "./score.js";
-import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onKakan, onNorth,
+import { onRiichi, onCancelRiichi, onPon, onKan, onAnkan, onDaiminkan, onShominkan, onNorth,
          addKanDora,
-         canRiichi, canTsumo, canRon, canPon, canKan, canAnkan, canDaiminkan, canKakan, canNorth
+         canRiichi, canTsumo, canRon, canPon, canKan, canNorth
         } from "./action.js";
 import { checkTenpai, isTenpaiNow, getRiichiCandidates,
          checkDiscardFuriten, missedRonFuriten

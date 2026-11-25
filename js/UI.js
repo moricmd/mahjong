@@ -189,7 +189,7 @@ function getMeldTilesForRender(meld) {
     }
   }
 
-  if (meld.type === "kakan") {
+  if (meld.type === "shominkan") {
     // 小明槓 → ポン面子の横向き牌の上に重ねる
     const base = getMeldTilesForRender({
       type: "pon",
@@ -262,7 +262,7 @@ export function updateMelds(game) {
       if (obj.stacked) {
         const stackedImg = createTileElement(obj.stacked.tile);
         stackedImg.style.transform = "rotate(-90deg)";
-        stackedImg.classList.add("kakan-stacked");
+        stackedImg.classList.add("shominkan-stacked");
         area.appendChild(stackedImg);
       }
     });

@@ -10,7 +10,7 @@ export class Player {
     // -------------------------
     this.hand = [];
     this.discards = [];
-    this.melds = []; // { type: "pon" | "ankan" | "daiminkan" | "kakan", tiles: [...], from }
+    this.melds = []; // { type: "pon" | "ankan" | "daiminkan" | "shominkan", tiles: [...], from }
 
     // ----------
     // 持ち点

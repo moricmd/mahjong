@@ -171,10 +171,10 @@ export function onDaiminkan(game, playerIndex, tile) {
 
 }
 
-  // -------------------------
-  // 加槓
-  // -------------------------
-export function onKakan(game, playerIndex, tile) {
+// -------------------------
+// 小明槓
+// -------------------------
+export function onShominkan(game, playerIndex, tile) {
     const p = game.players[playerIndex];
 
     // 既存のポン面子を探す
@@ -185,7 +185,7 @@ export function onKakan(game, playerIndex, tile) {
     p.hand.splice(idx, 1);
 
     // ポン → 加槓に変換
-    meld.type = "kakan";
+    meld.type = "shominkan";
     meld.tiles.push(tile);
 
     // from はポン時のものをそのまま使う
@@ -339,7 +339,7 @@ export function canTsumo(game, playerIndex = 0) {
 
 
 // ロン
-export function canRon(game) {
+export function canRon(game, playerIndex) {
   if (game.state !== "CheckRon"){
     console.log("%c[Reject: canRon] ロンできるタイミングではない", "color: #e44848;");
     return false;
@@ -353,13 +353,14 @@ export function canRon(game) {
   }
 
   // フリテンでなければロンが可能
+  console.log(`%c[canRon] ${p.isFuriten ? "フリテンである" : "ロン和了できる"}`, "color: #4b88c2;");
   return !p.isFuriten;
 
 }
 
 
 // ポン
-export function canPon(game) {
+export function canPon(game, playerIndex) {
   if(game.state !== "WaitCall"){
     console.log("%c[Reject: canPon] ポンできるタイミングではない", "color: #e44848;");
     return false;
@@ -372,8 +373,23 @@ export function canPon(game) {
     return false;
   }
 
-  // いったん保留
-  return false;
+  const pending = game.pendingDiscard;
+  
+  if(!pending){
+    console.log("%c[Reject: canPon] 捨て牌情報がセットされていない", "color: #e44848;");
+  }
+
+  // ターンプレイヤーなら先の処理を行わない
+  if(pending.discarder === playerIndex){
+    console.log(`[canPon] プレイヤー${playerIndex}: 自分のターンである`, "color: #4b88c2;");
+    return false;
+  }
+
+  // 捨て牌と同種の牌が手牌に2枚以上あるならポンできる
+  const matchedCount = p.hand.filter(t => sameTile(t, pending.discardTile));
+  console.log(`%c[canPon] 捨て牌: ${JSON.stringify(pending.discardTile)}\nプレイヤー${playerIndex}の手牌に${ponCandidatesCount}枚ある`, "color: #4b88c2;");
+
+  return matchedCount >= 2;
 }
 
 /* canKan() {
@@ -381,62 +397,113 @@ export function canPon(game) {
 } */
 
 // カン
-export function canKan(game) {
+export function canKan(game, playerIndex) {
 
-  if(!game || !game.players || !game.players[0]) return false;
-  const p = game.players[0];
+    const p = game.players[playerIndex];
 
-  // -------------------------
-  // ① 他家の捨て牌 → 大明槓
-  // -------------------------
-  if (game.state === "WaitCall") {
-    return game.kanCandidates?.length > 0; // 大明槓候補がある
-  }
+    // カン判定結果をまとめたオブジェクト
+    const result = {
+        canCallKan: false,  // カン可能か
+        candidates: []      // カン候補牌とそのタイプ
+    };
 
-  // -------------------------
-  // ② 自分のツモ番でなければカン不可
-  // -------------------------
-  const isMyTurn =
-    (game.turn === 0) &&
-    (game.state === "CheckTsumo" || game.state === "Discard");
+    // ----------
+    // 相手のターン中のカン
+    // ----------
+    if (game.state === "WaitCall") {
 
-  if (!isMyTurn) return false;
+        // ----------
+        // 大明槓
+        // ----------
+        const pending = game.pendingDiscard;
+        if(!pending){
+            console.log("%c[Reject: canKan] 捨て牌情報がセットされていない", "color: #e44848;");
+            return result;
+        }
 
-  // -------------------------
-  // ③ 暗槓（手牌に4枚）
-  // -------------------------
-  const hasAnkan = p.hand.some(t =>
-    p.hand.filter(x => sameTile(x, t)).length === 4
-  );
+        // ターンプレイヤーなら先の処理を行わない
+        if(pending.discarder === playerIndex){
+            console.log(`%c[canKan] （大明槓）プレイヤー${playerIndex}: 自分のターンである`, "color: #4b88c2;");
+            return result;
+        }
 
-  if (hasAnkan) return true;
+        // 捨て牌と同種の牌が自分の手牌に何枚あるか調べる
+        const tile = pending.discardTile;
+        const count = p.hand.filter(t => sameTile(t, tile));
+        console.log(`%c[canKan] （大明槓）捨て牌: ${JSON.stringify(tile)}\nプレイヤー${playerIndex}の手牌に${count}枚ある`, "color: #4b88c2;");
 
-  // -------------------------
-  // ④ 小明槓（ポン済み + 同じ牌をツモった）
-  // -------------------------
-  const lastTile = p.hand[p.hand.length - 1]; // ツモ牌
+        // 捨て牌と同種の牌が3枚あるなら大明槓できる
+        if(count >= 3){
+            result.candidates.push({ type: "daiminkan", tile });
+        }
 
-  const hasKakan = p.melds.some(m =>
-    m.type === "pon" && sameTile(m.tiles[0], lastTile)
-  );
+        result.canCallKan = result.candidates.length > 0;
 
-  if (hasKakan) return true;
+        console.log(`%c[canKan] （大明槓）プレイヤー${playerIndex}は${ result.canCallKan ? "大明槓できる" : "大明槓できない"}`);
+        return result;
 
-  return false;
+
+    // ----------
+    // 自分のターン中のカン（暗槓・小明槓）
+    // ----------
+    } else {
+
+        const isMyTurn = game.turn === playerIndex && game.state === "CheckTsumo";
+
+        if (!isMyTurn){
+            console.log(`%c[Reject: canKan] （暗槓・小明槓）プレイヤー${playerIndex}: 自分のターンではない`, "color: #e44848;");
+            return result;
+        }
+
+
+        // ----------
+        // 暗槓
+        // ----------
+        const seenAnkan = [];  // 暗槓候補牌の配列
+        for(const t of p.hand){
+
+            // 候補牌と同種の牌はこれ以上判定しない
+            if(seenAnkan.some(s => sameTile(s, t))) continue;
+
+            // 手牌に同じ種類の牌が何枚あるか調べる
+            const count = p.hand.filter(x => sameTile(x, t)).length;
+
+            // 4枚あるなら暗槓できる
+            if(count >= 4){
+                seenAnkan.push(t);
+                result.candidates.push({ type: "ankan", tile: t });
+            }
+        }
+
+
+
+        // ----------
+        // 小明槓
+        // ----------
+        for(const meld of p.melds){
+
+            // ポン以外の副露した面子は判定しない
+            if(meld.type !== "pon") continue;
+
+            // ポンした面子と同じ種類の牌が手牌に存在するか調べる
+            // （baseTileは牌の種類を比較するため面子の代表牌とする）
+            const baseTile = meld.tiles[0];
+            const matchedTile = p.hand.find(t => sameTile(t, baseTile));
+
+            // 同種の牌が存在すれば小明槓できる
+            if(matchedTile){
+                result.candidates.push({ type: "shominkan", tile: matchedTile });
+            }
+        }
+
+        result.canCallKan = result.candidates.length > 0;
+        console.log(`%c[canKan] プレイヤー${playerIndex}は${result.canCallKan ? `カンできる\n候補牌: ${JSON.stringify(result.candidates)}` : "カンできない"}`, "color: #4b88c2;");
+        return result;
+
+    }
 }
 
-// 保留: カン系
-export function canAnkan(game) {
-  return false;
-}
 
-export function canDaiminkan(game){
-  return false;
-}
-
-export function canKakan(game){
-  return false;
-}
 
 
 // 北抜き
