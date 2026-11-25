@@ -106,6 +106,26 @@ export class Game {
             this.players.forEach(p => p.draw(this.wall[this.wallIndex++]));
         }
 
+        // ----------
+        // デバッグ用: 手牌の操作
+        // ----------
+        const p = this.players[0];
+        p.hand = [
+            { suit: "pin", value: 1, red: false, type: "wall" },
+            { suit: "pin", value: 1, red: false, type: "wall" },
+            { suit: "pin", value: 2, red: false, type: "wall" },
+            { suit: "pin", value: 2, red: false, type: "wall" },
+            { suit: "pin", value: 3, red: false, type: "wall" },
+            { suit: "pin", value: 3, red: false, type: "wall" },
+            { suit: "sou", value: 7, red: false, type: "wall" },
+            { suit: "sou", value: 8, red: false, type: "wall" },
+            { suit: "sou", value: 9, red: false, type: "wall" },
+            { suit: "wind", value: 1, red: false, type: "wall" },
+            { suit: "wind", value: 1, red: false, type: "wall" },
+            { suit: "dragon", value: 1, red: false, type: "wall" },
+            { suit: "dragon", value: 1, red: false, type: "wall" },
+        ];
+
         this.players.forEach((_, idx) => this.sortHand(idx));
 
         this.state = "TurnStart";
