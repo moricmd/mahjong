@@ -262,15 +262,15 @@ export function canRiichi(game, playerIndex = 0) {
 
   if(!p.isMenzen){
     console.log("%c[Reject: canRiichi] 面前でない", "color: #e44848;");
-    return;
+    return false;
   }
   if(p.isRiichi){
     console.log("%c[Reject: canRiichi] すでに立直している", "color: #e44848;");
-    return;
+    return false;
   }
   if(p.score < 1000){
     console.log("%c[Reject: canRiichi] 持ち点が1000点未満", "color: #e44848;");
-    return;
+    return false;
   }
 
   if ((game.wall.length - game.wallIndex) < 4){
@@ -338,7 +338,9 @@ export function canTsumo(game, playerIndex = 0) {
 }
 
 
+// ----------
 // ロン
+// ----------
 export function canRon(game, playerIndex) {
   if (game.state !== "CheckRon"){
     console.log("%c[Reject: canRon] ロンできるタイミングではない", "color: #e44848;");
@@ -359,6 +361,126 @@ export function canRon(game, playerIndex) {
 }
 
 
+// ----------
+// 相手の捨て牌に対する副露（ポン・大明槓）
+// ----------
+export function canCallForOpponent(game, playerIndex){
+
+  // 判定結果をまとめたオブジェクト
+  const result = {
+    canPon: false,        // ポンできるか
+    canDaiminkan: false,  // 大明槓できるか
+    tile: null            // 対象となる牌種
+  };
+
+  // 相手のWaitCall時に判定する
+  if(game.state !== "WaitCall"){
+    console.log("%c[Reject: canCallForOpponent] 副露可能なタイミングではない", "color: #e44848;");
+    return result;
+  }
+
+  const p = game.players[playerIndex];
+  if(!p){
+    console.log(`%c[Reject: canCallForOpponent] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848;");
+    return result;
+  }
+
+
+  const pending = game.pendingDiscard;
+  if(!pending || !pending.discardTile){
+    console.log("%c[Reject: canCallForOpponent] 捨て牌情報がセットされていない", "color: #e44848;");
+    return result;
+  }
+
+  // ターンプレイヤーに対しては判定しない
+  if(pending.discarder === playerIndex){
+    console.log(`%c[canCallForOpponent] プレイヤー${playerIndex}: ターンプレイヤーである`, "color: #4b88c2;");
+    return result;
+  }
+
+  // 捨て牌と同種の牌が手牌に何枚あるかを調べる
+  const tile = pending.discardTile;
+  const matchedCount = p.hand.filter(t => sameTile(t, tile)).length;
+
+
+  // 2枚以上ならポン、3枚あるならカンが可能
+  result.canPon = matchedCount >= 2;
+  result.canDaiminkan = matchedCount >= 3;
+
+  if(result.canPon || result.canDaiminkan){
+    result.tile = tile;
+  }
+
+  console.log(`%c[canCallForOpponent] 捨て牌: ${JSON.stringify(tile)}\nプレイヤー${playerIndex}の手牌に${matchedCount}枚ある`, "color: #4b88c2;");
+  return result;
+}
+
+
+// ----------
+// 自分の手番中の副露（暗槓・小明槓）
+// ----------
+export function canCallForMe(game, playerIndex){
+
+  const result = {
+    canKan: false,
+    candidates: []
+  };
+
+  if(game.state !== "CheckTsumo"){
+    console.log("%c[Reject: canCallForMe] 副露できるタイミングではない", "color: #e44848;");
+    return result;
+  }
+
+  const p = game.players[playerIndex];
+  if (!p) {
+    console.log(`%c[Reject: canCallForMe] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848;");
+    return result;
+  }
+
+  // 暗槓候補牌
+  const seenAnkan = [];
+  for(const t of p.hand){
+
+    // すでに候補牌となった牌と同種の牌はこれ以上判定しない
+    if(seenAnkan.some(s => sameTile(s, t))) continue;
+
+    // 同種の牌が手牌に何枚含まれているか調べる
+    const count = p.hand.filter(x => sameTile(x, t)).length;
+
+    if(count >= 4){  // 4枚あるなら暗槓候補牌である
+      seenAnkan.push(t);
+      result.candidates.push({ type: "ankan", tile: t });
+    }
+  }
+
+
+  // 小明槓候補牌
+  for(const meld of p.melds){
+
+    // ポンでない副露面子は判定しない
+    if(meld.type !== "pon") continue;
+
+    // ポンした面子と同種の牌が手牌にあるか調べる
+    // （baseTileは牌種を比較するために面子の代表牌として0番目の牌オブジェクトを取得）
+    const baseTile = meld.tiles[0];
+    const matchedTile = p.hand.filter(t => sameTile(t, baseTile));
+
+    if(matchedTile.length > 0){  // 同種の牌があるなら小明槓候補牌である
+      for(const t of matchedTile){
+        result.candidates.push({ type: "shominkan", tile: t });
+      }
+    }
+  }
+
+  result.canKan = result.candidates.length > 0;
+  console.log(`%c[canCallForMe] プレイヤー${playerIndex}: ${result.canKan ? `カン可能\n宣言牌: ${result.candidates}` : "カンできない"}`, "color: #4b88c2;");
+  return result;
+
+}
+
+
+
+/*
 // ポン
 export function canPon(game, playerIndex) {
   if(game.state !== "WaitCall"){
@@ -377,6 +499,7 @@ export function canPon(game, playerIndex) {
   
   if(!pending){
     console.log("%c[Reject: canPon] 捨て牌情報がセットされていない", "color: #e44848;");
+    return false;
   }
 
   // ターンプレイヤーなら先の処理を行わない
@@ -386,15 +509,12 @@ export function canPon(game, playerIndex) {
   }
 
   // 捨て牌と同種の牌が手牌に2枚以上あるならポンできる
-  const matchedCount = p.hand.filter(t => sameTile(t, pending.discardTile));
-  console.log(`%c[canPon] 捨て牌: ${JSON.stringify(pending.discardTile)}\nプレイヤー${playerIndex}の手牌に${ponCandidatesCount}枚ある`, "color: #4b88c2;");
+  const count = p.hand.filter(t => sameTile(t, pending.discardTile));
+  console.log(`%c[canPon] 捨て牌: ${JSON.stringify(pending.discardTile)}\nプレイヤー${playerIndex}の手牌に${count}枚ある`, "color: #4b88c2;");
 
-  return matchedCount >= 2;
+  return count >= 2;
 }
 
-/* canKan() {
-  return game.state === "WaitCall" && kanCandidates?.length > 0;
-} */
 
 // カン
 export function canKan(game, playerIndex) {
@@ -503,7 +623,7 @@ export function canKan(game, playerIndex) {
     }
 }
 
-
+*/
 
 
 // 北抜き
@@ -512,7 +632,7 @@ export function canNorth(game, playerIndex) {
 
   if(!p){
     console.log(`%c[Reject: canNorth] プレイヤーが存在しない: プレイヤー${playerIndex}`, "color: #e44848");
-    return;
+    return false;
   }
     // 手牌に北があるか
     return p.hand.some(t => t.suit === "wind" && t.value === 4);
