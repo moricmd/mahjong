@@ -237,8 +237,20 @@ export class Game {
                 this.onDraw();
                 break;
 
+            case "CheckTsumo":
+                this.tsumoStep();
+                break;
+
             case "Discard":
                 this.discardStep();
+                break;
+
+            case "CheckRon":
+                this.ronStep();
+                break;
+
+            case "WaitCall":
+                this.callStep();
                 break;
 
             case "NextTurn":
@@ -279,6 +291,113 @@ export class Game {
         this.step();
     }
 
+
+    // ----------
+    // CheckTsumo
+    // ----------
+    onCheckTsumo(){
+
+        const p = this.players[this.turn];
+        const lastTile = p.hand[p.hand.length - 1];
+
+        const resultList = {
+            isTsumoWin: false,
+            lastTile,
+            winnerIndex: null,
+            yakuResult: null
+        };
+
+        // ツモ牌が待ち牌であるか
+        const isWaitingTiles = p.isTenpai && 
+                               p.waitingTiles.some(w => sameTile(w, lastTile));
+
+        if(!isWaitingTiles){
+            console.log("%c[onCheckTsumo] ツモ牌は待ち牌ではない", "color: #4b88c2;");
+            return resultList;
+        }
+
+        // ----------
+        // ツモ和了成立時
+        // ----------
+        const openDora = this.doraIndicators.slice(0, this.openDoraCount);
+        const uraDora = p.isRiichi ? this.uraIndicators.slice(0, this.openDoraCount) : [];  // 裏ドラは立直していた場合に表ドラと同じ枚数だけ開く
+
+        const yakuResult = judgeYaku(
+            p,
+            p.hand,
+            lastTile,
+            true,
+            this.plalyerWind,
+            1,
+            openDora,
+            uraDora,
+            this.wallIndex >= this.wall.length
+        );
+
+        if(p.isRiichi){
+            yakuResult.han += 1;
+            if(p.isIppatsu) yakuResult.han += 1;
+        }
+
+        if(!yakuResult || yakuResult.han <= 0){
+            console.log("[Reject: onCheckTsumo] ツモ和了していない", "color: #e44848;");
+            return resultList;
+        }
+
+        resultList.isTsumoWin = true;
+        resultList.winnerIndex = this.turn;
+        resultList.yakuResult = yakuResult;
+
+        return resultList;
+
+    }
+
+    tsumoStep(){
+        console.log("%c[CheckTsumo: tsumoStep] 開始", "color: #4b88c2;");
+
+        const index = this.turn;
+        const p = this.players[index];
+        const tsumoResult = this.onCheckTsumo();
+
+        // ツモ・立直・副露・北抜きフラグの取得
+        const canTsumoWin = tsumoResult.isTsumoWin;
+        const canRiichiNow = canRiichi(this, index);
+        const selfCall = canCallForMe(this, index);
+        const canNorthNow = canNorth(this, index);
+
+        // ツモ和了可能ならPlayerインスタンスに結果を保存する
+        if(canTsumoWin){
+            p.tsumoResult = tsumoResult;
+        } else {
+            p.tsumoResult = null;
+        }
+
+        // 表示できるアクションボタンがあるか
+        const hasAction = canTsumoWin || canRiichiNow || selfCall.canKan || canNorthNow;
+
+        if(hasAction){
+            this.availableActionsByPlayer = {
+                [index]: {
+                    canTsumo: canTsumoWin,
+                    canRiichi: canRiichiNow,
+                    riichiCandidates: canRiichiNow ? getRiichiCandidates(this, index) : [],
+                    canKan: selfCall.canKan,
+                    kanCandidates: selfCall.candidates,
+                    canNorth: canNorthNow
+                }
+            };
+
+            console.log(`[WaitUser: tsumoStep] プレイヤー${index}:\n${canTsumoWin ? "ツモ和了できる\n" : ""}${canRiichiNow ? "立直できる\n" : ""}${selfCall.canKan ? "カンできる\n" : ""}${canNorthNow ? "北抜きできる" : ""}`, "color: #ff4794;");
+
+            this.broadcastGameState();
+            return;
+        }
+
+        // 表示できるものがなければそのまま打牌へ
+        this.availableActionsByPlayer = {};
+        this.state = "Discard";
+        this.step();
+    }
 
     // ----------
     // Discard
