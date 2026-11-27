@@ -44,6 +44,7 @@ window.addEventListener("load", () => {
   document.getElementById("pvp-mode").onclick = () => {
     if(!socket){
       socket = io();
+      window.socket = socket;
       initPvPClient(socket, {
         showScreen,
         getAutoSort: () => autoSort
