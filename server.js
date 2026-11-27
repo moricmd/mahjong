@@ -97,17 +97,17 @@ io.on("connection", (socket) => {
     // ----------
     // デバッグ用: setNextTile
     // ----------
-    socket.on("setNextTile", (payload = {}) => {
+    socket.on("setNextTile", (suit, value, red = false) => {
         const session = socketSessionMap.get(socket.id);
         if(!session) return;
 
         const game = session.game;
 
-        game.nextDrawSelect({
-            suit: payload.suit,
-            value: payload.value,
-            red: payload.red
-        });
+        game.nextDrawSelect(
+            suit,
+            value,
+            red
+        );
     });
 });
 

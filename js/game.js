@@ -444,7 +444,7 @@ export class Game {
     // ----------
     // デバッグ用: 次の自分のツモ牌を指定する
     // ----------
-    nextDrawSelect({suit, value, red = false}){
+    nextDrawSelect(suit, value, red = false){
 
         // 次の自分のツモ牌のwallIndexは現在のwallIndexの2つ先になる
         const offset = 2;
