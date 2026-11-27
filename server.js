@@ -93,6 +93,22 @@ io.on("connection", (socket) => {
         socketSessionMap.delete(socket.id);
         waitingPlayers = waitingPlayers.filter(s => s !== socket);
     });
+
+    // ----------
+    // デバッグ用: setNextTile
+    // ----------
+    socket.on("setNextTile", (payload = {}) => {
+        const session = socketSessionMap.get(socket.id);
+        if(!session) return;
+
+        const game = session.game;
+
+        game.nextDrawSelect({
+            suit: payload.suit,
+            value: payload.value,
+            red: payload.red
+        });
+    });
 });
 
 const PORT = process.env.PORT || 3000;

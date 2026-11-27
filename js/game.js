@@ -441,6 +441,47 @@ export class Game {
     }
 
 
+    // ----------
+    // デバッグ用: 次の自分のツモ牌を指定する
+    // ----------
+    nextDrawSelect({suit, value, red = false}){
+
+        // 次の自分のツモ牌のwallIndexは現在のwallIndexの2つ先になる
+        const offset = 2;
+        const targetIndex = this.wallIndex + offset;
+
+        // マイナスもしくは山の長さ以上へのアクセスは禁止
+        if(targetIndex < 0 || targetIndex >= this.wall.length){
+            console.log("%c[Reject: nextDrawSelect] 山の範囲外", "color: #e44848;");
+            return false;
+        }
+    
+        const foundIndex = this.wall.findIndex(
+            (tile, index) => 
+                index >= this.wallIndex &&
+            tile &&
+            tile.suit === suit &&
+            tile.value === value &&
+            (red === undefined || tile.red === red)
+        );
+
+        // 指定した牌が山に残っていなかった場合
+        if(foundIndex === -1){
+            console.log(`%c[Reject: nextDrawSelect] 山にsuit: ${suit}, value: ${value}となる牌が見つからない`, "color: #e44848;");
+            return false;
+        }
+        
+        // 牌を入れかえる
+        [this.wall[targetIndex], this.wall[foundIndex]] = 
+        [this.wall[foundIndex], this.wall[targetIndex]];
+
+        console.log(`[nextDrawSelect] 次のツモ牌を${JSON.stringify(this.wall[foundIndex])}に設定, "color: #4b88c2;`);
+        return true;
+
+
+
+    }
+
 }
 
 
