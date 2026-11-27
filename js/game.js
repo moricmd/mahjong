@@ -475,7 +475,7 @@ export class Game {
         [this.wall[targetIndex], this.wall[foundIndex]] = 
         [this.wall[foundIndex], this.wall[targetIndex]];
 
-        console.log(`[nextDrawSelect] 次のツモ牌を${JSON.stringify(this.wall[targetIndex])}に設定, "color: #4b88c2;`);
+        console.log(`[nextDrawSelect] 次のツモ牌を${JSON.stringify(this.wall[foundIndex])}に設定, "color: #4b88c2;`);
         return true;
 
 
